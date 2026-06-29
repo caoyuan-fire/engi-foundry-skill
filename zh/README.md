@@ -22,6 +22,7 @@ TaskForgeSkill/
 │   ├── execution-policy.md
 │   ├── handoff-and-checkpoint.md
 │   ├── job-format.md
+│   ├── module-resolution.md
 │   ├── package-format.md
 │   ├── platform-metadata.md
 │   ├── publication.md
@@ -34,9 +35,12 @@ TaskForgeSkill/
 │       │   ├── generic.json
 │       │   └── openai.yaml
 │       ├── references/
+│       ├── scripts/
 │       └── modules/
 ├── examples/
 │   └── README.md
+├── tests/
+│   └── test_resolve_module.py
 └── zh/
     └── README.md
 ```
@@ -253,7 +257,7 @@ TaskForge 不应静默修改 `.gitignore`。如果用户不希望成果物进入
 
 ## 安装
 
-本地开发时，可以复制或软链接可安装的 skill 目录：
+推荐使用完整安装。复制或软链接可安装的 skill 目录：
 
 ```text
 skills/taskforge/
@@ -267,6 +271,8 @@ skills/taskforge/
 
 然后重启 Codex，让它重新扫描 skill metadata。
 
+也支持 kernel-only 轻量分享模式。该模式需要 `SKILL.md`、`taskforge.manifest.json` 和 `skills/taskforge/scripts/resolve_module.py`。缺失模块只会在用户明确确认后从 manifest 声明的 GitHub 源下载，下载内容会缓存到项目 artifact root 之外。
+
 ## 文档
 
 更多文档：
@@ -277,6 +283,7 @@ skills/taskforge/
 - [Role protocol](../docs/role-protocol.md)
 - [Package format](../docs/package-format.md)
 - [Job format](../docs/job-format.md)
+- [Module resolution](../docs/module-resolution.md)
 - [Handoff and checkpoint](../docs/handoff-and-checkpoint.md)
 - [Engineering discipline](../docs/engineering-discipline.md)
 - [Adapter contract](../docs/adapter-contract.md)

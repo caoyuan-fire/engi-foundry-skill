@@ -34,6 +34,7 @@ Read only the references needed by the classified mode:
 - Package and Job format: `references/package-format.md`
 - Engineering discipline: `references/engineering-discipline.md`
 - Adapter contract: `references/adapter-contract.md`
+- Module resolution: `references/module-resolution.md`
 
 ## Non-Negotiable Rules
 
@@ -44,6 +45,7 @@ Read only the references needed by the classified mode:
 - Primary-only actions require `primary/control` authority.
 - The artifact root defaults to `.taskforge/`, unless `.taskforge.config.json` or the user specifies another path.
 - The artifact root is for durable work products only. Do not write cache, temporary files, session dumps, credentials, or private runtime state there.
+- Missing modules may be resolved only through `references/module-resolution.md`; ask before downloading and keep caches outside artifact roots.
 - `summary.md` is for humans only. Machine control belongs in JSON config files.
 - Markdown explains. JSON controls.
 - Do not claim completion without fresh verification evidence or an explicit non-runnable verification record.

@@ -22,6 +22,7 @@ TaskForgeSkill/
 │   ├── execution-policy.md
 │   ├── handoff-and-checkpoint.md
 │   ├── job-format.md
+│   ├── module-resolution.md
 │   ├── package-format.md
 │   ├── platform-metadata.md
 │   ├── publication.md
@@ -34,9 +35,12 @@ TaskForgeSkill/
 │       │   ├── generic.json
 │       │   └── openai.yaml
 │       ├── references/
+│       ├── scripts/
 │       └── modules/
 ├── examples/
 │   └── README.md
+├── tests/
+│   └── test_resolve_module.py
 └── zh/
     └── README.md
 ```
@@ -253,7 +257,7 @@ TaskForge should not silently modify `.gitignore`. If users do not want artifact
 
 ## Installation
 
-For local development, copy or symlink the installable skill folder:
+Full installation is recommended. Copy or symlink the installable skill folder:
 
 ```text
 skills/taskforge/
@@ -267,6 +271,8 @@ to the Codex skills directory:
 
 Then restart Codex so the skill metadata is rescanned.
 
+Kernel-only installation is supported for lightweight sharing. It requires `SKILL.md`, `taskforge.manifest.json`, and `skills/taskforge/scripts/resolve_module.py`. Missing modules are resolved from the declared GitHub source only after explicit confirmation, and downloaded modules are cached outside any project artifact root.
+
 ## Documentation
 
 Additional documentation:
@@ -277,6 +283,7 @@ Additional documentation:
 - [Role protocol](docs/role-protocol.md)
 - [Package format](docs/package-format.md)
 - [Job format](docs/job-format.md)
+- [Module resolution](docs/module-resolution.md)
 - [Handoff and checkpoint](docs/handoff-and-checkpoint.md)
 - [Engineering discipline](docs/engineering-discipline.md)
 - [Adapter contract](docs/adapter-contract.md)

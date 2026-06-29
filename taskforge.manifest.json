@@ -14,8 +14,14 @@
       "description": "Install the TaskForge skill folder, including SKILL.md, references, modules, and agent metadata."
     },
     "kernelOnly": {
-      "supported": false,
-      "description": "Kernel-only installation is deferred until module resolution is implemented outside the artifact root."
+      "supported": true,
+      "description": "Install only the kernel, manifest, and resolver. Missing modules are resolved from the declared GitHub source after explicit confirmation."
+    }
+  },
+  "scripts": {
+    "resolveModule": {
+      "path": "skills/taskforge/scripts/resolve_module.py",
+      "description": "Resolve missing TaskForge modules from local paths, cache, or the declared GitHub remote source."
     }
   },
   "modules": {
@@ -47,6 +53,11 @@
     "adapter-contract": {
       "requiredFor": ["isolated-context", "executor", "external-reviewer"],
       "localPath": "skills/taskforge/references/adapter-contract.md",
+      "required": true
+    },
+    "module-resolution": {
+      "requiredFor": ["kernel-only", "missing-module", "dependency-resolution"],
+      "localPath": "skills/taskforge/references/module-resolution.md",
       "required": true
     },
     "superpowers-compatible-discipline": {

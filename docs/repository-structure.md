@@ -10,6 +10,7 @@ TaskForgeSkill/
 ├── skills/
 │   └── taskforge/
 ├── examples/
+├── tests/
 └── zh/
 ```
 
@@ -30,6 +31,7 @@ These documents are the main basis for future implementation work:
 - `execution-policy.md`
 - `package-format.md`
 - `job-format.md`
+- `module-resolution.md`
 - `role-protocol.md`
 - `handoff-and-checkpoint.md`
 - `engineering-discipline.md`
@@ -47,6 +49,7 @@ It contains:
 - `agents/openai.yaml`: product-facing skill metadata;
 - `agents/generic.json`: platform-neutral metadata for humans and tooling;
 - `references/`: agent-facing operational rules loaded on demand;
+- `scripts/`: deterministic helper scripts;
 - `modules/`: optional extensions.
 
 The skill body should stay concise. Detailed rules belong in references and docs.
@@ -54,6 +57,10 @@ The skill body should stay concise. Detailed rules belong in references and docs
 ## `examples/`
 
 `examples/` contains example packages, Jobs, handoffs, reviews, and closeouts when the format stabilizes.
+
+## `tests/`
+
+`tests/` contains repository-level tests for deterministic helper scripts and publishable behavior.
 
 ## `zh/`
 
