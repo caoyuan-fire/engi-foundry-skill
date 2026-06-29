@@ -1,0 +1,49 @@
+---
+name: taskforge
+description: Platform-neutral engineering workflow skill for ad-hoc tasks and structured task packages. Use when a user wants TaskForge, structured engineering delivery, package planning, durable artifacts, Job-level execution, review policy, role handoff, verification, closeout, or an ad-hoc task under TaskForge rules.
+---
+
+# TaskForge
+
+TaskForge is a platform-neutral engineering workflow skill.
+
+It routes engineering work into the lightest process compatible with risk, while preserving durable artifacts for planning, execution, review, verification, and closeout.
+
+## Required First Step
+
+Before acting, classify the current request:
+
+1. `ad-hoc`: bounded low-risk task without package ceremony.
+2. `package-planning`: create or revise a structured task package.
+3. `package-alignment`: review a package before execution.
+4. `job-execution`: execute one or more package Jobs.
+5. `review-only`: review a package, Job result, diff, or implementation.
+6. `package-revision`: update package rules, Job contracts, policies, or records.
+7. `closeout`: final acceptance, handoff, or delivery record.
+8. `audit`: cost, process, quality, or workflow retrospective.
+
+Use the least ceremony compatible with risk. Absence of a package is not enough to choose ad-hoc for substantial work.
+
+## Required References
+
+Read only the references needed by the classified mode:
+
+- Intent routing: `references/intent-routing.md`
+- Artifact protocol: `references/artifact-protocol.md`
+- Role protocol: `references/role-protocol.md`
+- Package and Job format: `references/package-format.md`
+- Engineering discipline: `references/engineering-discipline.md`
+- Adapter contract: `references/adapter-contract.md`
+
+## Non-Negotiable Rules
+
+- New TaskForge work starts as `primary/control` by default.
+- If resuming a package and control ownership is inferable with high confidence, resume as `primary/control`.
+- If role is uncertain, ask whether to take over `primary/control` or perform bounded executor/reviewer work.
+- Bounded executor/reviewer work has `autoDrive=false`; finish the assigned task and stop.
+- Primary-only actions require `primary/control` authority.
+- The artifact root defaults to `.taskforge/`, unless `.taskforge.config.json` or the user specifies another path.
+- The artifact root is for durable work products only. Do not write cache, temporary files, session dumps, credentials, or private runtime state there.
+- `summary.md` is for humans only. Machine control belongs in JSON config files.
+- Markdown explains. JSON controls.
+- Do not claim completion without fresh verification evidence or an explicit non-runnable verification record.

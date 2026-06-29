@@ -1,0 +1,63 @@
+{
+  "name": "taskforge",
+  "displayName": "TaskForge",
+  "status": "public-layout-draft",
+  "baseLineage": {
+    "baseSkill": "$agent-delivery-workflow",
+    "relationship": "conceptual successor",
+    "statement": "TaskForge is based on lessons from agent-delivery-workflow, but it is a new platform-neutral engineering workflow skill."
+  },
+  "skillPath": "skills/taskforge",
+  "installModes": {
+    "full": {
+      "recommended": true,
+      "description": "Install the TaskForge skill folder, including SKILL.md, references, modules, and agent metadata."
+    },
+    "kernelOnly": {
+      "supported": false,
+      "description": "Kernel-only installation is deferred until module resolution is implemented outside the artifact root."
+    }
+  },
+  "modules": {
+    "intent-routing": {
+      "requiredFor": ["all"],
+      "localPath": "skills/taskforge/references/intent-routing.md",
+      "required": true
+    },
+    "artifact-protocol": {
+      "requiredFor": ["package-planning", "job-execution", "review-only", "closeout", "audit"],
+      "localPath": "skills/taskforge/references/artifact-protocol.md",
+      "required": true
+    },
+    "role-protocol": {
+      "requiredFor": ["package-planning", "job-execution", "review-only", "package-revision", "closeout"],
+      "localPath": "skills/taskforge/references/role-protocol.md",
+      "required": true
+    },
+    "package-format": {
+      "requiredFor": ["package-planning", "job-execution", "review-only", "package-revision", "closeout"],
+      "localPath": "skills/taskforge/references/package-format.md",
+      "required": true
+    },
+    "engineering-discipline": {
+      "requiredFor": ["implementation", "bugfix", "refactor", "verification", "job-execution", "ad-hoc-code-change"],
+      "localPath": "skills/taskforge/references/engineering-discipline.md",
+      "required": true
+    },
+    "adapter-contract": {
+      "requiredFor": ["isolated-context", "executor", "external-reviewer"],
+      "localPath": "skills/taskforge/references/adapter-contract.md",
+      "required": true
+    },
+    "superpowers-compatible-discipline": {
+      "requiredFor": ["optional-enhancement"],
+      "localPath": "skills/taskforge/modules/superpowers-compatible-discipline.md",
+      "required": false
+    }
+  },
+  "remoteSource": {
+    "type": "github",
+    "repo": "caoyuan-fire/task-forge-skill",
+    "defaultRef": "main"
+  }
+}

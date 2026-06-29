@@ -1,0 +1,4 @@
+interface:
+  display_name: "TaskForge"
+  short_description: "Structured engineering workflow skill"
+  default_prompt: "Use $taskforge to plan, execute, review, and close out an engineering task with durable artifacts."
