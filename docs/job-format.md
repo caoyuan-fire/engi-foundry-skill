@@ -1,6 +1,6 @@
 # Job Format
 
-Each TaskForge Job is a directory with human-readable intent and machine-readable control.
+Each EngiFoundry Job is a directory with human-readable intent and machine-readable control.
 
 ## Directory Layout
 

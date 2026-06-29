@@ -1,23 +1,23 @@
 # Artifact Protocol
 
-TaskForge writes durable work products to an artifact root inside the user's project.
+EngiFoundry writes durable work products to an artifact root inside the user's project.
 
 ## Artifact Root
 
 The default artifact root is:
 
 ```text
-<project-root>/.taskforge/
+<project-root>/.engifoundry/
 ```
 
 Users may choose another path, such as:
 
 ```text
-<project-root>/MyWorkForge/
-<project-root>/docs/taskforge/
+<project-root>/MyEngiFoundry/
+<project-root>/docs/engifoundry/
 ```
 
-The selected path is recorded in `.taskforge.config.json` at the project root.
+The selected path is recorded in `.engifoundry.config.json` at the project root.
 
 The artifact root is not a runtime workspace, cache directory, or scratch area. It exists to preserve inspectable engineering artifacts.
 
@@ -71,10 +71,10 @@ Ad-hoc, review-only, and audit work may write records under `records/` when the 
 
 ## Git Policy
 
-TaskForge must not silently modify `.gitignore`.
+EngiFoundry must not silently modify `.gitignore`.
 
 The artifact root should not be ignored by default because it contains durable work products, not temporary files.
 
-If users do not want TaskForge artifacts in version control, they may explicitly ignore their chosen artifact root.
+If users do not want EngiFoundry artifacts in version control, they may explicitly ignore their chosen artifact root.
 
-TaskForge may explain the tradeoff, but it must not apply the ignore rule without user approval.
+EngiFoundry may explain the tradeoff, but it must not apply the ignore rule without user approval.

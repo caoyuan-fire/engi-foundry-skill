@@ -1,23 +1,23 @@
 # Artifact Protocol
 
-TaskForge uses a durable artifact root in the user's project.
+EngiFoundry uses a durable artifact root in the user's project.
 
 ## Project Config
 
 The project root may contain:
 
 ```text
-<project-root>/.taskforge.config.json
+<project-root>/.engifoundry.config.json
 ```
 
-This is the discovery entry point for TaskForge inside the project.
+This is the discovery entry point for EngiFoundry inside the project.
 
 Example:
 
 ```json
 {
   "schemaVersion": 1,
-  "artifactRoot": ".taskforge",
+  "artifactRoot": ".engifoundry",
   "recordsPolicy": "durable",
   "defaultPackagePolicy": "package-when-risky"
 }
@@ -25,17 +25,17 @@ Example:
 
 `artifactRoot` may be relative. Use absolute paths only when the user explicitly requests them.
 
-Do not store secrets, tokens, private session IDs, cache state, or transient runtime state in `.taskforge.config.json`.
+Do not store secrets, tokens, private session IDs, cache state, or transient runtime state in `.engifoundry.config.json`.
 
 ## Artifact Root
 
 Default:
 
 ```text
-<project-root>/.taskforge/
+<project-root>/.engifoundry/
 ```
 
-The user may specify another path such as `MyWorkForge/` or `docs/taskforge/`.
+The user may specify another path such as `MyEngiFoundry/` or `docs/engifoundry/`.
 
 Artifact root layout:
 
@@ -116,4 +116,4 @@ Executor configs describe capability and preference. They do not grant package a
 
 Do not silently modify `.gitignore`. The artifact root is presumed reviewable and useful unless the user says otherwise.
 
-If users do not want TaskForge artifacts in version control, they may explicitly ignore their chosen artifact root.
+If users do not want EngiFoundry artifacts in version control, they may explicitly ignore their chosen artifact root.

@@ -1,6 +1,6 @@
 # Handoff and Checkpoint
 
-Checkpoints and handoffs let TaskForge packages pause and resume across sessions, tools, or humans.
+Checkpoints and handoffs let EngiFoundry packages pause and resume across sessions, tools, or humans.
 
 They support role recovery but do not permanently bind primary/control authority to any product.
 

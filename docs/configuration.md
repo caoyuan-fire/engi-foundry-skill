@@ -1,6 +1,6 @@
 # Configuration
 
-TaskForge uses two durable configuration layers:
+EngiFoundry uses two durable configuration layers:
 
 - project-level discovery config;
 - artifact-root execution config.
@@ -12,10 +12,10 @@ Neither layer may store secrets, tokens, private session IDs, cache state, or tr
 The project root may contain:
 
 ```text
-<project-root>/.taskforge.config.json
+<project-root>/.engifoundry.config.json
 ```
 
-This file is the discovery entry point for TaskForge inside a user project.
+This file is the discovery entry point for EngiFoundry inside a user project.
 
 It should be safe to commit.
 
@@ -24,7 +24,7 @@ Example:
 ```json
 {
   "schemaVersion": 1,
-  "artifactRoot": ".taskforge",
+  "artifactRoot": ".engifoundry",
   "recordsPolicy": "durable",
   "defaultPackagePolicy": "package-when-risky"
 }
@@ -33,9 +33,9 @@ Example:
 Fields:
 
 - `schemaVersion`: config schema version.
-- `artifactRoot`: output directory for durable TaskForge artifacts. Defaults to `.taskforge`.
-- `recordsPolicy`: how aggressively TaskForge should preserve records.
-- `defaultPackagePolicy`: when TaskForge should prefer package mode over ad-hoc mode.
+- `artifactRoot`: output directory for durable EngiFoundry artifacts. Defaults to `.engifoundry`.
+- `recordsPolicy`: how aggressively EngiFoundry should preserve records.
+- `defaultPackagePolicy`: when EngiFoundry should prefer package mode over ad-hoc mode.
 
 `artifactRoot` may be a relative path. Absolute paths should be used only when the user explicitly requests them.
 
@@ -49,7 +49,7 @@ The artifact root should contain:
 
 This file describes executor registry and selection policy.
 
-It is part of the durable TaskForge protocol and should be safe to commit.
+It is part of the durable EngiFoundry protocol and should be safe to commit.
 
 Example:
 

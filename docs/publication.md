@@ -1,13 +1,13 @@
 # Publication
 
-TaskForge uses a public repository structure that separates user documentation, formal specification, and installable skill content.
+EngiFoundry uses a public repository structure that separates user documentation, formal specification, and installable skill content.
 
 ## Public Files
 
 - `README.md`: English public introduction and quick reference.
 - `zh/README.md`: Chinese public introduction with equivalent content.
 - `docs/`: formal specification basis.
-- `skills/taskforge/`: installable skill.
+- `skills/engifoundry/`: installable skill.
 - `examples/`: examples after the format stabilizes.
 - `tests/`: repository-level validation for scripts and publishable behavior.
 
@@ -15,7 +15,7 @@ TaskForge uses a public repository structure that separates user documentation, 
 
 The README explains:
 
-- what TaskForge is;
+- what EngiFoundry is;
 - how the repository is structured;
 - where the installable skill lives;
 - core artifact, package, Job, role, and Git policies;
@@ -23,13 +23,13 @@ The README explains:
 
 `docs/` explains the full specification.
 
-`skills/taskforge/SKILL.md` stays concise and operational.
+`skills/engifoundry/SKILL.md` stays concise and operational.
 
-`skills/taskforge/references/` contains agent-facing details loaded on demand.
+`skills/engifoundry/references/` contains agent-facing details loaded on demand.
 
-`skills/taskforge/agents/` contains optional platform and tooling metadata. Core discovery must still work from `SKILL.md`.
+`skills/engifoundry/agents/` contains optional platform and tooling metadata. Core discovery must still work from `SKILL.md`.
 
-`skills/taskforge/scripts/` contains deterministic helper scripts that support optional workflows such as module resolution.
+`skills/engifoundry/scripts/` contains deterministic helper scripts that support optional workflows such as module resolution.
 
 ## Publishing Principles
 

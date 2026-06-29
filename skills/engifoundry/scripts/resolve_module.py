@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Resolve TaskForge modules from local files, cache, or GitHub."""
+"""Resolve EngiFoundry modules from local files, cache, or GitHub."""
 
 from __future__ import annotations
 
@@ -41,8 +41,8 @@ def build_github_raw_url(repo: str, ref: str, path: str) -> str:
 def default_cache_dir() -> Path:
     base = os.environ.get("XDG_CACHE_HOME")
     if base:
-        return Path(base) / "taskforge" / "modules"
-    return Path.home() / ".cache" / "taskforge" / "modules"
+        return Path(base) / "engifoundry" / "modules"
+    return Path.home() / ".cache" / "engifoundry" / "modules"
 
 
 def cache_path_for(cache_dir: Path, repo: str, ref: str, module_path: str) -> Path:
@@ -57,7 +57,7 @@ def download_url(url: str, destination: Path) -> None:
 
 
 def write_lock(cache_dir: Path, module_name: str, result: ResolutionResult, ref: str) -> None:
-    lock_path = cache_dir / "taskforge.lock.json"
+    lock_path = cache_dir / "engifoundry.lock.json"
     if lock_path.exists():
         lock = json.loads(lock_path.read_text(encoding="utf-8"))
     else:
@@ -86,7 +86,7 @@ def resolve_module(
     manifest = load_manifest(manifest_path)
     modules = manifest.get("modules", {})
     if module_name not in modules:
-        raise ModuleResolutionError(f"Unknown TaskForge module: {module_name}")
+        raise ModuleResolutionError(f"Unknown EngiFoundry module: {module_name}")
 
     module = modules[module_name]
     module_path = module["localPath"]
@@ -120,9 +120,9 @@ def resolve_module(
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Resolve a TaskForge module.")
-    parser.add_argument("module", help="Module key from taskforge.manifest.json")
-    parser.add_argument("--manifest", default="taskforge.manifest.json", help="Path to taskforge.manifest.json")
+    parser = argparse.ArgumentParser(description="Resolve a EngiFoundry module.")
+    parser.add_argument("module", help="Module key from engifoundry.manifest.json")
+    parser.add_argument("--manifest", default="engifoundry.manifest.json", help="Path to engifoundry.manifest.json")
     parser.add_argument("--cache-dir", help="Cache directory outside any artifact root")
     parser.add_argument("--ref", help="Git ref to use instead of manifest remoteSource.defaultRef")
     parser.add_argument("--yes", action="store_true", help="Allow downloading missing modules")

@@ -7,8 +7,8 @@ from pathlib import Path
 
 
 def load_resolver():
-    path = Path(__file__).resolve().parents[1] / "skills/taskforge/scripts/resolve_module.py"
-    spec = importlib.util.spec_from_file_location("taskforge_resolve_module", path)
+    path = Path(__file__).resolve().parents[1] / "skills/engifoundry/scripts/resolve_module.py"
+    spec = importlib.util.spec_from_file_location("engifoundry_resolve_module", path)
     module = importlib.util.module_from_spec(spec)
     assert spec.loader is not None
     sys.modules[spec.name] = module
@@ -17,11 +17,11 @@ def load_resolver():
 
 
 class ResolveModuleTests(unittest.TestCase):
-    def write_manifest(self, root, local_path="skills/taskforge/references/example.md", required=True):
+    def write_manifest(self, root, local_path="skills/engifoundry/references/example.md", required=True):
         manifest = {
             "remoteSource": {
                 "type": "github",
-                "repo": "example-org/task-forge-skill",
+                "repo": "example-org/engi-foundry-skill",
                 "defaultRef": "v1.2.3",
             },
             "modules": {
@@ -32,7 +32,7 @@ class ResolveModuleTests(unittest.TestCase):
                 }
             },
         }
-        manifest_path = root / "taskforge.manifest.json"
+        manifest_path = root / "engifoundry.manifest.json"
         manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
         return manifest_path
 
@@ -41,7 +41,7 @@ class ResolveModuleTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            local_file = root / "skills/taskforge/references/example.md"
+            local_file = root / "skills/engifoundry/references/example.md"
             local_file.parent.mkdir(parents=True)
             local_file.write_text("# Example\n", encoding="utf-8")
             manifest_path = self.write_manifest(root)
@@ -65,14 +65,14 @@ class ResolveModuleTests(unittest.TestCase):
         build_github_raw_url = load_resolver().build_github_raw_url
 
         url = build_github_raw_url(
-            repo="example-org/task-forge-skill",
+            repo="example-org/engi-foundry-skill",
             ref="v1.2.3",
-            path="skills/taskforge/references/example.md",
+            path="skills/engifoundry/references/example.md",
         )
 
         self.assertEqual(
             url,
-            "https://raw.githubusercontent.com/example-org/task-forge-skill/v1.2.3/skills/taskforge/references/example.md",
+            "https://raw.githubusercontent.com/example-org/engi-foundry-skill/v1.2.3/skills/engifoundry/references/example.md",
         )
 
     def test_downloads_to_cache_and_writes_lock_when_confirmed(self):
@@ -101,7 +101,7 @@ class ResolveModuleTests(unittest.TestCase):
             self.assertEqual(result.path.read_text(encoding="utf-8"), "# Downloaded\n")
             self.assertEqual(len(downloaded), 1)
 
-            lock = json.loads((cache_dir / "taskforge.lock.json").read_text(encoding="utf-8"))
+            lock = json.loads((cache_dir / "engifoundry.lock.json").read_text(encoding="utf-8"))
             self.assertEqual(lock["modules"]["example"]["source"], downloaded[0][0])
             self.assertEqual(lock["modules"]["example"]["path"], str(result.path))
 
@@ -111,7 +111,7 @@ class ResolveModuleTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             manifest_path = self.write_manifest(root)
-            cached = root / "cache/example-org__task-forge-skill/v1.2.3/skills/taskforge/references/example.md"
+            cached = root / "cache/example-org__engi-foundry-skill/v1.2.3/skills/engifoundry/references/example.md"
             cached.parent.mkdir(parents=True)
             cached.write_text("# Cached\n", encoding="utf-8")
 

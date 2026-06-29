@@ -1,12 +1,12 @@
 {
-  "name": "taskforge",
-  "displayName": "TaskForge",
+  "name": "engifoundry",
+  "displayName": "EngiFoundry",
   "status": "public-layout-draft",
-  "skillPath": "skills/taskforge",
+  "skillPath": "skills/engifoundry",
   "installModes": {
     "full": {
       "recommended": true,
-      "description": "Install the TaskForge skill folder, including SKILL.md, references, modules, and agent metadata."
+      "description": "Install the EngiFoundry skill folder, including SKILL.md, references, modules, and agent metadata."
     },
     "kernelOnly": {
       "supported": true,
@@ -15,55 +15,55 @@
   },
   "scripts": {
     "resolveModule": {
-      "path": "skills/taskforge/scripts/resolve_module.py",
-      "description": "Resolve missing TaskForge modules from local paths, cache, or the declared GitHub remote source."
+      "path": "skills/engifoundry/scripts/resolve_module.py",
+      "description": "Resolve missing EngiFoundry modules from local paths, cache, or the declared GitHub remote source."
     }
   },
   "modules": {
     "intent-routing": {
       "requiredFor": ["all"],
-      "localPath": "skills/taskforge/references/intent-routing.md",
+      "localPath": "skills/engifoundry/references/intent-routing.md",
       "required": true
     },
     "artifact-protocol": {
       "requiredFor": ["package-planning", "job-execution", "review-only", "closeout", "audit"],
-      "localPath": "skills/taskforge/references/artifact-protocol.md",
+      "localPath": "skills/engifoundry/references/artifact-protocol.md",
       "required": true
     },
     "role-protocol": {
       "requiredFor": ["package-planning", "job-execution", "review-only", "package-revision", "closeout"],
-      "localPath": "skills/taskforge/references/role-protocol.md",
+      "localPath": "skills/engifoundry/references/role-protocol.md",
       "required": true
     },
     "package-format": {
       "requiredFor": ["package-planning", "job-execution", "review-only", "package-revision", "closeout"],
-      "localPath": "skills/taskforge/references/package-format.md",
+      "localPath": "skills/engifoundry/references/package-format.md",
       "required": true
     },
     "engineering-discipline": {
       "requiredFor": ["implementation", "bugfix", "refactor", "verification", "job-execution", "ad-hoc-code-change"],
-      "localPath": "skills/taskforge/references/engineering-discipline.md",
+      "localPath": "skills/engifoundry/references/engineering-discipline.md",
       "required": true
     },
     "adapter-contract": {
       "requiredFor": ["isolated-context", "executor", "external-reviewer"],
-      "localPath": "skills/taskforge/references/adapter-contract.md",
+      "localPath": "skills/engifoundry/references/adapter-contract.md",
       "required": true
     },
     "module-resolution": {
       "requiredFor": ["kernel-only", "missing-module", "dependency-resolution"],
-      "localPath": "skills/taskforge/references/module-resolution.md",
+      "localPath": "skills/engifoundry/references/module-resolution.md",
       "required": true
     },
     "superpowers-compatible-discipline": {
       "requiredFor": ["optional-enhancement"],
-      "localPath": "skills/taskforge/modules/superpowers-compatible-discipline.md",
+      "localPath": "skills/engifoundry/modules/superpowers-compatible-discipline.md",
       "required": false
     }
   },
   "remoteSource": {
     "type": "github",
-    "repo": "caoyuan-fire/task-forge-skill",
+    "repo": "caoyuan-fire/engi-foundry-skill",
     "defaultRef": "main"
   }
 }

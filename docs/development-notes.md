@@ -1,14 +1,14 @@
 # Development Notes
 
-TaskForge keeps public repository documentation separate from the installable skill body.
+EngiFoundry keeps public repository documentation separate from the installable skill body.
 
 ## Documentation Roles
 
 - `README.md`: public introduction and quick reference.
 - `zh/README.md`: Chinese public introduction.
 - `docs/`: formal specification and maintainable design basis.
-- `skills/taskforge/SKILL.md`: concise agent entry point.
-- `skills/taskforge/references/`: operational rules for agents, loaded only when needed.
+- `skills/engifoundry/SKILL.md`: concise agent entry point.
+- `skills/engifoundry/references/`: operational rules for agents, loaded only when needed.
 
 ## Skill Body
 

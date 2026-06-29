@@ -1,6 +1,6 @@
 # Role Protocol
 
-TaskForge roles are session-scoped and artifact-governed. They are not bound to product names.
+EngiFoundry roles are session-scoped and artifact-governed. They are not bound to product names.
 
 Codex may be `primary/control` or `executor`. Kimi may be `primary/control` or `executor`. A human may manually drive either.
 
@@ -14,7 +14,7 @@ Codex may be `primary/control` or `executor`. Kimi may be `primary/control` or `
 
 ## New Work
 
-New TaskForge work starts as `primary/control` by default.
+New EngiFoundry work starts as `primary/control` by default.
 
 This applies when there is no existing package, checkpoint, handoff, or assignment chain. The current session is the only reasonable controller for planning, scope, execution policy, and acceptance decisions.
 

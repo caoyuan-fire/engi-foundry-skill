@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "name": "taskforge",
-  "displayName": "TaskForge",
+  "name": "engifoundry",
+  "displayName": "EngiFoundry",
   "shortDescription": "Structured engineering workflow skill",
-  "defaultPrompt": "Use $taskforge to plan, execute, review, and close out an engineering task with durable artifacts.",
+  "defaultPrompt": "Use $engifoundry to plan, execute, review, and close out an engineering task with durable artifacts.",
   "entrypoint": "SKILL.md",
   "visibility": "single-skill-entrypoint",
-  "canonicalInvocation": "$taskforge",
+  "canonicalInvocation": "$engifoundry",
   "compatibility": {
     "coreFormat": "Agent Skills SKILL.md",
     "requires": [

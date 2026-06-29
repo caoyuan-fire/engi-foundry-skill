@@ -1,19 +1,19 @@
-# TaskForge Skill
+# Engineering Foundry Skill
 
-TaskForge is a platform-neutral engineering workflow skill for AI-assisted software work.
+EngiFoundry is a platform-neutral engineering workflow skill for AI-assisted software work.
 
 It turns engineering intent into durable artifacts: plans, task packages, Job contracts, execution records, reviews, verification evidence, and closeout notes. It supports small ad-hoc tasks, medium engineering changes, and large multi-phase packages that may move across tools such as Codex, Kimi, Claude, local CLIs, or human operators.
 
-TaskForge is not tied to any single product as the permanent controller. Roles are session-scoped and artifact-governed.
+EngiFoundry is not tied to any single product as the permanent controller. Roles are session-scoped and artifact-governed.
 
 中文说明见 [zh/README.md](zh/README.md).
 
 ## Repository Layout
 
 ```text
-TaskForgeSkill/
+EngiFoundrySkill/
 ├── README.md
-├── taskforge.manifest.json
+├── engifoundry.manifest.json
 ├── docs/
 │   ├── adapter-contract.md
 │   ├── artifact-protocol.md
@@ -29,7 +29,7 @@ TaskForgeSkill/
 │   ├── role-protocol.md
 │   └── repository-structure.md
 ├── skills/
-│   └── taskforge/
+│   └── engifoundry/
 │       ├── SKILL.md
 │       ├── agents/
 │       │   ├── generic.json
@@ -45,11 +45,11 @@ TaskForgeSkill/
     └── README.md
 ```
 
-The installable skill is `skills/taskforge/`. Root-level documentation is for users and maintainers.
+The installable skill is `skills/engifoundry/`. Root-level documentation is for users and maintainers.
 
 ## Core Concepts
 
-TaskForge has one public entry point and several operating modes:
+EngiFoundry has one public entry point and several operating modes:
 
 | Mode | Purpose |
 | --- | --- |
@@ -62,29 +62,29 @@ TaskForge has one public entry point and several operating modes:
 | `closeout` | Final acceptance, handoff, or delivery record |
 | `audit` | Process, cost, quality, or workflow retrospective |
 
-TaskForge uses the least ceremony compatible with risk. Small work may stay ad-hoc. Broad, risky, multi-step, or handoff-oriented work should use package mode.
+EngiFoundry uses the least ceremony compatible with risk. Small work may stay ad-hoc. Broad, risky, multi-step, or handoff-oriented work should use package mode.
 
 ## Artifact Root
 
-TaskForge writes durable outputs to an artifact root inside the user's project.
+EngiFoundry writes durable outputs to an artifact root inside the user's project.
 
 Default:
 
 ```text
-<project-root>/.taskforge/
+<project-root>/.engifoundry/
 ```
 
 Users may choose a different path, such as:
 
 ```text
-<project-root>/MyWorkForge/
-<project-root>/docs/taskforge/
+<project-root>/MyEngiFoundry/
+<project-root>/docs/engifoundry/
 ```
 
 The project root should contain a locator config:
 
 ```text
-<project-root>/.taskforge.config.json
+<project-root>/.engifoundry.config.json
 ```
 
 Example:
@@ -92,13 +92,13 @@ Example:
 ```json
 {
   "schemaVersion": 1,
-  "artifactRoot": ".taskforge",
+  "artifactRoot": ".engifoundry",
   "recordsPolicy": "durable",
   "defaultPackagePolicy": "package-when-risky"
 }
 ```
 
-The artifact root is not a runtime cache. TaskForge must not write cache, temporary files, session dumps, downloaded modules, or other non-reviewable state into it. If an adapter needs private runtime state, it must use an explicit external cache location, not the artifact root.
+The artifact root is not a runtime cache. EngiFoundry must not write cache, temporary files, session dumps, downloaded modules, or other non-reviewable state into it. If an adapter needs private runtime state, it must use an explicit external cache location, not the artifact root.
 
 ## Artifact Root Layout
 
@@ -171,7 +171,7 @@ Example:
 }
 ```
 
-Executor choice is separate from quality discipline. TaskForge models execution with three independent dimensions:
+Executor choice is separate from quality discipline. EngiFoundry models execution with three independent dimensions:
 
 ```text
 executor   = who or what performs the work
@@ -219,7 +219,7 @@ JSON files must not duplicate long narrative content from Markdown files. Markdo
 
 ## Roles
 
-TaskForge roles are not tied to product names.
+EngiFoundry roles are not tied to product names.
 
 Codex may be primary/control or executor. Kimi may be primary/control or executor. A human may manually drive either. Role is session-scoped and governed by artifacts plus user intent.
 
@@ -230,11 +230,11 @@ Roles:
 - `reviewer`: reviews package or Job artifacts without being the implementer.
 - `audit-control`: evaluates process, quality, cost, or workflow history.
 
-New TaskForge work starts as `primary/control` by default.
+New EngiFoundry work starts as `primary/control` by default.
 
 When resuming an existing package, a session resumes as `primary/control` if ownership or continuation intent can be inferred with high confidence from conversation context, checkpoint records, handoff records, or user wording.
 
-If role cannot be inferred, TaskForge asks the user to choose between control takeover and bounded executor/reviewer work.
+If role cannot be inferred, EngiFoundry asks the user to choose between control takeover and bounded executor/reviewer work.
 
 Bounded executor/reviewer work may complete the assigned task and write outputs, but it cannot automatically drive the package forward. Its `autoDrive` capability is false.
 
@@ -253,25 +253,25 @@ Primary-only actions require `primary/control` authority:
 
 The artifact root contains durable work products and should not be ignored by default.
 
-TaskForge should not silently modify `.gitignore`. If users do not want artifacts in version control, they may explicitly ignore their chosen artifact root.
+EngiFoundry should not silently modify `.gitignore`. If users do not want artifacts in version control, they may explicitly ignore their chosen artifact root.
 
 ## Installation
 
 Full installation is recommended. Copy or symlink the installable skill folder:
 
 ```text
-skills/taskforge/
+skills/engifoundry/
 ```
 
 to the Codex skills directory:
 
 ```text
-~/.codex/skills/taskforge/
+~/.codex/skills/engifoundry/
 ```
 
 Then restart Codex so the skill metadata is rescanned.
 
-Kernel-only installation is supported for lightweight sharing. It requires `SKILL.md`, `taskforge.manifest.json`, and `skills/taskforge/scripts/resolve_module.py`. Missing modules are resolved from the declared GitHub source only after explicit confirmation, and downloaded modules are cached outside any project artifact root.
+Kernel-only installation is supported for lightweight sharing. It requires `SKILL.md`, `engifoundry.manifest.json`, and `skills/engifoundry/scripts/resolve_module.py`. Missing modules are resolved from the declared GitHub source only after explicit confirmation, and downloaded modules are cached outside any project artifact root.
 
 ## Documentation
 

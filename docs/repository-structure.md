@@ -1,14 +1,14 @@
 # Repository Structure
 
-TaskForge uses a publishable repository layout with the installable skill under `skills/`.
+EngiFoundry uses a publishable repository layout with the installable skill under `skills/`.
 
 ```text
-TaskForgeSkill/
+EngiFoundrySkill/
 ├── README.md
-├── taskforge.manifest.json
+├── engifoundry.manifest.json
 ├── docs/
 ├── skills/
-│   └── taskforge/
+│   └── engifoundry/
 ├── examples/
 ├── tests/
 └── zh/
@@ -17,12 +17,12 @@ TaskForgeSkill/
 ## Root Files
 
 - `README.md`: public English introduction and quick reference.
-- `taskforge.manifest.json`: repository-level skill manifest.
+- `engifoundry.manifest.json`: repository-level skill manifest.
 - `.gitignore`: repository hygiene only.
 
 ## `docs/`
 
-`docs/` contains the formal human-facing specification for TaskForge.
+`docs/` contains the formal human-facing specification for EngiFoundry.
 
 These documents are the main basis for future implementation work:
 
@@ -39,9 +39,9 @@ These documents are the main basis for future implementation work:
 - `platform-metadata.md`
 - `publication.md`
 
-## `skills/taskforge/`
+## `skills/engifoundry/`
 
-`skills/taskforge/` is the installable skill.
+`skills/engifoundry/` is the installable skill.
 
 It contains:
 

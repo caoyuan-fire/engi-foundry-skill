@@ -10,7 +10,7 @@ Roles:
 - `audit-control`: evaluates process, quality, cost, or workflow history.
 - `unknown`: role cannot be inferred safely.
 
-New TaskForge work starts as `primary/control`.
+New EngiFoundry work starts as `primary/control`.
 
 This applies when there is no existing package, checkpoint, handoff, or assignment chain.
 

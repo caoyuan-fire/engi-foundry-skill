@@ -1,6 +1,6 @@
 # Package Format
 
-TaskForge packages separate human narrative from machine control.
+EngiFoundry packages separate human narrative from machine control.
 
 Markdown explains. JSON controls.
 

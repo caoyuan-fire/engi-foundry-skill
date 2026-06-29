@@ -1,11 +1,11 @@
 ---
-name: taskforge
-description: Platform-neutral engineering workflow skill for ad-hoc tasks and structured task packages. Use when a user wants TaskForge, structured engineering delivery, package planning, durable artifacts, Job-level execution, review policy, role handoff, verification, closeout, or an ad-hoc task under TaskForge rules.
+name: engifoundry
+description: Platform-neutral engineering workflow skill for ad-hoc tasks and structured task packages. Use when a user wants EngiFoundry, structured engineering delivery, package planning, durable artifacts, Job-level execution, review policy, role handoff, verification, closeout, or an ad-hoc task under EngiFoundry rules.
 ---
 
-# TaskForge
+# EngiFoundry
 
-TaskForge is a platform-neutral engineering workflow skill.
+EngiFoundry is a platform-neutral engineering workflow skill.
 
 It routes engineering work into the lightest process compatible with risk, while preserving durable artifacts for planning, execution, review, verification, and closeout.
 
@@ -38,12 +38,12 @@ Read only the references needed by the classified mode:
 
 ## Non-Negotiable Rules
 
-- New TaskForge work starts as `primary/control` by default.
+- New EngiFoundry work starts as `primary/control` by default.
 - If resuming a package and control ownership is inferable with high confidence, resume as `primary/control`.
 - If role is uncertain, ask whether to take over `primary/control` or perform bounded executor/reviewer work.
 - Bounded executor/reviewer work has `autoDrive=false`; finish the assigned task and stop.
 - Primary-only actions require `primary/control` authority.
-- The artifact root defaults to `.taskforge/`, unless `.taskforge.config.json` or the user specifies another path.
+- The artifact root defaults to `.engifoundry/`, unless `.engifoundry.config.json` or the user specifies another path.
 - The artifact root is for durable work products only. Do not write cache, temporary files, session dumps, credentials, or private runtime state there.
 - Missing modules may be resolved only through `references/module-resolution.md`; ask before downloading and keep caches outside artifact roots.
 - `summary.md` is for humans only. Machine control belongs in JSON config files.

@@ -1,6 +1,6 @@
 # Module Resolution
 
-TaskForge supports full installation and controlled kernel-only installation.
+EngiFoundry supports full installation and controlled kernel-only installation.
 
 Full installation remains recommended. Kernel-only installation is for lightweight local sharing when only `SKILL.md`, the manifest, and the resolver are present.
 
@@ -9,7 +9,7 @@ Full installation remains recommended. Kernel-only installation is for lightweig
 Module metadata lives in:
 
 ```text
-taskforge.manifest.json
+engifoundry.manifest.json
 ```
 
 Each module entry declares:
@@ -24,7 +24,7 @@ Remote source metadata lives in:
 {
   "remoteSource": {
     "type": "github",
-    "repo": "caoyuan-fire/task-forge-skill",
+    "repo": "caoyuan-fire/engi-foundry-skill",
     "defaultRef": "main"
   }
 }
@@ -35,10 +35,10 @@ Remote source metadata lives in:
 When a module is needed:
 
 1. Check the declared local path.
-2. Check the TaskForge module cache.
+2. Check the EngiFoundry module cache.
 3. If still missing, require explicit user confirmation before download.
 4. Download from the declared GitHub raw URL.
-5. Record the resolved module in `taskforge.lock.json` inside the cache directory.
+5. Record the resolved module in `engifoundry.lock.json` inside the cache directory.
 
 Required modules must not be silently skipped.
 
@@ -49,30 +49,30 @@ Optional modules may be skipped only with an explicit note.
 The default cache location is:
 
 ```text
-~/.cache/taskforge/modules/
+~/.cache/engifoundry/modules/
 ```
 
 If `XDG_CACHE_HOME` is set, the default is:
 
 ```text
-<XDG_CACHE_HOME>/taskforge/modules/
+<XDG_CACHE_HOME>/engifoundry/modules/
 ```
 
-The module cache must not be inside a user's TaskForge artifact root. Artifact roots contain durable project work products, not downloaded runtime support files.
+The module cache must not be inside a user's EngiFoundry artifact root. Artifact roots contain durable project work products, not downloaded runtime support files.
 
 ## Resolver Script
 
 The resolver script is:
 
 ```text
-skills/taskforge/scripts/resolve_module.py
+skills/engifoundry/scripts/resolve_module.py
 ```
 
 Example:
 
 ```bash
-python3 skills/taskforge/scripts/resolve_module.py role-protocol \
-  --manifest taskforge.manifest.json
+python3 skills/engifoundry/scripts/resolve_module.py role-protocol \
+  --manifest engifoundry.manifest.json
 ```
 
 If the module is missing and not cached, the command exits without downloading.
@@ -80,16 +80,16 @@ If the module is missing and not cached, the command exits without downloading.
 To allow download:
 
 ```bash
-python3 skills/taskforge/scripts/resolve_module.py role-protocol \
-  --manifest taskforge.manifest.json \
+python3 skills/engifoundry/scripts/resolve_module.py role-protocol \
+  --manifest engifoundry.manifest.json \
   --yes
 ```
 
 Machine-readable output:
 
 ```bash
-python3 skills/taskforge/scripts/resolve_module.py role-protocol \
-  --manifest taskforge.manifest.json \
+python3 skills/engifoundry/scripts/resolve_module.py role-protocol \
+  --manifest engifoundry.manifest.json \
   --yes \
   --json
 ```
@@ -99,7 +99,7 @@ python3 skills/taskforge/scripts/resolve_module.py role-protocol \
 The resolver writes:
 
 ```text
-<cache-dir>/taskforge.lock.json
+<cache-dir>/engifoundry.lock.json
 ```
 
 The lockfile records:

@@ -19,7 +19,7 @@ An adapter must state:
 - known risks;
 - fallback behavior.
 
-Core TaskForge rules remain authoritative.
+Core EngiFoundry rules remain authoritative.
 
 Adapter configuration belongs in `execution.config.json` when it is durable and non-sensitive.
 

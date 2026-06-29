@@ -1,6 +1,6 @@
 # Engineering Discipline
 
-TaskForge includes built-in engineering discipline. Package ceremony may be light, but engineering quality must not be.
+EngiFoundry includes built-in engineering discipline. Package ceremony may be light, but engineering quality must not be.
 
 ## TDD
 

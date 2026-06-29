@@ -1,6 +1,6 @@
 # Adapter Contract
 
-Adapters map TaskForge's abstract isolated-context capabilities to concrete mechanisms.
+Adapters map EngiFoundry's abstract isolated-context capabilities to concrete mechanisms.
 
 An adapter may represent a local multi-session mechanism, native sub-agent feature, external CLI, cloud task runner, or human executor.
 
@@ -26,7 +26,7 @@ An adapter must state:
 
 ## Boundaries
 
-Adapters cannot override TaskForge core rules.
+Adapters cannot override EngiFoundry core rules.
 
 Adapters cannot grant primary/control authority by themselves.
 
@@ -38,4 +38,4 @@ Adapters describe mechanism. Package and Job configs decide policy.
 
 Durable, non-sensitive adapter capability may be recorded in `execution.config.json`.
 
-Sensitive values must live outside TaskForge artifacts.
+Sensitive values must live outside EngiFoundry artifacts.
