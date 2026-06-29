@@ -2,6 +2,8 @@
 
 EngiFoundry is a platform-neutral engineering workflow skill for AI-assisted software work.
 
+Keyword: `engifoundry`.
+
 It turns engineering intent into durable artifacts: plans, task packages, Job contracts, execution records, reviews, verification evidence, and closeout notes. It supports small ad-hoc tasks, medium engineering changes, and large multi-phase packages that may move across tools such as Codex, Kimi, Claude, local CLIs, or human operators.
 
 EngiFoundry is not tied to any single product as the permanent controller. Roles are session-scoped and artifact-governed.
