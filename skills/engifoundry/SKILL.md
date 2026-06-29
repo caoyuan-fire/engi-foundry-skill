@@ -24,6 +24,8 @@ Before acting, classify the current request:
 
 Use the least ceremony compatible with risk. Absence of a package is not enough to choose ad-hoc for substantial work.
 
+`ad-hoc` remains a first-class mode. Package-only governance must not be applied to bounded low-risk work that has not entered a package flow.
+
 ## Required References
 
 Read only the references needed by the classified mode:
@@ -42,6 +44,7 @@ Read only the references needed by the classified mode:
 - If resuming a package and control ownership is inferable with high confidence, resume as `primary/control`.
 - If role is uncertain, ask whether to take over `primary/control` or perform bounded executor/reviewer work.
 - Bounded executor/reviewer work has `autoDrive=false`; finish the assigned task and stop.
+- When a package or Job contract exists, bounded executor/reviewer work must follow the package-first conflict rule.
 - Primary-only actions require `primary/control` authority.
 - The artifact root defaults to `.engifoundry/`, unless `.engifoundry.config.json` or the user specifies another path.
 - The artifact root is for durable work products only. Do not write cache, temporary files, session dumps, credentials, or private runtime state there.

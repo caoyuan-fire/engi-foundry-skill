@@ -67,6 +67,8 @@ Executor entries may describe:
 
 These fields help primary/control choose an executor. They do not authorize primary-only actions.
 
+When executor capability is unknown, package work must not assume support for stdin prompt delivery, unattended execution, structured output, write access, review-only mode, or watchdog behavior. Record the capability, discover it safely, or ask the user before using it in a package flow.
+
 ## Job Override Rule
 
 A Job may override package defaults when it needs a different executor, isolation level, discipline preset, review requirement, verification command, or output contract.

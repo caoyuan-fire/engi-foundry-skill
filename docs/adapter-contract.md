@@ -34,6 +34,27 @@ Adapters cannot write runtime cache, session dumps, secrets, or private state in
 
 Adapters describe mechanism. Package and Job configs decide policy.
 
+## Executor Contract Gate
+
+Executor Contract Gate only applies after work enters a package flow and uses an isolated executor, isolated reviewer, external CLI, human handoff, or other bounded execution mechanism.
+
+Before using an adapter for package work, `primary/control` must know or record enough capability information to run and review the work safely:
+
+- invocation mechanism;
+- prompt delivery method;
+- stdin support;
+- output retrieval method;
+- write permissions;
+- review-only support;
+- timeout or watchdog behavior;
+- fallback behavior.
+
+Do not assume stdin support. If prompt delivery or stdin behavior is unknown, discover it with a harmless command or ask the user before using the adapter for real package work.
+
+Watchdog behavior must be explicit. The adapter contract should state how stalled, silent, timed-out, or partial executor runs are detected and reported.
+
+The adapter contract is not an approval mechanism. It does not override package-first rules, Job dependencies, allowed and forbidden areas, verification requirements, or primary/control-only decisions.
+
 ## Configuration
 
 Durable, non-sensitive adapter capability may be recorded in `execution.config.json`.

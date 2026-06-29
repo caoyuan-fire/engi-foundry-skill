@@ -29,6 +29,7 @@ packages/<package-id>/
 - JSON files carry machine-readable control data.
 - JSON must not duplicate long Markdown narratives.
 - Markdown must not be treated as the authoritative machine-control source.
+- Package governance only applies after work enters a package flow; bounded low-risk `ad-hoc` work does not need package artifacts.
 
 ## `summary.md`
 
@@ -56,6 +57,8 @@ It may include a Job overview table:
 
 The table is a readable summary. It is not authoritative configuration.
 
+`summary.md` should also state the package reading entrypoint, current state, and next expected action when another session, tool, or human may continue the work.
+
 ## `package.config.json`
 
 `package.config.json` is the machine-readable package contract.
@@ -72,6 +75,8 @@ It should record:
 - checkpoint references;
 - handoff references;
 - closeout requirements.
+- handoff entrypoint;
+- required reader acknowledgement;
 
 Example:
 
@@ -104,6 +109,43 @@ Example:
   }
 }
 ```
+
+## Reader Acknowledgement
+
+Reader Acknowledgement only applies after work enters a package flow.
+
+Before executor or reviewer work starts on a package or Job, the session should acknowledge that it has read the relevant package summary, package config, Job config, dependencies, allowed areas, forbidden areas, stop conditions, and verification requirements.
+
+The acknowledgement does not grant extra authority. It confirms the reader understands the package-first contract before acting.
+
+`package.config.json` may record acknowledgement requirements in a compact form, for example:
+
+```json
+{
+  "handoff": {
+    "entrypoint": "summary.md",
+    "requiredAcknowledgement": [
+      "package-summary",
+      "package-config",
+      "job-config",
+      "allowed-and-forbidden-areas",
+      "verification"
+    ]
+  }
+}
+```
+
+## Package Alignment Gate
+
+Package Alignment Gate only applies after work enters a package flow.
+
+Package alignment is required before implementation starts when the package uses isolated executors or reviewers, external CLI execution, human handoff, cross-module or high-risk work, security-sensitive work, data-sensitive work, release-sensitive work, unclear verification, or known ambiguity.
+
+Package alignment is optional for simple direct packages and does not apply to `ad-hoc` work with no package.
+
+Alignment records are review records. They should capture the reviewer role, understanding restatement, findings, required package revisions, accepted non-blocking risks, and primary/control decision.
+
+Alignment records are review records, not Jobs. Do not add package alignment as a synthetic Job in the Job order.
 
 ## Checkpoints and Handoffs
 

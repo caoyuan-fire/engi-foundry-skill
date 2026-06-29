@@ -69,6 +69,31 @@ They must not:
 - revise default execution policy;
 - drive the next Job automatically.
 
+## Package-First Conflict Rule
+
+This rule only applies after work enters a package flow. It does not apply to bounded low-risk `ad-hoc` work with no package or Job contract.
+
+When an approved package or Job contract exists, the package and Job JSON are the execution contract for executor and reviewer sessions. Later chat instructions do not override that contract.
+
+Executor and reviewer sessions must refuse or escalate instructions that conflict with the package, including:
+
+- out-of-order Job execution or unmet dependencies;
+- work marked `primary-control-only`, `review-only`, `blocked`, or not delegable;
+- scope expansion, changed acceptance criteria, or changed execution policy;
+- edits to forbidden areas;
+- skipped verification, skipped records, or bypassed stop conditions;
+- role changes or delegation changes not recorded by `primary/control`.
+
+Only `primary/control` may revise package rules, and the revision must be recorded in package artifacts before executor or reviewer work follows the new rule.
+
+An executor report is not Job approval. Executor completion means the assigned work was returned for review; it does not approve the Job, close the Job, or authorize the next Job.
+
+## Takeover Verification Gate
+
+`primary/control` may take over work that was previously delegable, but must record the reason in the package or Job record.
+
+Takeover does not weaken the Job contract. The same scope, allowed and forbidden areas, stop conditions, verification evidence, and review requirements still apply unless `primary/control` explicitly revises the package contract.
+
 ## Primary-Only Actions
 
 The following actions require `primary/control` authority:

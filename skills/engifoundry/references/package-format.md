@@ -6,6 +6,8 @@ Markdown explains. JSON controls.
 
 JSON must not duplicate long Markdown narratives. Markdown must not be treated as the authoritative machine-control source.
 
+Package governance only applies after work enters a package flow; bounded low-risk `ad-hoc` work does not need package artifacts.
+
 ## Package Layout
 
 Package layout:
@@ -45,6 +47,8 @@ It explains:
 
 It may include a Job overview table, but the table is only a readable summary.
 
+`summary.md` should also state the package reading entrypoint, current state, and next expected action when another session, tool, or human may continue the work.
+
 ## `package.config.json`
 
 `package.config.json` is machine-readable. It defines package status, Job order, defaults, checkpoints, and acceptance gates.
@@ -61,6 +65,30 @@ It should record:
 - checkpoint references;
 - handoff references;
 - closeout requirements.
+- handoff entrypoint;
+- required reader acknowledgement.
+
+## Reader Acknowledgement
+
+Reader Acknowledgement only applies after work enters a package flow.
+
+Before executor or reviewer work starts on a package or Job, the session should acknowledge that it has read the relevant package summary, package config, Job config, dependencies, allowed areas, forbidden areas, stop conditions, and verification requirements.
+
+The acknowledgement confirms understanding. It does not grant primary/control authority.
+
+`package.config.json` may record `handoff.entrypoint` and `handoff.requiredAcknowledgement`.
+
+## Package Alignment Gate
+
+Package Alignment Gate only applies after work enters a package flow.
+
+Package alignment is required before implementation starts when the package uses isolated executors or reviewers, external CLI execution, human handoff, cross-module or high-risk work, security-sensitive work, data-sensitive work, release-sensitive work, unclear verification, or known ambiguity.
+
+Package alignment is optional for simple direct packages and does not apply to `ad-hoc` work with no package.
+
+Alignment records are review records. They capture reviewer role, understanding restatement, findings, required package revisions, accepted non-blocking risks, and primary/control decision.
+
+Alignment records are review records, not Jobs. Do not add package alignment as a synthetic Job in the Job order.
 
 ## Job Layout
 
@@ -90,6 +118,12 @@ jobs/JOB-001/
 - output contract;
 - required outputs;
 - review requirement.
+- `type`: `delegable | primary-control-only | review-only | blocked`;
+- `stopConditions`;
+- `requiredReturnFormat`;
+- delegation or primary-execution reason when relevant.
+
+Executor completion does not complete the Job. A Job is complete only after required records, verification evidence, review, and primary/control approval are consistent with the package contract.
 
 `record.md` is the executor's execution record. Include actual work summary, changed areas, verification evidence, deviations, remaining risks, and follow-up recommendations. Do not dump raw long logs.
 

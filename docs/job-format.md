@@ -39,14 +39,18 @@ It should record:
 - `schemaVersion`;
 - `jobId`;
 - status;
+- `type`: `delegable | primary-control-only | review-only | blocked`;
 - dependencies;
 - allowed areas;
 - forbidden areas;
+- stop conditions;
 - execution policy;
 - verification commands;
 - output contract;
+- required return format;
 - required outputs;
 - review requirement.
+- delegation reason or primary execution reason when relevant.
 
 Example:
 
@@ -55,9 +59,11 @@ Example:
   "schemaVersion": 1,
   "jobId": "JOB-001",
   "status": "planned",
+  "type": "delegable",
   "dependsOn": [],
   "allowedAreas": ["src", "tests"],
   "forbiddenAreas": ["release"],
+  "stopConditions": ["unexpected release-file changes", "verification cannot run"],
   "executionPolicy": {
     "executor": "multi-session",
     "isolation": "isolated-execution",
@@ -73,9 +79,33 @@ Example:
     "maxLines": 120,
     "includeEvidenceIndex": true
   },
+  "requiredReturnFormat": "record-with-verification-evidence",
   "requiredOutputs": ["record.md", "verification.md"]
 }
 ```
+
+## Completion Gate
+
+Executor completion does not complete the Job.
+
+A Job reaches a completed or approved state only after required records, verification evidence, review, and primary/control approval are consistent with the package contract.
+
+`primary/control` owns completion approval and status updates unless it explicitly records a narrower authorization in the package contract.
+
+## Delegability and Stop Conditions
+
+`type` should be explicit when package work may be delegated.
+
+Allowed values:
+
+- `delegable`: bounded work may be assigned to an executor.
+- `primary-control-only`: only `primary/control` may perform the work.
+- `review-only`: review work without implementation.
+- `blocked`: work cannot start until `primary/control` revises the package or records unblock evidence.
+
+`stopConditions` define situations where executor or reviewer sessions must stop and return control instead of improvising.
+
+`requiredReturnFormat` describes the expected handback shape so the primary/control session can review evidence efficiently.
 
 ## `record.md`
 
