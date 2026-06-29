@@ -26,11 +26,14 @@ The README explains:
 
 `skills/taskforge/references/` contains agent-facing details loaded on demand.
 
+`skills/taskforge/agents/` contains optional platform and tooling metadata. Core discovery must still work from `SKILL.md`.
+
 ## Publishing Principles
 
 - Do not expose local scratch paths or private notes in public documentation.
 - Do not make the skill body a long specification document.
 - Do not duplicate long rules across README, docs, and references.
+- Do not add platform-specific metadata files without a stable schema.
 - Keep public docs readable for humans.
 - Keep references actionable for agents.
 - Keep generated runtime state out of publishable files.

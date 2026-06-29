@@ -23,6 +23,7 @@ TaskForgeSkill/
 │   ├── handoff-and-checkpoint.md
 │   ├── job-format.md
 │   ├── package-format.md
+│   ├── platform-metadata.md
 │   ├── publication.md
 │   ├── role-protocol.md
 │   └── repository-structure.md
@@ -30,6 +31,7 @@ TaskForgeSkill/
 │   └── taskforge/
 │       ├── SKILL.md
 │       ├── agents/
+│       │   ├── generic.json
 │       │   └── openai.yaml
 │       ├── references/
 │       └── modules/
@@ -278,5 +280,6 @@ skills/taskforge/
 - [Handoff and checkpoint](../docs/handoff-and-checkpoint.md)
 - [Engineering discipline](../docs/engineering-discipline.md)
 - [Adapter contract](../docs/adapter-contract.md)
+- [Platform metadata](../docs/platform-metadata.md)
 - [Repository structure](../docs/repository-structure.md)
 - [Publication](../docs/publication.md)

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "name": "taskforge",
+  "displayName": "TaskForge",
+  "shortDescription": "Structured engineering workflow skill",
+  "defaultPrompt": "Use $taskforge to plan, execute, review, and close out an engineering task with durable artifacts.",
+  "entrypoint": "SKILL.md",
+  "visibility": "single-skill-entrypoint",
+  "canonicalInvocation": "$taskforge",
+  "compatibility": {
+    "coreFormat": "Agent Skills SKILL.md",
+    "requires": [
+      "SKILL.md frontmatter name",
+      "SKILL.md frontmatter description"
+    ],
+    "optionalResources": [
+      "references",
+      "modules",
+      "agents"
+    ]
+  },
+  "platformNotes": {
+    "openai": "Use agents/openai.yaml when supported by Codex/OpenAI surfaces.",
+    "claude": "Claude-compatible surfaces should read SKILL.md frontmatter as the core metadata.",
+    "kimi": "No stable platform-specific metadata schema is declared here; use SKILL.md frontmatter and this generic metadata as a human/tooling hint."
+  }
+}

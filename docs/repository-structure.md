@@ -34,6 +34,7 @@ These documents are the main basis for future implementation work:
 - `handoff-and-checkpoint.md`
 - `engineering-discipline.md`
 - `adapter-contract.md`
+- `platform-metadata.md`
 - `publication.md`
 
 ## `skills/taskforge/`
@@ -44,6 +45,7 @@ It contains:
 
 - `SKILL.md`: concise entry point and routing rules;
 - `agents/openai.yaml`: product-facing skill metadata;
+- `agents/generic.json`: platform-neutral metadata for humans and tooling;
 - `references/`: agent-facing operational rules loaded on demand;
 - `modules/`: optional extensions.
 
