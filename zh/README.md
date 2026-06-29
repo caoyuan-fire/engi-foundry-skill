@@ -1,10 +1,10 @@
-# TaskForge
+# TaskForge Skill
 
 TaskForge 是一个平台无关的 AI 辅助工程工作流 skill。
 
 它把工程意图转化为可持久保存、可审查、可交接的成果物：计划、任务包、Job 契约、执行记录、审查记录、验证证据和收尾记录。它适用于小型临时任务、中等规模工程变更，以及可能跨 Codex、Kimi、Claude、本地 CLI 或人类操作者流转的大型多阶段任务包。
 
-TaskForge 是 `agent-delivery-workflow` 的概念继任者，但不再把任何单一产品绑定为永久主控。角色是会话级的，并由成果物和用户意图共同约束。
+TaskForge 不把任何单一产品绑定为永久主控。角色是会话级的，并由成果物和用户意图共同约束。
 
 English documentation: [../README.md](../README.md).
 

@@ -2,11 +2,6 @@
   "name": "taskforge",
   "displayName": "TaskForge",
   "status": "public-layout-draft",
-  "baseLineage": {
-    "baseSkill": "$agent-delivery-workflow",
-    "relationship": "conceptual successor",
-    "statement": "TaskForge is based on lessons from agent-delivery-workflow, but it is a new platform-neutral engineering workflow skill."
-  },
   "skillPath": "skills/taskforge",
   "installModes": {
     "full": {
