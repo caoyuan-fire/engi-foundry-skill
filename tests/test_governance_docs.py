@@ -1,4 +1,5 @@
 import unittest
+import json
 from pathlib import Path
 
 
@@ -65,6 +66,13 @@ class GovernanceDocsTests(unittest.TestCase):
 
         self.assert_contains_all("docs/job-format.md", phrases)
         self.assert_contains_all("skills/engifoundry/references/package-format.md", phrases)
+
+    def test_manifest_maps_review_and_audit_to_engineering_discipline(self):
+        manifest = json.loads(read("engifoundry.manifest.json"))
+        required_for = manifest["modules"]["engineering-discipline"]["requiredFor"]
+
+        self.assertIn("review-only", required_for)
+        self.assertIn("audit", required_for)
 
 
 if __name__ == "__main__":

@@ -41,7 +41,7 @@
       "required": true
     },
     "engineering-discipline": {
-      "requiredFor": ["implementation", "bugfix", "refactor", "verification", "job-execution", "ad-hoc-code-change"],
+      "requiredFor": ["implementation", "bugfix", "refactor", "verification", "job-execution", "review-only", "audit", "ad-hoc-code-change"],
       "localPath": "skills/engifoundry/references/engineering-discipline.md",
       "required": true
     },
