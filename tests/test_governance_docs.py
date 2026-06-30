@@ -180,6 +180,7 @@ class GovernanceDocsTests(unittest.TestCase):
 
     def test_executor_bootstrap_policy_is_explicit_in_installable_skill(self):
         phrases = [
+            "When aligning a new project or new EngiFoundry session to project workflow state, prefer reading `<artifact-root>/execution.config.json`",
             "If no package, Job, prompt, or execution config specifies an executor, use `direct`",
             "If package work requires bounded or isolated execution and no usable executor config exists",
             "safely discover local executor capability or ask the user",
@@ -192,11 +193,22 @@ class GovernanceDocsTests(unittest.TestCase):
             "Do not ask the user to choose an executor when a package, Job, prompt, or `execution.config.json` already names a usable executor",
             "If safe discovery cannot establish a usable bounded executor, ask the user which executor to register or use",
             "Do not infer durable executor capability from product names, installed binaries, or examples alone",
+            "When aligning a new project or new EngiFoundry session to project workflow state, prefer reading `<artifact-root>/execution.config.json`",
+            "This execution-config read is a session-alignment step, not a mandatory read before every ad-hoc task",
+            "If the file is missing, continue with the executor bootstrap rules",
+            "When session alignment or safe discovery reveals missing executor knowledge, suggest recording durable non-sensitive facts",
+            "Do not force a write unless the user asks to persist it or package execution needs a durable executor contract",
         ]
 
         self.assert_contains_all("skills/engifoundry/references/artifact-protocol.md", reference_phrases)
         self.assert_contains_all("docs/configuration.md", reference_phrases)
-        self.assert_contains_all("docs/execution-policy.md", reference_phrases)
+
+        execution_policy_phrases = [
+            phrase
+            for phrase in reference_phrases
+            if phrase != "If the file is missing, continue with the executor bootstrap rules"
+        ]
+        self.assert_contains_all("docs/execution-policy.md", execution_policy_phrases)
 
     def test_executor_liveness_contract_prevents_wait_window_aborts(self):
         phrases = [

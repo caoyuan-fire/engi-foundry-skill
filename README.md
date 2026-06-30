@@ -238,6 +238,8 @@ Example:
 
 For a new project with no usable `execution.config.json`, EngiFoundry uses `direct` for ad-hoc and simple `primary/control` work. If package work requires bounded or isolated execution and no usable executor config exists, primary/control safely discovers local executor capability or asks the user which executor to register or use.
 
+When aligning a new project or new EngiFoundry session, EngiFoundry should read `execution.config.json` after locating the artifact root when that file exists, so executor order, invocation methods, capability fields, and known limitations stay in current-session context. This is not required before every ad-hoc task. If alignment or safe discovery finds missing executor knowledge, EngiFoundry should suggest recording durable non-sensitive facts in the matching `execution.config.json` fields without forcing a write.
+
 Executor choice is separate from quality discipline. EngiFoundry models execution with three independent dimensions:
 
 ```text

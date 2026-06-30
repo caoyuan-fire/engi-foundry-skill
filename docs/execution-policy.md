@@ -107,6 +107,12 @@ If package work requires bounded or isolated execution and no usable executor co
 
 Do not infer durable executor capability from product names, installed binaries, or examples alone.
 
+When aligning a new project or new EngiFoundry session to project workflow state, prefer reading `<artifact-root>/execution.config.json` after locating the artifact root, if the file exists. Use it to keep executor selection order, fallback behavior, invocation methods, capability fields, and known limitations in the current session context.
+
+This execution-config read is a session-alignment step, not a mandatory read before every ad-hoc task.
+
+When session alignment or safe discovery reveals missing executor knowledge, suggest recording durable non-sensitive facts in the matching `execution.config.json` fields, such as `selectionPolicy`, `bestInvocation`, `supportsStdin`, `stdinMode`, `supportsStructuredOutput`, `structuredOutputFormat`, `timeoutBehavior`, `livenessSignals`, `probeBehavior`, `rawStreamPolicy`, `workingDirectoryPolicy`, `supportsParallel`, `supportsReviewOnly`, `knownLimitations`, and `agentNotes`. Do not force a write unless the user asks to persist it or package execution needs a durable executor contract.
+
 ## Executor Liveness Contract
 
 Primary/control must not abort a long-running executor solely because a fixed elapsed-time or wait-turn window has passed.

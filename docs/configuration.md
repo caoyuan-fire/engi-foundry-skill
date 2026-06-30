@@ -43,6 +43,10 @@ Fields:
 
 Project config is a discovery and alignment aid. It should not be treated as a mandatory read before every ad-hoc task. Read it when locating artifact or package roots, resuming package flow, writing durable records, or aligning a new session to project workflow state.
 
+When aligning a new project or new EngiFoundry session to project workflow state, prefer reading `<artifact-root>/execution.config.json` after locating the artifact root, if the file exists. Use it to keep executor selection order, fallback behavior, invocation methods, capability fields, and known limitations in the current session context.
+
+This execution-config read is a session-alignment step, not a mandatory read before every ad-hoc task. If the file is missing, continue with the executor bootstrap rules.
+
 Do not store Git ignore state in project config. Whether the package root is versioned comes from Git behavior, especially `.gitignore` and `git status`.
 
 Do not store roadmap state in project config. The project config locates the artifact root; roadmap state belongs to `<artifact-root>/roadmaps/ROADMAP.md` and `<artifact-root>/roadmaps/roadmap.index.json`.
@@ -171,3 +175,5 @@ Do not ask the user to choose an executor when a package, Job, prompt, or `execu
 If package work requires bounded or isolated execution and no usable executor config exists, `primary/control` should safely discover local executor capability and record durable non-sensitive capability before use. If safe discovery cannot establish a usable bounded executor, ask the user which executor to register or use for that package work.
 
 Do not infer durable executor capability from product names, installed binaries, or examples alone.
+
+When session alignment or safe discovery reveals missing executor knowledge, suggest recording durable non-sensitive facts in the matching `execution.config.json` fields, such as `selectionPolicy`, `bestInvocation`, `supportsStdin`, `stdinMode`, `supportsStructuredOutput`, `structuredOutputFormat`, `timeoutBehavior`, `livenessSignals`, `probeBehavior`, `rawStreamPolicy`, `workingDirectoryPolicy`, `supportsParallel`, `supportsReviewOnly`, `knownLimitations`, and `agentNotes`. Do not force a write unless the user asks to persist it or package execution needs a durable executor contract.

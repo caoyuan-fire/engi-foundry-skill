@@ -238,6 +238,8 @@ execution.config.json
 
 对于没有可用 `execution.config.json` 的新工程，EngiFoundry 对 ad-hoc 和简单 `primary/control` 工作使用 `direct`。如果 package 工作需要有边界或隔离执行，但没有可用 executor 配置，primary/control 会先安全发现本地 executor 能力，无法确认时再询问用户注册或使用哪个 executor。
 
+对齐新工程或新的 EngiFoundry 会话时，EngiFoundry 在定位 artifact root 后应优先读取已存在的 `execution.config.json`，把 executor 顺序、调用方法、能力字段和已知限制带入当前会话上下文。这不是每次 ad-hoc 任务前的强制读取。若对齐或安全发现时发现 executor 认知缺失，EngiFoundry 应建议把可持久、非敏感事实记录到对应 `execution.config.json` 字段，但不强制写入。
+
 executor 选择和质量纪律是分离的。EngiFoundry 用三个独立维度描述执行：
 
 ```text
