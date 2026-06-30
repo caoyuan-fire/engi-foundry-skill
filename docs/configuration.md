@@ -86,15 +86,24 @@ Example:
 ```json
 {
   "schemaVersion": 1,
-  "defaultExecutor": "multi-session",
   "executors": {
     "multi-session": {
       "type": "local-multi-session",
+      "command": "codex",
       "supportsStdin": true,
+      "stdinMode": "prompt-pipe",
+      "bestInvocation": "codex exec --json",
       "supportsStructuredOutput": true,
+      "structuredOutputFormat": "jsonl",
       "outputNoise": "low",
+      "requiresOutputPreprocessing": true,
+      "preprocessingNotes": "Extract the final assistant result from JSONL event output.",
+      "timeoutBehavior": "long-running; wait for process exit or configured watchdog",
+      "workingDirectoryPolicy": "invoke from project root",
       "supportsParallel": true,
-      "supportsReviewOnly": true
+      "supportsReviewOnly": true,
+      "knownLimitations": ["stdout may include non-result events"],
+      "agentNotes": "Use for bounded execution Jobs when structured handback is required."
     }
   },
   "selectionPolicy": {
@@ -107,8 +116,34 @@ Example:
 Fields:
 
 - `schemaVersion`: config schema version.
-- `defaultExecutor`: preferred executor key.
 - `executors`: registry of available executor mechanisms.
-- `selectionPolicy`: priority and fallback behavior.
+- `selectionPolicy`: ordered executor preference and fallback behavior.
 
 Executor configs describe capability and preference. They do not grant package authority by themselves.
+
+## Executor Invocation Profiles
+
+`selectionPolicy.prefer` is ordered. The first available executor in the list is preferred. Later entries are fallback choices in order. This is the default call preference; it does not record user preference.
+
+Job or package contracts may override the global ordered preference when they explicitly name an executor. A prompt may also specify an executor for the current turn, but that does not automatically rewrite `execution.config.json`.
+
+Each `executors.<key>` entry may record an invocation profile:
+
+- `type`: executor family, such as `local-cli`, `external-cli`, `local-multi-session`, or `human`.
+- `command`: command or mechanism name when applicable.
+- `supportsStdin`: whether prompt delivery through standard input is supported.
+- `stdinMode`: known standard-input mode, such as `prompt-pipe`, `interactive-only`, or `unsupported`.
+- `bestInvocation`: preferred command form or invocation mechanism.
+- `supportsStructuredOutput`: whether output can be requested in a stable structured form.
+- `structuredOutputFormat`: structured format name, such as `json`, `jsonl`, or `markdown`.
+- `outputNoise`: `low`, `medium`, or `high`.
+- `requiresOutputPreprocessing`: whether agent output must be cleaned or parsed before review.
+- `preprocessingNotes`: how to clean or parse the output.
+- `timeoutBehavior`: known long-running, watchdog, or polling behavior.
+- `workingDirectoryPolicy`: safest directory from which to invoke the executor.
+- `supportsParallel`: whether parallel executor use is supported.
+- `supportsReviewOnly`: whether review-only use is supported.
+- `knownLimitations`: verified limitations or hazards.
+- `agentNotes`: concise operational notes for later agents.
+
+Agents may update executor invocation profiles only after safe discovery or explicit user instruction. Do not record guesses as durable executor capability.

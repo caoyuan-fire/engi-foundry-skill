@@ -51,6 +51,8 @@ Job overrides belong in `job.config.json`.
 
 Executor capability and preference belong in `execution.config.json`.
 
+`selectionPolicy.prefer` is ordered. The first available executor in the list is preferred. Later entries are fallback choices in order.
+
 ## Executor Capability Fields
 
 Executor entries may describe:
@@ -58,16 +60,29 @@ Executor entries may describe:
 - `type`;
 - `command`;
 - `supportsStdin`;
+- `stdinMode`;
+- `bestInvocation`;
 - `supportsStructuredOutput`;
+- `structuredOutputFormat`;
 - `outputNoise`;
+- `requiresOutputPreprocessing`;
+- `preprocessingNotes`;
+- `timeoutBehavior`;
+- `workingDirectoryPolicy`;
 - `supportsParallel`;
 - `supportsReviewOnly`;
-- `fallback`;
-- `knownRisks`.
+- `knownLimitations`;
+- `agentNotes`.
 
 These fields help primary/control choose an executor. They do not authorize primary-only actions.
 
-When executor capability is unknown, package work must not assume support for stdin prompt delivery, unattended execution, structured output, write access, review-only mode, or watchdog behavior. Record the capability, discover it safely, or ask the user before using it in a package flow.
+## Executor Invocation Profiles
+
+Executor Invocation Profiles are durable notes about how to call each executor. They may record the best invocation, standard-input behavior, structured-output behavior, output noise, preprocessing requirements, timeout behavior, working directory policy, known limitations, and concise agent notes.
+
+Agents may update executor invocation profiles only after safe discovery or explicit user instruction. Do not record guesses as durable executor capability.
+
+When executor capability is unknown, package work must not assume support for stdin prompt delivery, unattended execution, structured output, write access, review-only mode, or watchdog behavior. Record the capability only after safe discovery or explicit user instruction, discover it safely, or ask the user before using it in a package flow.
 
 ## Job Override Rule
 

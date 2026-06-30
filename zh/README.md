@@ -182,22 +182,31 @@ execution.config.json
 ```json
 {
   "schemaVersion": 1,
-  "defaultExecutor": "multi-session",
   "executors": {
     "multi-session": {
       "type": "local-multi-session",
+      "command": "codex",
       "supportsStdin": true,
+      "stdinMode": "prompt-pipe",
+      "bestInvocation": "codex exec --json",
       "supportsStructuredOutput": true,
+      "structuredOutputFormat": "jsonl",
       "outputNoise": "low",
+      "requiresOutputPreprocessing": true,
+      "preprocessingNotes": "Extract the final assistant result from JSONL event output.",
       "supportsParallel": true,
       "supportsReviewOnly": true
     },
     "external-cli": {
       "type": "third-party-cli",
       "command": "kimi",
-      "supportsStdin": true,
+      "supportsStdin": false,
+      "stdinMode": "interactive-only",
+      "bestInvocation": "kimi",
       "supportsStructuredOutput": false,
       "outputNoise": "medium",
+      "requiresOutputPreprocessing": true,
+      "preprocessingNotes": "Manual summary extraction may be required.",
       "supportsParallel": false,
       "supportsReviewOnly": true
     }
@@ -208,6 +217,8 @@ execution.config.json
   }
 }
 ```
+
+`selectionPolicy.prefer` 是有序数组；第一个可用 executor 优先调用。
 
 executor 选择和质量纪律是分离的。EngiFoundry 用三个独立维度描述执行：
 

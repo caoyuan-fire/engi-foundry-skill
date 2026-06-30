@@ -157,6 +157,27 @@ class GovernanceDocsTests(unittest.TestCase):
         self.assert_contains_all("skills/engifoundry/SKILL.md", phrases)
         self.assert_contains_all("docs/publication.md", phrases)
 
+    def test_executor_config_records_invocation_profile_and_ordered_preference(self):
+        phrases = [
+            "Executor Invocation Profiles",
+            "`selectionPolicy.prefer` is ordered",
+            "first available executor in the list is preferred",
+            "`bestInvocation`",
+            "`stdinMode`",
+            "`structuredOutputFormat`",
+            "`requiresOutputPreprocessing`",
+            "`preprocessingNotes`",
+            "`timeoutBehavior`",
+            "`workingDirectoryPolicy`",
+            "`knownLimitations`",
+            "`agentNotes`",
+            "only after safe discovery or explicit user instruction",
+        ]
+
+        self.assert_contains_all("docs/configuration.md", phrases)
+        self.assert_contains_all("docs/execution-policy.md", phrases)
+        self.assert_contains_all("skills/engifoundry/references/artifact-protocol.md", phrases)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -189,15 +189,24 @@ Example:
 ```json
 {
   "schemaVersion": 1,
-  "defaultExecutor": "multi-session",
   "executors": {
     "multi-session": {
       "type": "local-multi-session",
+      "command": "codex",
       "supportsStdin": true,
+      "stdinMode": "prompt-pipe",
+      "bestInvocation": "codex exec --json",
       "supportsStructuredOutput": true,
+      "structuredOutputFormat": "jsonl",
       "outputNoise": "low",
+      "requiresOutputPreprocessing": true,
+      "preprocessingNotes": "Extract the final assistant result from JSONL event output.",
+      "timeoutBehavior": "long-running; wait for process exit or configured watchdog",
+      "workingDirectoryPolicy": "invoke from project root",
       "supportsParallel": true,
-      "supportsReviewOnly": true
+      "supportsReviewOnly": true,
+      "knownLimitations": ["stdout may include non-result events"],
+      "agentNotes": "Use for bounded execution Jobs when structured handback is required."
     }
   },
   "selectionPolicy": {
@@ -208,6 +217,16 @@ Example:
 ```
 
 Executor configs describe capability and preference. They do not grant package authority.
+
+## Executor Invocation Profiles
+
+`selectionPolicy.prefer` is ordered. The first available executor in the list is preferred. Later entries are fallback choices in order. This is the default call preference; it does not record user preference.
+
+Job or package contracts may override the global ordered preference when they explicitly name an executor. A prompt may also specify an executor for the current turn, but that does not automatically rewrite `execution.config.json`.
+
+Each `executors.<key>` entry may record `type`, `command`, `supportsStdin`, `stdinMode`, `bestInvocation`, `supportsStructuredOutput`, `structuredOutputFormat`, `outputNoise`, `requiresOutputPreprocessing`, `preprocessingNotes`, `timeoutBehavior`, `workingDirectoryPolicy`, `supportsParallel`, `supportsReviewOnly`, `knownLimitations`, and `agentNotes`.
+
+Agents may update executor invocation profiles only after safe discovery or explicit user instruction. Do not record guesses as durable executor capability.
 
 ## Git Policy
 

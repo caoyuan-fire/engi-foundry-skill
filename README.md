@@ -182,22 +182,31 @@ Example:
 ```json
 {
   "schemaVersion": 1,
-  "defaultExecutor": "multi-session",
   "executors": {
     "multi-session": {
       "type": "local-multi-session",
+      "command": "codex",
       "supportsStdin": true,
+      "stdinMode": "prompt-pipe",
+      "bestInvocation": "codex exec --json",
       "supportsStructuredOutput": true,
+      "structuredOutputFormat": "jsonl",
       "outputNoise": "low",
+      "requiresOutputPreprocessing": true,
+      "preprocessingNotes": "Extract the final assistant result from JSONL event output.",
       "supportsParallel": true,
       "supportsReviewOnly": true
     },
     "external-cli": {
       "type": "third-party-cli",
       "command": "kimi",
-      "supportsStdin": true,
+      "supportsStdin": false,
+      "stdinMode": "interactive-only",
+      "bestInvocation": "kimi",
       "supportsStructuredOutput": false,
       "outputNoise": "medium",
+      "requiresOutputPreprocessing": true,
+      "preprocessingNotes": "Manual summary extraction may be required.",
       "supportsParallel": false,
       "supportsReviewOnly": true
     }
@@ -208,6 +217,8 @@ Example:
   }
 }
 ```
+
+`selectionPolicy.prefer` is ordered; the first available executor is preferred.
 
 Executor choice is separate from quality discipline. EngiFoundry models execution with three independent dimensions:
 
