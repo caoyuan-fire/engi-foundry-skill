@@ -57,7 +57,7 @@ EngiFoundry has one public entry point and several operating modes:
 | --- | --- |
 | `ad-hoc` | Bounded low-risk work without package ceremony |
 | `package-planning` | Create or revise a structured task package |
-| `package-alignment` | Review a package before execution |
+| `package-alignment` | Review whether package planning can be marked ready |
 | `job-execution` | Execute one or more package Jobs |
 | `review-only` | Review a package, Job result, diff, or implementation |
 | `package-revision` | Update package rules, Job contracts, policies, or records |
@@ -244,7 +244,7 @@ A package is both human-readable and machine-readable.
 
 `summary.md` is for humans only. It explains purpose, scope, non-goals, target state, risks, Job overview, acceptance criteria, and closeout requirements. It is not the source of machine control.
 
-`package.config.json` is the machine-readable package contract. It should define package status, Job order, default execution policy, acceptance gates, checkpoint references, and closeout requirements.
+`package.config.json` is the machine-readable package contract. It should define package planning status, execution status, Job order, default execution policy, acceptance gates, checkpoint references, and closeout requirements.
 
 ## Job Format
 

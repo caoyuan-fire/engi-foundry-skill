@@ -77,7 +77,8 @@ It should record:
 
 - `schemaVersion`;
 - `packageId`;
-- package status;
+- package planning status;
+- package execution status;
 - Job list;
 - Job order and dependencies;
 - default execution policy;
@@ -94,7 +95,12 @@ Example:
 {
   "schemaVersion": 1,
   "packageId": "pkg-example",
-  "status": "planned",
+  "planning": {
+    "status": "draft"
+  },
+  "execution": {
+    "status": "not-started"
+  },
   "jobs": ["JOB-001", "JOB-002"],
   "jobOrder": [
     {
@@ -149,13 +155,19 @@ The acknowledgement does not grant extra authority. It confirms the reader under
 
 Package Alignment Gate only applies after work enters a package flow.
 
-Package alignment is required before implementation starts when the package uses isolated executors or reviewers, external CLI execution, human handoff, cross-module or high-risk work, security-sensitive work, data-sensitive work, release-sensitive work, unclear verification, or known ambiguity.
+A package records only two status dimensions: `planning.status` and `execution.status`. Do not add `alignmentStatus`, `alignmentRequired`, or `alignmentPassed` to the package state model.
+
+Package alignment is a gate for reporting package planning as ready when the package uses isolated executors or reviewers, external CLI execution, human handoff, cross-module or high-risk work, security-sensitive work, data-sensitive work, release-sensitive work, unclear verification, or known ambiguity.
 
 Package alignment is optional for simple direct packages and does not apply to `ad-hoc` work with no package.
 
-Alignment records are review records. They should capture the reviewer role, understanding restatement, findings, required package revisions, accepted non-blocking risks, and primary/control decision.
+Alignment evidence is recorded as review evidence. Alignment records should capture the reviewer role, understanding restatement, findings, required package revisions, accepted non-blocking risks, and primary/control decision.
 
 Alignment records are review records, not Jobs. Do not add package alignment as a synthetic Job in the Job order.
+
+A package may be reported as compiled only after `planning.status` can be set to `ready`. If package alignment finds blocking issues, keep `planning.status` as `draft` or set it to `blocked`, revise the package, and do not report package planning as complete.
+
+Package execution start must check `planning.status=ready`. It must not defer required package alignment to execution startup.
 
 ## Checkpoints and Handoffs
 

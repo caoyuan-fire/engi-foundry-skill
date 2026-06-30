@@ -12,7 +12,8 @@ It should include:
 
 - completed Jobs;
 - pending Jobs;
-- current package status;
+- current package planning status;
+- current package execution status;
 - blocking issues;
 - verification status;
 - review status;

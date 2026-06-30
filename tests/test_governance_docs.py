@@ -178,6 +178,36 @@ class GovernanceDocsTests(unittest.TestCase):
         self.assert_contains_all("docs/execution-policy.md", phrases)
         self.assert_contains_all("skills/engifoundry/references/artifact-protocol.md", phrases)
 
+    def test_package_alignment_is_planning_ready_gate_not_third_status_dimension(self):
+        phrases = [
+            "A package records only two status dimensions: `planning.status` and `execution.status`",
+            "Package alignment is a gate for reporting package planning as ready",
+            "Do not add `alignmentStatus`, `alignmentRequired`, or `alignmentPassed`",
+            "Alignment evidence is recorded as review evidence",
+            "A package may be reported as compiled only after `planning.status` can be set to `ready`",
+            "execution start must check `planning.status=ready`",
+        ]
+
+        self.assert_contains_all("docs/package-format.md", phrases)
+        self.assert_contains_all("skills/engifoundry/references/package-format.md", phrases)
+
+        forbidden_phrases = [
+            "Review a package before execution",
+            "执行前检查任务包是否可执行",
+            "required before implementation starts",
+        ]
+        for path in [
+            "README.md",
+            "zh/README.md",
+            "docs/package-format.md",
+            "skills/engifoundry/SKILL.md",
+            "skills/engifoundry/references/package-format.md",
+        ]:
+            content = read(path)
+            for phrase in forbidden_phrases:
+                with self.subTest(path=path, phrase=phrase):
+                    self.assertNotIn(phrase, content)
+
 
 if __name__ == "__main__":
     unittest.main()

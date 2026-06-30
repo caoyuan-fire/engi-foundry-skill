@@ -15,7 +15,7 @@ Before acting, classify the current request:
 
 1. `ad-hoc`: bounded low-risk task without package ceremony.
 2. `package-planning`: create or revise a structured task package.
-3. `package-alignment`: review a package before execution.
+3. `package-alignment`: review whether package planning can be marked ready.
 4. `job-execution`: execute one or more package Jobs.
 5. `review-only`: review a package, Job result, diff, or implementation.
 6. `package-revision`: update package rules, Job contracts, policies, or records.

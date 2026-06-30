@@ -63,13 +63,14 @@ It may include a Job overview table, but the table is only a readable summary.
 
 ## `package.config.json`
 
-`package.config.json` is machine-readable. It defines package status, Job order, defaults, checkpoints, and acceptance gates.
+`package.config.json` is machine-readable. It defines package planning status, package execution status, Job order, defaults, checkpoints, and acceptance gates.
 
 It should record:
 
 - `schemaVersion`;
 - `packageId`;
-- status;
+- planning status;
+- execution status;
 - Job list;
 - Job order and dependencies;
 - default execution policy;
@@ -94,13 +95,19 @@ The acknowledgement confirms understanding. It does not grant primary/control au
 
 Package Alignment Gate only applies after work enters a package flow.
 
-Package alignment is required before implementation starts when the package uses isolated executors or reviewers, external CLI execution, human handoff, cross-module or high-risk work, security-sensitive work, data-sensitive work, release-sensitive work, unclear verification, or known ambiguity.
+A package records only two status dimensions: `planning.status` and `execution.status`. Do not add `alignmentStatus`, `alignmentRequired`, or `alignmentPassed` to the package state model.
+
+Package alignment is a gate for reporting package planning as ready when the package uses isolated executors or reviewers, external CLI execution, human handoff, cross-module or high-risk work, security-sensitive work, data-sensitive work, release-sensitive work, unclear verification, or known ambiguity.
 
 Package alignment is optional for simple direct packages and does not apply to `ad-hoc` work with no package.
 
-Alignment records are review records. They capture reviewer role, understanding restatement, findings, required package revisions, accepted non-blocking risks, and primary/control decision.
+Alignment evidence is recorded as review evidence. Alignment records capture reviewer role, understanding restatement, findings, required package revisions, accepted non-blocking risks, and primary/control decision.
 
 Alignment records are review records, not Jobs. Do not add package alignment as a synthetic Job in the Job order.
+
+A package may be reported as compiled only after `planning.status` can be set to `ready`. If package alignment finds blocking issues, keep `planning.status` as `draft` or set it to `blocked`, revise the package, and do not report package planning as complete.
+
+Package execution start must check `planning.status=ready`. It must not defer required package alignment to execution startup.
 
 ## Job Layout
 
@@ -177,7 +184,7 @@ Package defaults belong in `package.config.json`. Job overrides belong in `job.c
 
 ## Checkpoints and Handoffs
 
-Checkpoints record package state at pause points: completed Jobs, pending Jobs, package status, blocking issues, verification status, review status, next step, and open primary-only decisions.
+Checkpoints record package state at pause points: completed Jobs, pending Jobs, package planning status, package execution status, blocking issues, verification status, review status, next step, and open primary-only decisions.
 
 Handoffs prepare another session, tool, or human to continue. They should state package id, current status, completed work, incomplete work, next entry point, recommended role, and primary-only decisions.
 
