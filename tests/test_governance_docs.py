@@ -178,6 +178,22 @@ class GovernanceDocsTests(unittest.TestCase):
         self.assert_contains_all("docs/execution-policy.md", phrases)
         self.assert_contains_all("skills/engifoundry/references/artifact-protocol.md", phrases)
 
+    def test_executor_liveness_contract_prevents_wait_window_aborts(self):
+        phrases = [
+            "Executor Liveness Contract",
+            "must not abort a long-running executor solely because a fixed elapsed-time or wait-turn window has passed",
+            "Silence is a reason to probe, not a reason to abort",
+            "`livenessSignals`",
+            "`probeBehavior`",
+            "`stallCriteria`",
+            "`abortCriteria`",
+            "Repeated generic `working` responses without changed phase, evidence, or next action are not sufficient progress evidence",
+        ]
+
+        self.assert_contains_all("docs/adapter-contract.md", phrases)
+        self.assert_contains_all("docs/execution-policy.md", phrases)
+        self.assert_contains_all("skills/engifoundry/references/adapter-contract.md", phrases)
+
     def test_package_alignment_is_planning_ready_gate_not_third_status_dimension(self):
         phrases = [
             "A package records only two status dimensions: `planning.status` and `execution.status`",

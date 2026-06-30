@@ -55,6 +55,23 @@ Watchdog behavior must be explicit. The adapter contract should state how stalle
 
 The adapter contract is not an approval mechanism. It does not override package-first rules, Job dependencies, allowed and forbidden areas, verification requirements, or primary/control-only decisions.
 
+## Executor Liveness Contract
+
+Primary/control must not abort a long-running executor solely because a fixed elapsed-time or wait-turn window has passed.
+
+Silence is a reason to probe, not a reason to abort. Before treating a long-running executor as stalled, primary/control should use the adapter's output retrieval mechanism or an explicit probe to ask for current status, recent externally observable work, next action, and whether the executor is blocked.
+
+An adapter should describe its liveness behavior with durable, non-sensitive fields such as:
+
+- `livenessSignals`: observable evidence that the executor is still active, such as process-alive checks, progress events, structured status messages, or probe responses.
+- `probeBehavior`: how primary/control asks for status when output is quiet or ambiguous.
+- `stallCriteria`: behavior that means the executor is probably not making useful progress.
+- `abortCriteria`: behavior that permits primary/control to stop waiting, fall back, or mark the run blocked.
+
+Repeated generic `working` responses without changed phase, evidence, or next action are not sufficient progress evidence.
+
+Valid abort criteria include process exit without a compliant handback, repeated failed probes, explicit blocked status, repeated non-evidential progress reports, contract violation, or a package/Job stop condition.
+
 ## Configuration
 
 Durable, non-sensitive adapter capability may be recorded in `execution.config.json`.

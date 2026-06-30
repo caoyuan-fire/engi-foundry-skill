@@ -201,7 +201,11 @@ Example:
       "outputNoise": "low",
       "requiresOutputPreprocessing": true,
       "preprocessingNotes": "Extract the final assistant result from JSONL event output.",
-      "timeoutBehavior": "long-running; wait for process exit or configured watchdog",
+      "timeoutBehavior": "long-running; do not abort solely because a fixed elapsed-time or wait-turn window passed",
+      "livenessSignals": ["process-alive", "progress-event", "probe-response"],
+      "probeBehavior": "on silence, request status before fallback or abort",
+      "stallCriteria": "no probe response or repeated non-evidential working reports",
+      "abortCriteria": "process exit without handback, explicit blocked status, repeated failed probes, contract violation, or stop condition",
       "workingDirectoryPolicy": "invoke from project root",
       "supportsParallel": true,
       "supportsReviewOnly": true,
@@ -224,7 +228,7 @@ Executor configs describe capability and preference. They do not grant package a
 
 Job or package contracts may override the global ordered preference when they explicitly name an executor. A prompt may also specify an executor for the current turn, but that does not automatically rewrite `execution.config.json`.
 
-Each `executors.<key>` entry may record `type`, `command`, `supportsStdin`, `stdinMode`, `bestInvocation`, `supportsStructuredOutput`, `structuredOutputFormat`, `outputNoise`, `requiresOutputPreprocessing`, `preprocessingNotes`, `timeoutBehavior`, `workingDirectoryPolicy`, `supportsParallel`, `supportsReviewOnly`, `knownLimitations`, and `agentNotes`.
+Each `executors.<key>` entry may record `type`, `command`, `supportsStdin`, `stdinMode`, `bestInvocation`, `supportsStructuredOutput`, `structuredOutputFormat`, `outputNoise`, `requiresOutputPreprocessing`, `preprocessingNotes`, `timeoutBehavior`, `livenessSignals`, `probeBehavior`, `stallCriteria`, `abortCriteria`, `workingDirectoryPolicy`, `supportsParallel`, `supportsReviewOnly`, `knownLimitations`, and `agentNotes`.
 
 Agents may update executor invocation profiles only after safe discovery or explicit user instruction. Do not record guesses as durable executor capability.
 

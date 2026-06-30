@@ -68,6 +68,10 @@ Executor entries may describe:
 - `requiresOutputPreprocessing`;
 - `preprocessingNotes`;
 - `timeoutBehavior`;
+- `livenessSignals`;
+- `probeBehavior`;
+- `stallCriteria`;
+- `abortCriteria`;
 - `workingDirectoryPolicy`;
 - `supportsParallel`;
 - `supportsReviewOnly`;
@@ -78,11 +82,19 @@ These fields help primary/control choose an executor. They do not authorize prim
 
 ## Executor Invocation Profiles
 
-Executor Invocation Profiles are durable notes about how to call each executor. They may record the best invocation, standard-input behavior, structured-output behavior, output noise, preprocessing requirements, timeout behavior, working directory policy, known limitations, and concise agent notes.
+Executor Invocation Profiles are durable notes about how to call each executor. They may record the best invocation, standard-input behavior, structured-output behavior, output noise, preprocessing requirements, timeout behavior, liveness and probe behavior, working directory policy, known limitations, and concise agent notes.
 
 Agents may update executor invocation profiles only after safe discovery or explicit user instruction. Do not record guesses as durable executor capability.
 
 When executor capability is unknown, package work must not assume support for stdin prompt delivery, unattended execution, structured output, write access, review-only mode, or watchdog behavior. Record the capability only after safe discovery or explicit user instruction, discover it safely, or ask the user before using it in a package flow.
+
+## Executor Liveness Contract
+
+Primary/control must not abort a long-running executor solely because a fixed elapsed-time or wait-turn window has passed.
+
+Silence is a reason to probe, not a reason to abort. If an executor is quiet, primary/control should check adapter-defined `livenessSignals` or use the adapter-defined `probeBehavior` before applying `stallCriteria` or `abortCriteria`.
+
+Repeated generic `working` responses without changed phase, evidence, or next action are not sufficient progress evidence.
 
 ## Job Override Rule
 

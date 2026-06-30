@@ -194,6 +194,11 @@ execution.config.json
       "outputNoise": "low",
       "requiresOutputPreprocessing": true,
       "preprocessingNotes": "Extract the final assistant result from JSONL event output.",
+      "timeoutBehavior": "long-running; do not abort solely because a fixed elapsed-time or wait-turn window passed",
+      "livenessSignals": ["process-alive", "progress-event", "probe-response"],
+      "probeBehavior": "on silence, request status before fallback or abort",
+      "stallCriteria": "no probe response or repeated non-evidential working reports",
+      "abortCriteria": "process exit without handback, explicit blocked status, repeated failed probes, contract violation, or stop condition",
       "supportsParallel": true,
       "supportsReviewOnly": true
     },
@@ -207,6 +212,11 @@ execution.config.json
       "outputNoise": "medium",
       "requiresOutputPreprocessing": true,
       "preprocessingNotes": "Manual summary extraction may be required.",
+      "timeoutBehavior": "human-observed; do not abort solely because a fixed elapsed-time or wait-turn window passed",
+      "livenessSignals": ["human-status", "probe-response"],
+      "probeBehavior": "ask for current status, recent work, next action, and blockers",
+      "stallCriteria": "no response or repeated non-evidential working reports",
+      "abortCriteria": "explicit blocked status, repeated failed probes, contract violation, or stop condition",
       "supportsParallel": false,
       "supportsReviewOnly": true
     }

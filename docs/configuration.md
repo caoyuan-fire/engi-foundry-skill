@@ -98,7 +98,11 @@ Example:
       "outputNoise": "low",
       "requiresOutputPreprocessing": true,
       "preprocessingNotes": "Extract the final assistant result from JSONL event output.",
-      "timeoutBehavior": "long-running; wait for process exit or configured watchdog",
+      "timeoutBehavior": "long-running; do not abort solely because a fixed elapsed-time or wait-turn window passed",
+      "livenessSignals": ["process-alive", "progress-event", "probe-response"],
+      "probeBehavior": "on silence, request status before fallback or abort",
+      "stallCriteria": "no probe response or repeated non-evidential working reports",
+      "abortCriteria": "process exit without handback, explicit blocked status, repeated failed probes, contract violation, or stop condition",
       "workingDirectoryPolicy": "invoke from project root",
       "supportsParallel": true,
       "supportsReviewOnly": true,
@@ -140,6 +144,10 @@ Each `executors.<key>` entry may record an invocation profile:
 - `requiresOutputPreprocessing`: whether agent output must be cleaned or parsed before review.
 - `preprocessingNotes`: how to clean or parse the output.
 - `timeoutBehavior`: known long-running, watchdog, or polling behavior.
+- `livenessSignals`: observable evidence that the executor is still active.
+- `probeBehavior`: how to request status when output is quiet or ambiguous.
+- `stallCriteria`: behavior that means the executor is probably not making useful progress.
+- `abortCriteria`: behavior that permits fallback, blocked status, or abort.
 - `workingDirectoryPolicy`: safest directory from which to invoke the executor.
 - `supportsParallel`: whether parallel executor use is supported.
 - `supportsReviewOnly`: whether review-only use is supported.
