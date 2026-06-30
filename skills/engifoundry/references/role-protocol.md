@@ -29,7 +29,7 @@ If role cannot be inferred, ask the user to choose control takeover or bounded e
 
 Bounded executor/reviewer work may complete the assigned task and write outputs, but `autoDrive=false`; it does not continue the package automatically.
 
-Bounded sessions may write `record.md`, `review.md`, `verification.md`, or an explicit handoff note.
+Bounded sessions may write `record.md`, `review.md`, `verification.md`, or an explicit handoff note under the artifact root package records area.
 
 Bounded sessions must not approve Job completion, modify package scope, modify Job order, modify acceptance policy, revise default execution policy, or drive the next Job automatically.
 

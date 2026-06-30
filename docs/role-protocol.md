@@ -53,7 +53,7 @@ autoDrive=false
 
 That means they do not continue the package automatically after their assigned task.
 
-They may write:
+They may write durable outputs under the artifact root package records area:
 
 - `record.md`;
 - `review.md`;

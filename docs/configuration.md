@@ -25,6 +25,7 @@ Example:
 {
   "schemaVersion": 1,
   "artifactRoot": ".engifoundry",
+  "packageRoot": ".engifoundry-packages",
   "recordsPolicy": "durable",
   "defaultPackagePolicy": "package-when-risky"
 }
@@ -34,10 +35,15 @@ Fields:
 
 - `schemaVersion`: config schema version.
 - `artifactRoot`: output directory for durable EngiFoundry artifacts. Defaults to `.engifoundry`.
+- `packageRoot`: discovery path for task packages and Job contracts. Defaults to `.engifoundry-packages`.
 - `recordsPolicy`: how aggressively EngiFoundry should preserve records.
 - `defaultPackagePolicy`: when EngiFoundry should prefer package mode over ad-hoc mode.
 
-`artifactRoot` may be a relative path. Absolute paths should be used only when the user explicitly requests them.
+`artifactRoot` and `packageRoot` may be relative paths. Absolute paths should be used only when the user explicitly requests them.
+
+Project config is a discovery and alignment aid. It should not be treated as a mandatory read before every ad-hoc task. Read it when locating artifact or package roots, resuming package flow, writing durable records, or aligning a new session to project workflow state.
+
+Do not store Git ignore state in project config. Whether the package root is versioned comes from Git behavior, especially `.gitignore` and `git status`.
 
 ## Artifact Root Config
 

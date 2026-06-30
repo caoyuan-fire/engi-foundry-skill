@@ -7,13 +7,21 @@ Markdown explains. JSON controls.
 ## Directory Layout
 
 ```text
-packages/<package-id>/
+<package-root>/<package-id>/
 ├── summary.md
 ├── package.config.json
+└── jobs/
+    └── JOB-001/
+        ├── job.md
+        └── job.config.json
+```
+
+Package-flow durable outputs use the package records area:
+
+```text
+<artifact-root>/records/packages/<package-id>/
 ├── jobs/
 │   └── JOB-001/
-│       ├── job.md
-│       ├── job.config.json
 │       ├── record.md
 │       ├── review.md
 │       └── verification.md
@@ -25,6 +33,8 @@ packages/<package-id>/
 ## Package Rules
 
 - A package is both human-readable and machine-readable.
+- A package is execution input by default and lives under the package root, not the artifact root.
+- Execution records, reviews, verification evidence, and closeout notes are durable outputs and live under the artifact root.
 - Markdown files carry human meaning and review context.
 - JSON files carry machine-readable control data.
 - JSON must not duplicate long Markdown narratives.

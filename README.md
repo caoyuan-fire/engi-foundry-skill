@@ -4,7 +4,7 @@ EngiFoundry is a platform-neutral engineering workflow skill for AI-assisted sof
 
 Keyword: `engifoundry`.
 
-It turns engineering intent into durable artifacts: plans, task packages, Job contracts, execution records, reviews, verification evidence, and closeout notes. It supports small ad-hoc tasks, medium engineering changes, and large multi-phase packages that may move across tools such as Codex, Kimi, Claude, local CLIs, or human operators.
+It turns engineering intent into execution inputs and durable artifacts: package plans, Job contracts, execution records, reviews, verification evidence, and closeout notes. It supports small ad-hoc tasks, medium engineering changes, and large multi-phase packages that may move across tools such as Codex, Kimi, Claude, local CLIs, or human operators.
 
 EngiFoundry is not tied to any single product as the permanent controller. Roles are session-scoped and artifact-governed.
 
@@ -56,7 +56,7 @@ EngiFoundry has one public entry point and several operating modes:
 | Mode | Purpose |
 | --- | --- |
 | `ad-hoc` | Bounded low-risk work without package ceremony |
-| `package-planning` | Create or revise a durable task package |
+| `package-planning` | Create or revise a structured task package |
 | `package-alignment` | Review a package before execution |
 | `job-execution` | Execute one or more package Jobs |
 | `review-only` | Review a package, Job result, diff, or implementation |
@@ -95,6 +95,7 @@ Example:
 {
   "schemaVersion": 1,
   "artifactRoot": ".engifoundry",
+  "packageRoot": ".engifoundry-packages",
   "recordsPolicy": "durable",
   "defaultPackagePolicy": "package-when-risky"
 }
@@ -102,27 +103,16 @@ Example:
 
 The artifact root is not a runtime cache. EngiFoundry must not write cache, temporary files, session dumps, downloaded modules, or other non-reviewable state into it. If an adapter needs private runtime state, it must use an explicit external cache location, not the artifact root.
 
+The artifact root is for durable work products. The package root is for execution inputs such as task packages and Job contracts.
+
 ## Artifact Root Layout
 
 ```text
 <artifact-root>/
 ├── execution.config.json
-├── packages/
-│   └── <package-id>/
-│       ├── summary.md
-│       ├── package.config.json
-│       ├── jobs/
-│       │   └── JOB-001/
-│       │       ├── job.md
-│       │       ├── job.config.json
-│       │       ├── record.md
-│       │       ├── review.md
-│       │       └── verification.md
-│       ├── checkpoints/
-│       ├── handoffs/
-│       └── closeout.md
 ├── records/
 │   ├── ad-hoc/
+│   ├── packages/
 │   ├── reviews/
 │   └── audits/
 └── docs/
@@ -130,6 +120,23 @@ The artifact root is not a runtime cache. EngiFoundry must not write cache, temp
 ```
 
 The artifact root should contain only durable, inspectable, useful work products.
+
+## Package Root Layout
+
+```text
+<package-root>/
+└── <package-id>/
+    ├── summary.md
+    ├── package.config.json
+    └── jobs/
+        └── JOB-001/
+            ├── job.md
+            └── job.config.json
+```
+
+The default package root is `.engifoundry-packages/`. It is execution input by default, not a delivery artifact.
+
+Package-flow durable outputs, including Job records, reviews, verification evidence, handoff summaries, and closeout notes, live under `<artifact-root>/records/packages/<package-id>/`.
 
 ## Execution Config
 
@@ -186,14 +193,13 @@ discipline = quality preset such as quick, standard, or strict
 A package is both human-readable and machine-readable.
 
 ```text
-packages/<package-id>/
+<package-root>/<package-id>/
 ├── summary.md
 ├── package.config.json
-├── jobs/
-│   └── JOB-001/
-│       ├── job.md
-│       └── job.config.json
-└── closeout.md
+└── jobs/
+    └── JOB-001/
+        ├── job.md
+        └── job.config.json
 ```
 
 `summary.md` is for humans only. It explains purpose, scope, non-goals, target state, risks, Job overview, acceptance criteria, and closeout requirements. It is not the source of machine control.
@@ -202,12 +208,18 @@ packages/<package-id>/
 
 ## Job Format
 
-Each Job is a directory:
+Each Job has control inputs under the package root:
 
 ```text
-jobs/JOB-001/
+<package-root>/<package-id>/jobs/JOB-001/
 ├── job.md
-├── job.config.json
+└── job.config.json
+```
+
+Each Job has durable outputs under the artifact root:
+
+```text
+<artifact-root>/records/packages/<package-id>/jobs/JOB-001/
 ├── record.md
 ├── review.md
 └── verification.md
@@ -255,7 +267,9 @@ Primary-only actions require `primary/control` authority:
 
 The artifact root contains durable work products and should not be ignored by default.
 
-EngiFoundry should not silently modify `.gitignore`. If users do not want artifacts in version control, they may explicitly ignore their chosen artifact root.
+EngiFoundry should not silently modify `.gitignore` for the artifact root. If users do not want artifacts in version control, they may explicitly ignore their chosen artifact root.
+
+The package root is different. It contains execution inputs and may be automatically added to `.gitignore`. EngiFoundry should tell the user only when it first adds that ignore rule. If the user asks to version task packages, or manually edits `.gitignore` so Git reports the package root in `git status`, EngiFoundry should treat package files as versionable. Git is the source of truth; `.engifoundry.config.json` must not store Git ignore state.
 
 ## Installation
 

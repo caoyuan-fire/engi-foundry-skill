@@ -8,18 +8,30 @@ JSON must not duplicate long Markdown narratives. Markdown must not be treated a
 
 Package governance only applies after work enters a package flow; bounded low-risk `ad-hoc` work does not need package artifacts.
 
+A package is execution input by default and lives under the package root, not the artifact root.
+
+Execution records, reviews, verification evidence, and closeout notes are durable outputs and live under the artifact root.
+
 ## Package Layout
 
 Package layout:
 
 ```text
-packages/<package-id>/
+<package-root>/<package-id>/
 ├── summary.md
 ├── package.config.json
+└── jobs/
+    └── JOB-001/
+        ├── job.md
+        └── job.config.json
+```
+
+Package-flow durable outputs use the package records area:
+
+```text
+<artifact-root>/records/packages/<package-id>/
 ├── jobs/
 │   └── JOB-001/
-│       ├── job.md
-│       ├── job.config.json
 │       ├── record.md
 │       ├── review.md
 │       └── verification.md
@@ -92,12 +104,18 @@ Alignment records are review records, not Jobs. Do not add package alignment as 
 
 ## Job Layout
 
-Each Job is a directory:
+Each Job has control inputs under the package root:
 
 ```text
-jobs/JOB-001/
+<package-root>/<package-id>/jobs/JOB-001/
 ├── job.md
-├── job.config.json
+└── job.config.json
+```
+
+Each Job has durable outputs under the artifact root:
+
+```text
+<artifact-root>/records/packages/<package-id>/jobs/JOB-001/
 ├── record.md
 ├── review.md
 └── verification.md

@@ -1,13 +1,19 @@
 # Job Format
 
-Each EngiFoundry Job is a directory with human-readable intent and machine-readable control.
+Each EngiFoundry Job has human-readable intent, machine-readable control, and durable output records.
 
-## Directory Layout
+## Control Input Layout
 
 ```text
-jobs/JOB-001/
+<package-root>/<package-id>/jobs/JOB-001/
 ├── job.md
-├── job.config.json
+└── job.config.json
+```
+
+## Durable Output Layout
+
+```text
+<artifact-root>/records/packages/<package-id>/jobs/JOB-001/
 ├── record.md
 ├── review.md
 └── verification.md
@@ -106,6 +112,8 @@ Allowed values:
 `stopConditions` define situations where executor or reviewer sessions must stop and return control instead of improvising.
 
 `requiredReturnFormat` describes the expected handback shape so the primary/control session can review evidence efficiently.
+
+Required outputs are durable records and should be written under `<artifact-root>/records/packages/<package-id>/jobs/<job-id>/` unless the package contract explicitly records another artifact-root path.
 
 ## `record.md`
 

@@ -74,6 +74,20 @@ class GovernanceDocsTests(unittest.TestCase):
         self.assertIn("review-only", required_for)
         self.assertIn("audit", required_for)
 
+    def test_artifact_and_package_root_git_policy_is_explicit(self):
+        phrases = [
+            "The artifact root is for durable work products",
+            "The package root is for execution inputs",
+            "<artifact-root>/records/packages/<package-id>/",
+            "EngiFoundry may automatically add the package root to `.gitignore`",
+            "Tell the user only when the ignore rule is first added",
+            "Do not store Git ignore state in `.engifoundry.config.json`",
+            "Git is the source of truth",
+        ]
+
+        self.assert_contains_all("docs/artifact-protocol.md", phrases)
+        self.assert_contains_all("skills/engifoundry/references/artifact-protocol.md", phrases)
+
 
 if __name__ == "__main__":
     unittest.main()
