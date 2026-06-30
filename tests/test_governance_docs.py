@@ -88,6 +88,26 @@ class GovernanceDocsTests(unittest.TestCase):
         self.assert_contains_all("docs/artifact-protocol.md", phrases)
         self.assert_contains_all("skills/engifoundry/references/artifact-protocol.md", phrases)
 
+    def test_roadmap_protocol_is_artifact_root_state_not_project_config_state(self):
+        phrases = [
+            "<artifact-root>/roadmaps/",
+            "ROADMAP.md",
+            "roadmap.index.json",
+            "Do not store roadmap state in `.engifoundry.config.json`",
+            "When the user asks what to do next",
+            "If no roadmap exists",
+        ]
+
+        self.assert_contains_all("docs/artifact-protocol.md", phrases)
+        self.assert_contains_all("skills/engifoundry/references/artifact-protocol.md", phrases)
+        self.assert_contains_all(
+            "skills/engifoundry/references/intent-routing.md",
+            [
+                "When the user asks what to do next",
+                "If no roadmap exists",
+            ],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

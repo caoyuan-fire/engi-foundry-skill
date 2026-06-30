@@ -21,4 +21,6 @@ Choose `ad-hoc` for bounded low-risk work. Use package mode for broad, risky, mu
 
 Package-only governance starts when the user asks to create or resume a package, an existing package or Job contract is the target of work, or the task requires durable handoff, delegation, Job sequencing, package records, or package closeout.
 
+When the user asks what to do next, asks to confirm the next step, or requests an engineering decision that depends on prior alignment, check the artifact root for an active roadmap before deciding. If a roadmap exists, use it as decision input together with current progress. If no roadmap exists, decide from the current session context, visible project state, and the user's stated goal.
+
 When the wrong mode could affect quality and context is insufficient, ask one concise question.

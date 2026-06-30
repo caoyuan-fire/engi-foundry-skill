@@ -110,6 +110,10 @@ The artifact root is for durable work products. The package root is for executio
 ```text
 <artifact-root>/
 ├── execution.config.json
+├── roadmaps/
+│   ├── ROADMAP.md
+│   ├── roadmap.index.json
+│   └── archive/
 ├── records/
 │   ├── ad-hoc/
 │   ├── packages/
@@ -120,6 +124,14 @@ The artifact root is for durable work products. The package root is for executio
 ```
 
 The artifact root should contain only durable, inspectable, useful work products.
+
+## Roadmaps
+
+ROADMAP archives are durable alignment artifacts and live under `<artifact-root>/roadmaps/`.
+
+When the user has done requirement alignment, planning, or pre-task discussion and asks to persist it, EngiFoundry writes or updates `ROADMAP.md` and `roadmap.index.json`. When the user asks what to do next or asks to confirm the next step, EngiFoundry checks for an active roadmap and uses it together with current progress. If no roadmap exists, it decides from current session context, visible project state, and the user's stated goal.
+
+Do not store roadmap state in `.engifoundry.config.json`; the project config only locates the artifact root.
 
 ## Package Root Layout
 

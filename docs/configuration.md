@@ -45,6 +45,8 @@ Project config is a discovery and alignment aid. It should not be treated as a m
 
 Do not store Git ignore state in project config. Whether the package root is versioned comes from Git behavior, especially `.gitignore` and `git status`.
 
+Do not store roadmap state in project config. The project config locates the artifact root; roadmap state belongs to `<artifact-root>/roadmaps/ROADMAP.md` and `<artifact-root>/roadmaps/roadmap.index.json`.
+
 ## Artifact Root Config
 
 The artifact root should contain:

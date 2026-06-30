@@ -49,6 +49,10 @@ Artifact root layout:
 ```text
 <artifact-root>/
 ├── execution.config.json
+├── roadmaps/
+│   ├── ROADMAP.md
+│   ├── roadmap.index.json
+│   └── archive/
 ├── records/
 │   ├── ad-hoc/
 │   ├── packages/
@@ -66,6 +70,7 @@ The artifact root stores durable outputs only:
 - closeout records;
 - ad-hoc records;
 - audit records;
+- roadmap archives;
 - generated docs with review or delivery value.
 
 Do not write these into the artifact root:
@@ -81,6 +86,27 @@ Do not write these into the artifact root:
 - transient executor state.
 
 If an adapter needs runtime state, use an explicit external location outside the artifact root.
+
+## Roadmaps
+
+ROADMAP archives are durable alignment artifacts. They capture agreed planning, requirement alignment, sequencing decisions, and next-step intent that may guide the current session or a later session.
+
+Roadmaps live under the artifact root:
+
+```text
+<artifact-root>/roadmaps/
+├── ROADMAP.md
+├── roadmap.index.json
+└── archive/
+```
+
+`ROADMAP.md` is the current roadmap. `roadmap.index.json` is the artifact-root-local roadmap index and may record `schemaVersion`, `current`, `updatedAt`, `source`, and whether the current roadmap should be considered active input for planning decisions.
+
+Create or update a ROADMAP archive when the user has performed requirement alignment, planning, roadmap, or pre-task discussion and asks to persist, archive, save, land, or use it as later execution input.
+
+When the user asks what to do next, asks to confirm the next step, or requests an engineering decision that depends on prior alignment, EngiFoundry should check the artifact root for an active roadmap. If a roadmap exists, use it as decision input together with current progress. If no roadmap exists, decide from the current session context, visible project state, and the user's stated goal.
+
+Do not store roadmap state in `.engifoundry.config.json`. The project config locates the artifact root. The roadmap files and `roadmap.index.json` are the source of truth for roadmap state.
 
 Package-flow durable outputs live under:
 
