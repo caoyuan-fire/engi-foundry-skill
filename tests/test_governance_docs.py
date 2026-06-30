@@ -108,6 +108,43 @@ class GovernanceDocsTests(unittest.TestCase):
             ],
         )
 
+    def test_artifact_protocol_has_directory_function_table(self):
+        phrases = [
+            "## Directory Function Table",
+            "| Path | Category | Purpose | Must Not Contain |",
+            "`<artifact-root>/records/ad-hoc/`",
+            "`<artifact-root>/records/packages/<package-id>/`",
+            "`<artifact-root>/records/reviews/`",
+            "`<artifact-root>/records/audits/`",
+            "`<artifact-root>/directory.config.json`",
+            "`<artifact-root>/docs/generated/`",
+            "`<artifact-root>/docs/integration/`",
+            "`<artifact-root>/docs/design/`",
+            "`<artifact-root>/docs/reference/`",
+            "`<artifact-root>/docs/archive/`",
+            "`<package-root>/<package-id>/`",
+            "Execution input",
+            "Durable output",
+        ]
+
+        self.assert_contains_all("docs/artifact-protocol.md", phrases)
+        self.assert_contains_all("skills/engifoundry/references/artifact-protocol.md", phrases)
+
+    def test_initialization_scripts_are_documented(self):
+        phrases = [
+            "## Initialization Scripts",
+            "create_root_config",
+            "create_standard_dirs",
+            "create_directory_config",
+            "Templates are formal editable files",
+            "POSIX shell",
+            "PowerShell",
+            "do not require Python",
+        ]
+
+        self.assert_contains_all("docs/configuration.md", phrases)
+        self.assert_contains_all("README.md", phrases)
+
 
 if __name__ == "__main__":
     unittest.main()

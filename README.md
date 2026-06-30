@@ -110,6 +110,7 @@ The artifact root is for durable work products. The package root is for executio
 ```text
 <artifact-root>/
 ├── execution.config.json
+├── directory.config.json
 ├── roadmaps/
 │   ├── ROADMAP.md
 │   ├── roadmap.index.json
@@ -120,7 +121,11 @@ The artifact root is for durable work products. The package root is for executio
 │   ├── reviews/
 │   └── audits/
 └── docs/
-    └── generated/
+    ├── generated/
+    ├── integration/
+    ├── design/
+    ├── reference/
+    └── archive/
 ```
 
 The artifact root should contain only durable, inspectable, useful work products.
@@ -132,6 +137,18 @@ ROADMAP archives are durable alignment artifacts and live under `<artifact-root>
 When the user has done requirement alignment, planning, or pre-task discussion and asks to persist it, EngiFoundry writes or updates `ROADMAP.md` and `roadmap.index.json`. When the user asks what to do next or asks to confirm the next step, EngiFoundry checks for an active roadmap and uses it together with current progress. If no roadmap exists, it decides from current session context, visible project state, and the user's stated goal.
 
 Do not store roadmap state in `.engifoundry.config.json`; the project config only locates the artifact root.
+
+## Initialization Scripts
+
+EngiFoundry includes functional initialization scripts for macOS, Linux, and Windows. They do not require Python.
+
+Run them in order:
+
+1. `create_root_config`
+2. `create_standard_dirs`
+3. `create_directory_config`
+
+Templates are formal editable files, not reference examples. Use the POSIX shell `.sh` scripts on macOS/Linux and the PowerShell `.ps1` scripts on Windows. Configuration template scripts support `empty` and `filled` modes, with values supplied from prompt context when available.
 
 ## Package Root Layout
 

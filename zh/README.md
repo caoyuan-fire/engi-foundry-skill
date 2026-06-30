@@ -110,6 +110,7 @@ artifact root 用于持久成果物。package root 用于任务包和 Job 契约
 ```text
 <artifact-root>/
 ├── execution.config.json
+├── directory.config.json
 ├── roadmaps/
 │   ├── ROADMAP.md
 │   ├── roadmap.index.json
@@ -120,7 +121,11 @@ artifact root 用于持久成果物。package root 用于任务包和 Job 契约
 │   ├── reviews/
 │   └── audits/
 └── docs/
-    └── generated/
+    ├── generated/
+    ├── integration/
+    ├── design/
+    ├── reference/
+    └── archive/
 ```
 
 artifact root 只应包含持久、可检查、有价值的工作成果。
@@ -132,6 +137,18 @@ ROADMAP 存档是持久对齐成果物，位于 `<artifact-root>/roadmaps/`。
 当用户已经做过需求对齐、规划或任务前讨论，并要求持久化、保存、归档或落地时，EngiFoundry 写入或更新 `ROADMAP.md` 和 `roadmap.index.json`。当用户询问“下一步做什么”或要求确认下一步时，EngiFoundry 检查是否存在 active roadmap，并结合当前进展使用它做决策。若不存在 roadmap，则根据当前会话上下文、可见工程状态和用户声明的目标决策。
 
 不要在 `.engifoundry.config.json` 中保存 roadmap 状态；项目根配置只负责定位 artifact root。
+
+## 初始化脚本
+
+EngiFoundry 提供面向 macOS、Linux 和 Windows 的功能性初始化脚本。它们不依赖 Python。
+
+按以下顺序执行：
+
+1. `create_root_config`
+2. `create_standard_dirs`
+3. `create_directory_config`
+
+Templates are formal editable files，不是参考示例。macOS/Linux 使用 `.sh` 脚本，Windows 使用 `.ps1` 脚本。配置模板脚本支持 `empty` 和 `filled` 模式；当 prompt 上下文已有明确值时，由 agent 映射为脚本参数。
 
 ## 任务包根目录结构
 

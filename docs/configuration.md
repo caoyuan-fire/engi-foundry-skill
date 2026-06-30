@@ -47,6 +47,28 @@ Do not store Git ignore state in project config. Whether the package root is ver
 
 Do not store roadmap state in project config. The project config locates the artifact root; roadmap state belongs to `<artifact-root>/roadmaps/ROADMAP.md` and `<artifact-root>/roadmaps/roadmap.index.json`.
 
+## Initialization Scripts
+
+EngiFoundry provides functional initialization scripts for macOS, Linux, and Windows. They do not require Python. Use POSIX shell scripts on macOS and Linux, and PowerShell scripts on Windows.
+
+Run them in this order:
+
+1. `create_root_config`
+2. `create_standard_dirs`
+3. `create_directory_config`
+
+Templates are formal editable files. They are not examples or reference snippets; they are pre-generated standard files intended to be edited and committed when appropriate.
+
+Script pairs:
+
+| Purpose | macOS/Linux | Windows |
+| --- | --- | --- |
+| Create project root config | `skills/engifoundry/scripts/create_root_config.sh` | `skills/engifoundry/scripts/create_root_config.ps1` |
+| Create standard directory structure | `skills/engifoundry/scripts/create_standard_dirs.sh` | `skills/engifoundry/scripts/create_standard_dirs.ps1` |
+| Create artifact-root directory config | `skills/engifoundry/scripts/create_directory_config.sh` | `skills/engifoundry/scripts/create_directory_config.ps1` |
+
+Configuration template scripts support `empty` and `filled` modes. Agents should map prompt context into script parameters instead of asking users to hand-write commands when the needed values are already clear.
+
 ## Artifact Root Config
 
 The artifact root should contain:

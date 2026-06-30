@@ -49,6 +49,7 @@ Artifact root layout:
 ```text
 <artifact-root>/
 ├── execution.config.json
+├── directory.config.json
 ├── roadmaps/
 │   ├── ROADMAP.md
 │   ├── roadmap.index.json
@@ -59,8 +60,33 @@ Artifact root layout:
 │   ├── reviews/
 │   └── audits/
 └── docs/
-    └── generated/
+    ├── generated/
+    ├── integration/
+    ├── design/
+    ├── reference/
+    └── archive/
 ```
+
+## Directory Function Table
+
+| Path | Category | Purpose | Must Not Contain |
+| --- | --- | --- | --- |
+| `<project-root>/.engifoundry.config.json` | Project discovery config | Locates EngiFoundry roots and durable workflow defaults for session alignment. | Secrets, tokens, runtime state, Git ignore state, roadmap state. |
+| `<artifact-root>/execution.config.json` | Artifact-root execution config | Records executor registry and selection policy. | Secrets, tokens, package authority grants, transient executor state. |
+| `<artifact-root>/directory.config.json` | Artifact-root directory config | Records the standard directory taxonomy as a formal editable file. | Runtime state, secrets, task package content, raw logs. |
+| `<artifact-root>/roadmaps/ROADMAP.md` | Durable output | Current roadmap for requirement alignment, sequencing, and next-step decisions. | Raw chat dumps, private runtime state, package control JSON. |
+| `<artifact-root>/roadmaps/roadmap.index.json` | Artifact-root index | Points to the current roadmap and records roadmap metadata. | Project root discovery settings, Git ignore state, secrets. |
+| `<artifact-root>/roadmaps/archive/` | Durable output archive | Historical roadmap snapshots that still have alignment or audit value. | Temporary drafts, cache files, raw model logs. |
+| `<artifact-root>/records/ad-hoc/` | Durable output | Records from bounded low-risk work that did not enter package flow. | Task package control inputs, caches, session dumps. |
+| `<artifact-root>/records/packages/<package-id>/` | Durable output | Package-flow execution records, reviews, verification evidence, checkpoints, handoffs, and closeout notes. | Package root control inputs unless copied as explicit evidence; raw long logs; private state. |
+| `<artifact-root>/records/reviews/` | Durable output | Review-only records that are not owned by a specific package record tree. | Implementation scratch files, task package control inputs, secrets. |
+| `<artifact-root>/records/audits/` | Durable output | Process, cost, quality, migration, policy, and workflow retrospective records. | Runtime cache, downloaded modules, unreviewable session dumps. |
+| `<artifact-root>/docs/generated/` | Durable output | Generated documents with review, delivery, or handoff value. | Cache output, throwaway drafts, raw model logs. |
+| `<artifact-root>/docs/integration/` | Durable output | Host integration, API integration, installation, and adapter-facing user documentation. | Executor runtime state, package control JSON. |
+| `<artifact-root>/docs/design/` | Durable output | Architecture, UX, data-flow, test-strategy, and domain design documents. | Temporary scratch notes, raw chat transcripts. |
+| `<artifact-root>/docs/reference/` | Durable input reference | External or upstream reference material used as context for decisions. | Secrets, credentials, downloaded dependency caches. |
+| `<artifact-root>/docs/archive/` | Durable output archive | Historical documents that remain useful as readable background but are not current records. | Current ROADMAP, active package contracts, cache files. |
+| `<package-root>/<package-id>/` | Execution input | Task package summary, package control JSON, Job contracts, and package-flow control data. | Execution records, reviews, verification evidence, closeout notes, raw logs. |
 
 The artifact root stores durable outputs only:
 
