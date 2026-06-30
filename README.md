@@ -302,6 +302,8 @@ The package root is different. It contains execution inputs and may be automatic
 
 ## Installation
 
+The installed skill version is recorded in `skills/engifoundry/VERSION`. Version is a maintenance label. EngiFoundry may check for updates at most once per session during first alignment when network access is available; no-update and failed checks stay silent.
+
 Full installation is recommended. Copy or symlink the installable skill folder:
 
 ```text

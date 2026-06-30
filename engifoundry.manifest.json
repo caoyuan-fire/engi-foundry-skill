@@ -1,6 +1,7 @@
 {
   "name": "engifoundry",
   "displayName": "EngiFoundry",
+  "version": "0.1.0",
   "status": "public-layout-draft",
   "skillPath": "skills/engifoundry",
   "installModes": {
@@ -14,6 +15,11 @@
     }
   },
   "scripts": {
+    "checkVersion": {
+      "posixPath": "skills/engifoundry/scripts/check_version.sh",
+      "powershellPath": "skills/engifoundry/scripts/check_version.ps1",
+      "description": "Low-noise optional version check for EngiFoundry skill updates."
+    },
     "resolveModule": {
       "path": "skills/engifoundry/scripts/resolve_module.py",
       "description": "Resolve missing EngiFoundry modules from local paths, cache, or the declared GitHub remote source."

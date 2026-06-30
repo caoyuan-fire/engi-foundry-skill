@@ -145,6 +145,18 @@ class GovernanceDocsTests(unittest.TestCase):
         self.assert_contains_all("docs/configuration.md", phrases)
         self.assert_contains_all("README.md", phrases)
 
+    def test_skill_version_policy_is_low_noise_and_documented(self):
+        phrases = [
+            "Skill version is a maintenance label",
+            "Check at most once per session",
+            "only when network access is available",
+            "must not block normal EngiFoundry work",
+            "check_version",
+        ]
+
+        self.assert_contains_all("skills/engifoundry/SKILL.md", phrases)
+        self.assert_contains_all("docs/publication.md", phrases)
+
 
 if __name__ == "__main__":
     unittest.main()

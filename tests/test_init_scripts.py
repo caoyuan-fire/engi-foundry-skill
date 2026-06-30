@@ -22,14 +22,15 @@ class InitScriptsTests(unittest.TestCase):
         return result
 
     def test_cross_platform_init_scripts_are_present(self):
-        for stem in ["create_root_config", "create_standard_dirs", "create_directory_config"]:
+        for stem in ["create_root_config", "create_standard_dirs", "create_directory_config", "check_version"]:
             with self.subTest(script=stem):
                 self.assertTrue((SCRIPTS / f"{stem}.sh").exists())
                 ps1 = SCRIPTS / f"{stem}.ps1"
                 self.assertTrue(ps1.exists())
                 content = ps1.read_text(encoding="utf-8")
                 self.assertIn("param(", content)
-                self.assertIn("ProjectRoot", content)
+                if stem != "check_version":
+                    self.assertIn("ProjectRoot", content)
 
     def test_root_config_script_creates_empty_and_filled_formal_files(self):
         with tempfile.TemporaryDirectory() as tmp:

@@ -31,6 +31,31 @@ The README explains:
 
 `skills/engifoundry/scripts/` contains deterministic helper scripts that support optional workflows such as module resolution.
 
+## Version Policy
+
+Skill version is a maintenance label, not a hard execution requirement.
+
+The canonical installable version is recorded in:
+
+```text
+skills/engifoundry/VERSION
+```
+
+The repository manifest should carry the same version:
+
+```text
+engifoundry.manifest.json
+```
+
+Check at most once per session, during the first EngiFoundry alignment, only when network access is available. Use `check_version` scripts for this low-noise check:
+
+```text
+skills/engifoundry/scripts/check_version.sh
+skills/engifoundry/scripts/check_version.ps1
+```
+
+If no newer version is available, say nothing. If the check fails or network is unavailable, do not mention it unless the user explicitly asks. Version checks must not block normal EngiFoundry work.
+
 ## Publishing Principles
 
 - Do not expose local scratch paths or private notes in public documentation.
