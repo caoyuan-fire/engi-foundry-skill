@@ -54,6 +54,8 @@ Before using an adapter for package work, `primary/control` must know or record 
 
 Do not assume stdin support. If prompt delivery or stdin behavior is unknown, discover it with a harmless command or ask the user before using the adapter for real package work.
 
+For a new project with no usable `execution.config.json`, direct execution is the default for ad-hoc and simple `primary/control` work. Ask the user to choose an executor only when package work needs bounded or isolated execution and safe discovery cannot establish a usable bounded executor.
+
 Watchdog behavior must be explicit. The adapter contract should state how stalled, silent, timed-out, or partial executor runs are detected and reported.
 
 The adapter contract is not an approval mechanism. It does not override package-first rules, Job dependencies, allowed and forbidden areas, verification requirements, or primary/control-only decisions.

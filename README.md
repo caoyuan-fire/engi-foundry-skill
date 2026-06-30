@@ -236,6 +236,8 @@ Example:
 
 `selectionPolicy.prefer` is ordered; the first available executor is preferred.
 
+For a new project with no usable `execution.config.json`, EngiFoundry uses `direct` for ad-hoc and simple `primary/control` work. If package work requires bounded or isolated execution and no usable executor config exists, primary/control safely discovers local executor capability or asks the user which executor to register or use.
+
 Executor choice is separate from quality discipline. EngiFoundry models execution with three independent dimensions:
 
 ```text

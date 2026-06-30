@@ -97,6 +97,16 @@ Agents may update executor invocation profiles only after safe discovery or expl
 
 When executor capability is unknown, package work must not assume support for stdin prompt delivery, unattended execution, structured output, write access, review-only mode, or watchdog behavior. Record the capability only after safe discovery or explicit user instruction, discover it safely, or ask the user before using it in a package flow.
 
+## Executor Bootstrap
+
+When no package, Job, prompt, or `execution.config.json` specifies an executor, use `direct` for ad-hoc work and simple `primary/control` work.
+
+Do not ask the user to choose an executor when a package, Job, prompt, or `execution.config.json` already names a usable executor. Apply the explicit contract first, then the ordered `selectionPolicy.prefer`, then its fallback.
+
+If package work requires bounded or isolated execution and no usable executor config exists, `primary/control` should safely discover local executor capability and record durable non-sensitive capability before use. If safe discovery cannot establish a usable bounded executor, ask the user which executor to register or use for that package work.
+
+Do not infer durable executor capability from product names, installed binaries, or examples alone.
+
 ## Executor Liveness Contract
 
 Primary/control must not abort a long-running executor solely because a fixed elapsed-time or wait-turn window has passed.

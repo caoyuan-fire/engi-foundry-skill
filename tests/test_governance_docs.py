@@ -178,6 +178,26 @@ class GovernanceDocsTests(unittest.TestCase):
         self.assert_contains_all("docs/execution-policy.md", phrases)
         self.assert_contains_all("skills/engifoundry/references/artifact-protocol.md", phrases)
 
+    def test_executor_bootstrap_policy_is_explicit_in_installable_skill(self):
+        phrases = [
+            "If no package, Job, prompt, or execution config specifies an executor, use `direct`",
+            "If package work requires bounded or isolated execution and no usable executor config exists",
+            "safely discover local executor capability or ask the user",
+        ]
+        self.assert_contains_all("skills/engifoundry/SKILL.md", phrases)
+
+        reference_phrases = [
+            "Executor Bootstrap",
+            "When no package, Job, prompt, or `execution.config.json` specifies an executor, use `direct`",
+            "Do not ask the user to choose an executor when a package, Job, prompt, or `execution.config.json` already names a usable executor",
+            "If safe discovery cannot establish a usable bounded executor, ask the user which executor to register or use",
+            "Do not infer durable executor capability from product names, installed binaries, or examples alone",
+        ]
+
+        self.assert_contains_all("skills/engifoundry/references/artifact-protocol.md", reference_phrases)
+        self.assert_contains_all("docs/configuration.md", reference_phrases)
+        self.assert_contains_all("docs/execution-policy.md", reference_phrases)
+
     def test_executor_liveness_contract_prevents_wait_window_aborts(self):
         phrases = [
             "Executor Liveness Contract",

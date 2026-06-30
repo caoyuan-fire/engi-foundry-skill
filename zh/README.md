@@ -236,6 +236,8 @@ execution.config.json
 
 `selectionPolicy.prefer` 是有序数组；第一个可用 executor 优先调用。
 
+对于没有可用 `execution.config.json` 的新工程，EngiFoundry 对 ad-hoc 和简单 `primary/control` 工作使用 `direct`。如果 package 工作需要有边界或隔离执行，但没有可用 executor 配置，primary/control 会先安全发现本地 executor 能力，无法确认时再询问用户注册或使用哪个 executor。
+
 executor 选择和质量纪律是分离的。EngiFoundry 用三个独立维度描述执行：
 
 ```text

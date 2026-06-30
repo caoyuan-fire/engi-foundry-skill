@@ -235,6 +235,16 @@ Each `executors.<key>` entry may record `type`, `command`, `supportsStdin`, `std
 
 Agents may update executor invocation profiles only after safe discovery or explicit user instruction. Do not record guesses as durable executor capability.
 
+## Executor Bootstrap
+
+When no package, Job, prompt, or `execution.config.json` specifies an executor, use `direct` for ad-hoc work and simple `primary/control` work.
+
+Do not ask the user to choose an executor when a package, Job, prompt, or `execution.config.json` already names a usable executor. Apply the explicit contract first, then the ordered `selectionPolicy.prefer`, then its fallback.
+
+If package work requires bounded or isolated execution and no usable executor config exists, `primary/control` should safely discover local executor capability and record durable non-sensitive capability before use. If safe discovery cannot establish a usable bounded executor, ask the user which executor to register or use for that package work.
+
+Do not infer durable executor capability from product names, installed binaries, or examples alone.
+
 ## Git Policy
 
 Do not silently modify `.gitignore` for the artifact root. The artifact root is presumed reviewable and useful unless the user says otherwise.

@@ -48,6 +48,8 @@ Read only the references needed by the classified mode:
 - Bounded executor/reviewer work has `autoDrive=false`; finish the assigned task and stop.
 - When a package or Job contract exists, bounded executor/reviewer work must follow the package-first conflict rule.
 - Primary-only actions require `primary/control` authority.
+- If no package, Job, prompt, or execution config specifies an executor, use `direct` for ad-hoc and simple `primary/control` work.
+- If package work requires bounded or isolated execution and no usable executor config exists, safely discover local executor capability or ask the user before using a bounded executor.
 - The artifact root defaults to `.engifoundry/`, unless `.engifoundry.config.json` or the user specifies another path.
 - The artifact root is for durable work products only. Do not write cache, temporary files, session dumps, credentials, or private runtime state there.
 - The package root defaults to `.engifoundry-packages/`, unless `.engifoundry.config.json` or the user specifies another path.
