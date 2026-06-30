@@ -103,6 +103,9 @@ Example:
       "probeBehavior": "on silence, request status before fallback or abort",
       "stallCriteria": "no probe response or repeated non-evidential working reports",
       "abortCriteria": "process exit without handback, explicit blocked status, repeated failed probes, contract violation, or stop condition",
+      "heartbeatSchema": ["status", "phase", "last_event", "next", "needs_control", "blocked_reason"],
+      "finalReportSchema": ["job_id", "status", "changed_files", "behavior_summary", "evidence_paths", "verification", "known_gaps", "recommendation"],
+      "rawStreamPolicy": "do not ingest raw executor streams during normal monitoring; read only on failure, blocked execution, verification mismatch, strict review escalation, or explicit user request",
       "workingDirectoryPolicy": "invoke from project root",
       "supportsParallel": true,
       "supportsReviewOnly": true,
@@ -148,6 +151,9 @@ Each `executors.<key>` entry may record an invocation profile:
 - `probeBehavior`: how to request status when output is quiet or ambiguous.
 - `stallCriteria`: behavior that means the executor is probably not making useful progress.
 - `abortCriteria`: behavior that permits fallback, blocked status, or abort.
+- `heartbeatSchema`: compact progress fields used during normal monitoring.
+- `finalReportSchema`: compact handback fields used for primary/control review.
+- `rawStreamPolicy`: when raw executor output may be read and how it is kept out of normal monitoring context.
 - `workingDirectoryPolicy`: safest directory from which to invoke the executor.
 - `supportsParallel`: whether parallel executor use is supported.
 - `supportsReviewOnly`: whether review-only use is supported.

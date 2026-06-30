@@ -199,6 +199,9 @@ execution.config.json
       "probeBehavior": "on silence, request status before fallback or abort",
       "stallCriteria": "no probe response or repeated non-evidential working reports",
       "abortCriteria": "process exit without handback, explicit blocked status, repeated failed probes, contract violation, or stop condition",
+      "heartbeatSchema": ["status", "phase", "last_event", "next", "needs_control", "blocked_reason"],
+      "finalReportSchema": ["job_id", "status", "changed_files", "behavior_summary", "evidence_paths", "verification", "known_gaps", "recommendation"],
+      "rawStreamPolicy": "read raw stream only on failure, blocked execution, verification mismatch, strict review escalation, or explicit user request",
       "supportsParallel": true,
       "supportsReviewOnly": true
     },
@@ -217,6 +220,9 @@ execution.config.json
       "probeBehavior": "ask for current status, recent work, next action, and blockers",
       "stallCriteria": "no response or repeated non-evidential working reports",
       "abortCriteria": "explicit blocked status, repeated failed probes, contract violation, or stop condition",
+      "heartbeatSchema": ["status", "phase", "last_event", "next", "needs_control", "blocked_reason"],
+      "finalReportSchema": ["job_id", "status", "changed_files", "behavior_summary", "evidence_paths", "verification", "known_gaps", "recommendation"],
+      "rawStreamPolicy": "human observed; summarize raw output before review context unless escalated",
       "supportsParallel": false,
       "supportsReviewOnly": true
     }
@@ -237,6 +243,8 @@ executor   = 谁或什么机制执行工作
 isolation  = 执行/审查上下文如何隔离
 discipline = quick、standard、strict 等质量预设
 ```
+
+正常监视期间，primary/control 不应持续摄入 executor 的原始输出流。`quick` 优先 direct execution 或只接收最终报告；`standard` 优先紧凑 heartbeat 和紧凑最终 handback；`strict` 保留更强的审查和证据要求，但仍避免默认摄入原始输出流。
 
 ## 任务包格式
 

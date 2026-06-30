@@ -83,7 +83,8 @@ Example:
   "outputContract": {
     "format": "markdown-summary",
     "maxLines": 120,
-    "includeEvidenceIndex": true
+    "includeEvidenceIndex": true,
+    "rawStreamPolicy": "summary-only"
   },
   "requiredReturnFormat": "record-with-verification-evidence",
   "requiredOutputs": ["record.md", "verification.md"]
@@ -112,6 +113,10 @@ Allowed values:
 `stopConditions` define situations where executor or reviewer sessions must stop and return control instead of improvising.
 
 `requiredReturnFormat` describes the expected handback shape so the primary/control session can review evidence efficiently.
+
+`outputContract` carries detailed formatting and verbosity constraints. `requiredReturnFormat` is the named handback shape, `requiredOutputs` is the durable file checklist, and `outputContract` defines limits such as maximum length, evidence-index requirements, and raw stream handling.
+
+Normal executor handback should be compact. It should include enough evidence paths and known gaps for primary/control review without copying raw command logs, full file contents, or verbose process streams.
 
 Required outputs are durable records and should be written under `<artifact-root>/records/packages/<package-id>/jobs/<job-id>/` unless the package contract explicitly records another artifact-root path.
 

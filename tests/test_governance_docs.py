@@ -194,6 +194,24 @@ class GovernanceDocsTests(unittest.TestCase):
         self.assert_contains_all("docs/execution-policy.md", phrases)
         self.assert_contains_all("skills/engifoundry/references/adapter-contract.md", phrases)
 
+    def test_executor_output_cost_controls_limit_primary_stream_ingestion(self):
+        phrases = [
+            "Executor Output Cost Control",
+            "Primary/control should not continuously ingest raw executor streams during normal monitoring",
+            "Monitor liveness through compact heartbeats, probe responses, and final handback",
+            "Raw executor streams should be read only for failure investigation, blocked execution, verification mismatch, strict review escalation, or explicit user request",
+            "`heartbeatSchema`",
+            "`finalReportSchema`",
+            "`rawStreamPolicy`",
+            "quick: prefer direct execution or final-report-only executor handback",
+            "standard: prefer compact heartbeats and compact final handback",
+            "strict: keep stronger review and evidence requirements while still avoiding default raw-stream ingestion",
+        ]
+
+        self.assert_contains_all("docs/execution-policy.md", phrases)
+        self.assert_contains_all("docs/adapter-contract.md", phrases)
+        self.assert_contains_all("skills/engifoundry/references/adapter-contract.md", phrases)
+
     def test_package_alignment_is_planning_ready_gate_not_third_status_dimension(self):
         phrases = [
             "A package records only two status dimensions: `planning.status` and `execution.status`",

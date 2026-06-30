@@ -206,6 +206,9 @@ Example:
       "probeBehavior": "on silence, request status before fallback or abort",
       "stallCriteria": "no probe response or repeated non-evidential working reports",
       "abortCriteria": "process exit without handback, explicit blocked status, repeated failed probes, contract violation, or stop condition",
+      "heartbeatSchema": ["status", "phase", "last_event", "next", "needs_control", "blocked_reason"],
+      "finalReportSchema": ["job_id", "status", "changed_files", "behavior_summary", "evidence_paths", "verification", "known_gaps", "recommendation"],
+      "rawStreamPolicy": "do not ingest raw executor streams during normal monitoring; read only on failure, blocked execution, verification mismatch, strict review escalation, or explicit user request",
       "workingDirectoryPolicy": "invoke from project root",
       "supportsParallel": true,
       "supportsReviewOnly": true,
@@ -228,7 +231,7 @@ Executor configs describe capability and preference. They do not grant package a
 
 Job or package contracts may override the global ordered preference when they explicitly name an executor. A prompt may also specify an executor for the current turn, but that does not automatically rewrite `execution.config.json`.
 
-Each `executors.<key>` entry may record `type`, `command`, `supportsStdin`, `stdinMode`, `bestInvocation`, `supportsStructuredOutput`, `structuredOutputFormat`, `outputNoise`, `requiresOutputPreprocessing`, `preprocessingNotes`, `timeoutBehavior`, `livenessSignals`, `probeBehavior`, `stallCriteria`, `abortCriteria`, `workingDirectoryPolicy`, `supportsParallel`, `supportsReviewOnly`, `knownLimitations`, and `agentNotes`.
+Each `executors.<key>` entry may record `type`, `command`, `supportsStdin`, `stdinMode`, `bestInvocation`, `supportsStructuredOutput`, `structuredOutputFormat`, `outputNoise`, `requiresOutputPreprocessing`, `preprocessingNotes`, `timeoutBehavior`, `livenessSignals`, `probeBehavior`, `stallCriteria`, `abortCriteria`, `heartbeatSchema`, `finalReportSchema`, `rawStreamPolicy`, `workingDirectoryPolicy`, `supportsParallel`, `supportsReviewOnly`, `knownLimitations`, and `agentNotes`.
 
 Agents may update executor invocation profiles only after safe discovery or explicit user instruction. Do not record guesses as durable executor capability.
 

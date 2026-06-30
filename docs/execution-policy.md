@@ -43,6 +43,12 @@ Recommended presets:
 - `standard`: default package work with explicit records and verification.
 - `strict`: high-risk, cross-module, release-sensitive, architecture, data, or security-related work requiring stronger isolation and review.
 
+Collaboration intensity should scale with the discipline preset:
+
+- quick: prefer direct execution or final-report-only executor handback.
+- standard: prefer compact heartbeats and compact final handback.
+- strict: keep stronger review and evidence requirements while still avoiding default raw-stream ingestion.
+
 ## Policy Location
 
 Package defaults belong in `package.config.json`.
@@ -72,6 +78,9 @@ Executor entries may describe:
 - `probeBehavior`;
 - `stallCriteria`;
 - `abortCriteria`;
+- `heartbeatSchema`;
+- `finalReportSchema`;
+- `rawStreamPolicy`;
 - `workingDirectoryPolicy`;
 - `supportsParallel`;
 - `supportsReviewOnly`;
@@ -95,6 +104,26 @@ Primary/control must not abort a long-running executor solely because a fixed el
 Silence is a reason to probe, not a reason to abort. If an executor is quiet, primary/control should check adapter-defined `livenessSignals` or use the adapter-defined `probeBehavior` before applying `stallCriteria` or `abortCriteria`.
 
 Repeated generic `working` responses without changed phase, evidence, or next action are not sufficient progress evidence.
+
+## Executor Output Cost Control
+
+Executor output control reduces accidental primary/control token loss during monitoring. It must not weaken verification, review authority, durable evidence, or package-first rules.
+
+Primary/control should not continuously ingest raw executor streams during normal monitoring.
+
+Monitor liveness through compact heartbeats, probe responses, and final handback. Heartbeats and probes are operational signals, not audit evidence.
+
+Raw executor streams should be read only for failure investigation, blocked execution, verification mismatch, strict review escalation, or explicit user request.
+
+Adapters and executor profiles may declare:
+
+- `heartbeatSchema`: compact progress fields such as status, phase, last external action, next external action, whether control is needed, and blocker reason.
+- `finalReportSchema`: compact handback fields such as job id, status, changed files, behavior summary, evidence paths, verification result, known gaps, and recommendation.
+- `rawStreamPolicy`: where raw executor output lives, when it may be read, and how much should enter primary/control context.
+
+Executor prompts should prefer targeted searches, concise evidence indexes, and bounded file reads over full file dumps. Final reports should be compact enough for review while preserving evidence paths and known gaps.
+
+Verbose command output, raw tool streams, and long logs are not durable records by default. If they are needed for failure analysis, summarize the relevant evidence in `record.md`, `verification.md`, or `review.md` instead of copying raw long logs.
 
 ## Job Override Rule
 

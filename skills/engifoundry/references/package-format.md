@@ -141,16 +141,20 @@ Each Job has durable outputs under the artifact root:
 - execution policy;
 - verification commands;
 - output contract;
+- required return format;
 - required outputs;
 - review requirement.
 - `type`: `delegable | primary-control-only | review-only | blocked`;
 - `stopConditions`;
-- `requiredReturnFormat`;
 - delegation or primary-execution reason when relevant.
 
 Executor completion does not complete the Job. A Job is complete only after required records, verification evidence, review, and primary/control approval are consistent with the package contract.
 
-`record.md` is the executor's execution record. Include actual work summary, changed areas, verification evidence, deviations, remaining risks, and follow-up recommendations. Do not dump raw long logs.
+`outputContract` carries detailed formatting and verbosity constraints. `requiredReturnFormat` is the named handback shape, `requiredOutputs` is the durable file checklist, and `outputContract` defines limits such as maximum length, evidence-index requirements, and raw stream handling.
+
+Normal executor handback should be compact. It should include enough evidence paths and known gaps for primary/control review without copying raw command logs, full file contents, or verbose process streams.
+
+`record.md` is the executor's execution record. Include actual work summary, changed areas, verification evidence, deviations, remaining risks, and follow-up recommendations. Do not dump raw long logs. Prefer concise evidence indexes.
 
 `review.md` is reviewer output. Include result (`pass`, `blocked`, or `needs-rework`), findings, evidence, affected acceptance criteria, required rework, and follow-up review requirements.
 

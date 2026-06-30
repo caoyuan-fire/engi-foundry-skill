@@ -21,6 +21,9 @@ An adapter must state:
 - timeout or watchdog behavior;
 - output noise;
 - structured output support;
+- heartbeat schema;
+- final report schema;
+- raw stream policy;
 - known risks;
 - fallback behavior.
 
@@ -71,6 +74,28 @@ An adapter should describe its liveness behavior with durable, non-sensitive fie
 Repeated generic `working` responses without changed phase, evidence, or next action are not sufficient progress evidence.
 
 Valid abort criteria include process exit without a compliant handback, repeated failed probes, explicit blocked status, repeated non-evidential progress reports, contract violation, or a package/Job stop condition.
+
+## Executor Output Cost Control
+
+Adapters should help primary/control avoid accidental token loss from monitoring noise.
+
+Primary/control should not continuously ingest raw executor streams during normal monitoring.
+
+Monitor liveness through compact heartbeats, probe responses, and final handback. Raw executor streams should be read only for failure investigation, blocked execution, verification mismatch, strict review escalation, or explicit user request.
+
+An adapter should describe durable, non-sensitive output-control behavior:
+
+- `heartbeatSchema`: fields emitted for compact progress reporting.
+- `finalReportSchema`: fields emitted for compact handback.
+- `rawStreamPolicy`: whether raw streams are hidden, summarized, retained outside the artifact root, or available only on escalation.
+
+If an adapter cannot suppress raw stream output, record that limitation in `knownLimitations` and prefer bounded executor prompts, targeted reads, and structured final handback.
+
+quick: prefer direct execution or final-report-only executor handback.
+
+standard: prefer compact heartbeats and compact final handback.
+
+strict: keep stronger review and evidence requirements while still avoiding default raw-stream ingestion.
 
 ## Configuration
 

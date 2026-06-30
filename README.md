@@ -199,6 +199,9 @@ Example:
       "probeBehavior": "on silence, request status before fallback or abort",
       "stallCriteria": "no probe response or repeated non-evidential working reports",
       "abortCriteria": "process exit without handback, explicit blocked status, repeated failed probes, contract violation, or stop condition",
+      "heartbeatSchema": ["status", "phase", "last_event", "next", "needs_control", "blocked_reason"],
+      "finalReportSchema": ["job_id", "status", "changed_files", "behavior_summary", "evidence_paths", "verification", "known_gaps", "recommendation"],
+      "rawStreamPolicy": "read raw stream only on failure, blocked execution, verification mismatch, strict review escalation, or explicit user request",
       "supportsParallel": true,
       "supportsReviewOnly": true
     },
@@ -217,6 +220,9 @@ Example:
       "probeBehavior": "ask for current status, recent work, next action, and blockers",
       "stallCriteria": "no response or repeated non-evidential working reports",
       "abortCriteria": "explicit blocked status, repeated failed probes, contract violation, or stop condition",
+      "heartbeatSchema": ["status", "phase", "last_event", "next", "needs_control", "blocked_reason"],
+      "finalReportSchema": ["job_id", "status", "changed_files", "behavior_summary", "evidence_paths", "verification", "known_gaps", "recommendation"],
+      "rawStreamPolicy": "human observed; summarize raw output before review context unless escalated",
       "supportsParallel": false,
       "supportsReviewOnly": true
     }
@@ -237,6 +243,8 @@ executor   = who or what performs the work
 isolation  = how separated the execution/review context is
 discipline = quality preset such as quick, standard, or strict
 ```
+
+During normal monitoring, primary/control should not continuously ingest raw executor streams. `quick` prefers direct execution or final-report-only handback; `standard` prefers compact heartbeats and compact final handback; `strict` keeps stronger review and evidence requirements while still avoiding default raw-stream ingestion.
 
 ## Package Format
 
