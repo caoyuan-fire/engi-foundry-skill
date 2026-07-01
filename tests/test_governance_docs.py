@@ -134,8 +134,9 @@ class GovernanceDocsTests(unittest.TestCase):
         ])
         self.assert_contains_all("zh/README.md", [
             ".agents/plugins/marketplace.json",
-            "Git marketplace",
-            "不要维护 `~/plugins/` 下的本地镜像作为事实来源",
+            ".codex-plugin/plugin.json",
+            "详细安装和发布规则见",
+            "通过你原来的安装渠道更新",
         ])
 
         manifest = json.loads(read("engifoundry.manifest.json"))
@@ -204,6 +205,18 @@ class GovernanceDocsTests(unittest.TestCase):
             "Detailed installation and publication rules live in",
             "Keep root documentation readable for humans",
         ])
+        self.assert_contains_all("zh/README.md", [
+            "# EngiFoundry",
+            "## 快速开始",
+            "## 工作方式",
+            "## 安装",
+            "## 更新",
+            "## 包含内容",
+            "## 开发",
+            "## License",
+            "详细安装和发布规则见",
+            "根 README 应保持为面向人类的入口文档",
+        ])
         self.assert_contains_all("docs/publication.md", [
             "Keep README as a human-facing project entry point, not a protocol specification",
             "Do not duplicate long rules across README, docs, and references",
@@ -223,6 +236,20 @@ class GovernanceDocsTests(unittest.TestCase):
         for phrase in forbidden_phrases:
             with self.subTest(phrase=phrase):
                 self.assertNotIn(phrase, readme)
+
+        zh_readme = read("zh/README.md")
+        zh_forbidden_phrases = [
+            "## 成果物根目录",
+            "## 成果物目录结构",
+            "## 执行配置",
+            "## 任务包格式",
+            "## Job 格式",
+            "Package Alignment Gate",
+            "```json",
+        ]
+        for phrase in zh_forbidden_phrases:
+            with self.subTest(phrase=phrase):
+                self.assertNotIn(phrase, zh_readme)
 
     def test_package_governance_constraints_are_synced_to_installable_references(self):
         expectations = {
@@ -370,9 +397,8 @@ class GovernanceDocsTests(unittest.TestCase):
             "Do not require the user to request initialization as a separate step",
         ])
         self.assert_contains_all("zh/README.md", [
-            "## 自动初始化",
-            "EngiFoundry 支持惰性自动初始化",
-            "不要要求用户把“初始化 EngiFoundry 工作目录”作为规划、创建任务包、使用 roadmap、记录执行、审查、验证或 closeout 之前的单独步骤",
+            "不要求用户单独发起“初始化”或“编制任务包”请求",
+            "[Artifact protocol](../docs/artifact-protocol.md)",
         ])
 
     def test_skill_version_policy_is_low_noise_and_documented(self):
@@ -508,11 +534,8 @@ class GovernanceDocsTests(unittest.TestCase):
             "[Package format](docs/package-format.md)",
         ])
         self.assert_contains_all("zh/README.md", [
-            "在设置或汇报 `planning.status=ready` 之前",
-            "primary/control 自审不是充分证据",
-            "不要停在 `planning.status=draft` 询问是否要执行 alignment",
-            "必须自动推进所需 alignment",
-            "package 必须保持 `draft` 或 `blocked`",
+            "范围大、高风险、多步骤、含糊或需要交接的变更使用结构化任务包",
+            "[Package format](../docs/package-format.md)",
         ])
 
         forbidden_phrases = [
