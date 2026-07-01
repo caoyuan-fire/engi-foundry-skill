@@ -78,7 +78,9 @@ If no newer version is available, say nothing. If the check fails or network is 
 
 When a user asks to install EngiFoundry from a GitHub repository, installers must prefer plugin installation if the target host supports plugins and the repository contains that host's plugin manifest.
 
-For Codex-compatible hosts, `.codex-plugin/plugin.json` makes the repository a plugin package. A request phrased as "install the latest EngiFoundry skill from GitHub" or "install this skill: <repository URL>" should still install the plugin package, not only copy `skills/engifoundry/`.
+For Codex-compatible hosts, `.agents/plugins/marketplace.json` makes the GitHub repository a marketplace, and `.codex-plugin/plugin.json` makes the repository root the `engifoundry-bundle` plugin package. A request phrased as "install the latest EngiFoundry skill from GitHub" or "install this skill: <repository URL>" should add the hosted repository as a Git marketplace and install the plugin from that marketplace, not copy `skills/engifoundry/` or maintain a local `~/plugins/` mirror as the source of truth.
+
+Codex updates must refresh the configured Git marketplace snapshot and reinstall from that hosted marketplace. Local source directories are acceptable only as transient Codex cache output, not as maintained plugin sources.
 
 For Claude-compatible hosts, `.claude-plugin/plugin.json` provides the same plugin-first signal.
 

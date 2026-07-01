@@ -82,6 +82,9 @@ class GovernanceDocsTests(unittest.TestCase):
             "install the latest EngiFoundry skill from GitHub",
             "install this skill: <repository URL>",
             "Skills-only installation is a compatibility fallback",
+            ".agents/plugins/marketplace.json",
+            "Updates must be pulled from the hosted repository snapshot",
+            "do not maintain a separate local mirror under `~/plugins/` as the source of truth",
         ]
 
         self.assert_contains_all("README.md", phrases)
@@ -89,14 +92,33 @@ class GovernanceDocsTests(unittest.TestCase):
             "## Installer Contract",
             "install the latest EngiFoundry skill from GitHub",
             "install this skill: <repository URL>",
-            "plugin package, not only copy `skills/engifoundry/`",
+            "add the hosted repository as a Git marketplace",
+            "refresh the configured Git marketplace snapshot",
+            "not as maintained plugin sources",
             "Skills-only installation is a fallback",
+        ])
+        self.assert_contains_all("docs/platform-metadata.md", [
+            ".agents/plugins/marketplace.json",
+            "hosted marketplace installation requests",
+            "maintaining a separate local `~/plugins/` source mirror",
+        ])
+        self.assert_contains_all("zh/README.md", [
+            ".agents/plugins/marketplace.json",
+            "Git marketplace",
+            "不要维护 `~/plugins/` 下的本地镜像作为事实来源",
         ])
 
         manifest = json.loads(read("engifoundry.manifest.json"))
         self.assertEqual(manifest["installModes"]["preference"], "plugin-first")
         self.assertEqual(manifest["installModes"]["full"]["preferred"], "plugin")
         self.assertTrue(manifest["installModes"]["plugin"]["recommended"])
+
+    def test_repository_declares_github_marketplace_entry(self):
+        marketplace = json.loads(read(".agents/plugins/marketplace.json"))
+        self.assertEqual(marketplace["name"], "engi-foundry-skill")
+        self.assertEqual(marketplace["plugins"][0]["name"], "engifoundry-bundle")
+        self.assertEqual(marketplace["plugins"][0]["source"]["source"], "local")
+        self.assertEqual(marketplace["plugins"][0]["source"]["path"], ".")
 
     def test_plugin_and_skills_only_installation_are_exclusive(self):
         phrases = [

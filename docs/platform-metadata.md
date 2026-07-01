@@ -27,18 +27,20 @@ That frontmatter contains the required `name` and `description` fields. Platform
 EngiFoundry includes a Codex plugin manifest:
 
 ```text
+.agents/plugins/marketplace.json
 .codex-plugin/plugin.json
 ```
 
 The plugin package name is `engifoundry-bundle`. The package name intentionally differs from the main `$engifoundry` skill name so host UIs that expose both plugin packages and skills do not show two ambiguous `engifoundry` entries.
 
-The Codex plugin manifest declares:
+The Codex marketplace and plugin manifests declare:
 
+- the Git-hosted marketplace entry for `engifoundry-bundle`;
 - the plugin name and interface metadata;
 - the shared `skills/` directory;
 - the `engifoundry-gate` autoload gate and `engifoundry` main entry through normal skill discovery.
 
-Codex-compatible installers should treat repository-level requests such as "install the latest EngiFoundry skill from GitHub" or "install this skill: <repository URL>" as plugin installation requests when `.codex-plugin/plugin.json` is present. Copying only `skills/engifoundry/` is not the preferred full installation.
+Codex-compatible installers should treat repository-level requests such as "install the latest EngiFoundry skill from GitHub" or "install this skill: <repository URL>" as hosted marketplace installation requests when `.agents/plugins/marketplace.json` and `.codex-plugin/plugin.json` are present. Copying only `skills/engifoundry/`, or maintaining a separate local `~/plugins/` source mirror, is not the preferred full installation.
 
 EngiFoundry also includes OpenAI/Codex-facing UI metadata:
 

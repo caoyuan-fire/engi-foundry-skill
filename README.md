@@ -366,11 +366,12 @@ Plugin installation is the preferred full installation mode when the host suppor
 Codex-compatible installations use:
 
 ```text
+.agents/plugins/marketplace.json
 .codex-plugin/plugin.json
 skills/
 ```
 
-For a prompt such as "install the latest EngiFoundry skill from GitHub" or "install this skill: <repository URL>", a Codex-compatible installer should treat this repository as a plugin package because `.codex-plugin/plugin.json` is present, then install the plugin so the `engifoundry-gate` and `engifoundry` entries are discovered from the shared `skills/` directory.
+For a prompt such as "install the latest EngiFoundry skill from GitHub" or "install this skill: <repository URL>", a Codex-compatible installer should add the GitHub repository as a Git marketplace and install `engifoundry-bundle` from that hosted marketplace. Updates must be pulled from the hosted repository snapshot; do not maintain a separate local mirror under `~/plugins/` as the source of truth.
 
 Claude-compatible installations use:
 

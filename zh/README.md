@@ -344,11 +344,12 @@ package root 不同。它保存执行依据，可以被 EngiFoundry 自动加入
 Codex 兼容安装使用：
 
 ```text
+.agents/plugins/marketplace.json
 .codex-plugin/plugin.json
 skills/
 ```
 
-对于“从 GitHub 安装最新 EngiFoundry skill”或“安装这个 skill: <repository URL>”这类提示，Codex 兼容安装器应因为仓库存在 `.codex-plugin/plugin.json` 而将其视为插件包，并安装插件，使 `engifoundry-gate` 和 `engifoundry` 通过共享的 `skills/` 目录被发现。
+对于“从 GitHub 安装最新 EngiFoundry skill”或“安装这个 skill: <repository URL>”这类提示，Codex 兼容安装器应将 GitHub 仓库添加为 Git marketplace，并从该托管 marketplace 安装 `engifoundry-bundle`。更新必须从托管仓库 snapshot 拉取；不要维护 `~/plugins/` 下的本地镜像作为事实来源。
 
 Claude 兼容安装使用：
 
