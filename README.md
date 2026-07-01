@@ -393,6 +393,8 @@ to the target agent's skills directory. For Codex skills-only installation:
 
 Then restart the host so skill metadata is rescanned.
 
+Do not install both the plugin package and skills-only entries into the same host home. If the plugin is installed, do not also copy `skills/engifoundry-gate/` or `skills/engifoundry/` into that host's global skills directory; doing both exposes duplicate `$engifoundry-gate` and `$engifoundry` entries.
+
 Kernel-only installation is supported for lightweight sharing. It requires `SKILL.md`, `engifoundry.manifest.json`, and `skills/engifoundry/scripts/resolve_module.py`. Missing modules are resolved from the declared GitHub source only after explicit confirmation, and downloaded modules are cached outside any project artifact root.
 
 ## Documentation

@@ -373,6 +373,8 @@ skills/engifoundry/
 
 然后重启宿主，让它重新扫描 skill metadata。
 
+不要在同一个 host home 中同时安装插件包和 skills-only 入口。如果已经安装插件，不要再把 `skills/engifoundry-gate/` 或 `skills/engifoundry/` 复制到该宿主的全局 skills 目录；两者并存会暴露重复的 `$engifoundry-gate` 和 `$engifoundry` 条目。
+
 也支持 kernel-only 轻量分享模式。该模式需要 `SKILL.md`、`engifoundry.manifest.json` 和 `skills/engifoundry/scripts/resolve_module.py`。缺失模块只会在用户明确确认后从 manifest 声明的 GitHub 源下载，下载内容会缓存到项目 artifact root 之外。
 
 ## 文档

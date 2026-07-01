@@ -81,3 +81,5 @@ For Codex-compatible hosts, `.codex-plugin/plugin.json` makes the repository a p
 For Claude-compatible hosts, `.claude-plugin/plugin.json` provides the same plugin-first signal.
 
 Skills-only installation is a fallback for hosts without plugin support or for explicit user requests for skills-only installation.
+
+Plugin installation and skills-only installation are mutually exclusive within one host home. Do not keep plugin-provided skill entries and copied global skill entries for the same EngiFoundry version in the same host home, because the host may expose duplicate `$engifoundry-gate` and `$engifoundry` entries.

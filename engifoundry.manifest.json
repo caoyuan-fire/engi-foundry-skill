@@ -24,6 +24,7 @@
     },
     "skillsOnly": {
       "supported": true,
+      "exclusiveWith": ["plugin"],
       "description": "Fallback installation for hosts without plugin support or explicit skills-only requests. Install both skills/engifoundry-gate and skills/engifoundry."
     },
     "kernelOnly": {

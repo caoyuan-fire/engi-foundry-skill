@@ -81,6 +81,21 @@ class GovernanceDocsTests(unittest.TestCase):
         self.assertEqual(manifest["installModes"]["full"]["preferred"], "plugin")
         self.assertTrue(manifest["installModes"]["plugin"]["recommended"])
 
+    def test_plugin_and_skills_only_installation_are_exclusive(self):
+        phrases = [
+            "Do not install both the plugin package and skills-only entries into the same host home",
+            "duplicate `$engifoundry-gate` and `$engifoundry` entries",
+        ]
+
+        self.assert_contains_all("README.md", phrases)
+        self.assert_contains_all("docs/publication.md", [
+            "Plugin installation and skills-only installation are mutually exclusive within one host home",
+            "duplicate `$engifoundry-gate` and `$engifoundry` entries",
+        ])
+
+        manifest = json.loads(read("engifoundry.manifest.json"))
+        self.assertIn("plugin", manifest["installModes"]["skillsOnly"]["exclusiveWith"])
+
     def test_package_governance_constraints_are_synced_to_installable_references(self):
         expectations = {
             "role-protocol.md": [
