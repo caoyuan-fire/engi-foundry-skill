@@ -393,11 +393,15 @@ class GovernanceDocsTests(unittest.TestCase):
         phrases = [
             "A package records only two status dimensions: `planning.status` and `execution.status`",
             "Before setting or reporting `planning.status=ready`, primary/control must evaluate whether Package Alignment Gate is required",
+            "When the user asks to create, compile, or prepare a task package, primary/control must treat `planning.status=ready` as the target state for the same request",
+            "Do not stop at `planning.status=draft` to ask whether alignment should run",
             "Package alignment is a hard gate for reporting package planning as ready",
             "Do not add `alignmentStatus`, `alignmentRequired`, or `alignmentPassed`",
             "any Job uses an executor other than `direct`",
             "primary/control self-review is not sufficient evidence",
+            "primary/control must automatically drive the required alignment work in the same turn",
             "must not write `planning.status=ready`",
+            "Stopping at `draft` is only acceptable when a concrete blocker prevents a ready package",
             "report package planning as complete",
             "Alignment evidence is recorded as review evidence",
             "reviewer identity",
@@ -409,14 +413,23 @@ class GovernanceDocsTests(unittest.TestCase):
 
         self.assert_contains_all("docs/package-format.md", phrases)
         self.assert_contains_all("skills/engifoundry/references/package-format.md", phrases)
+        self.assert_contains_all("skills/engifoundry/SKILL.md", [
+            "When the user asks to create, compile, or prepare a task package",
+            "must target `planning.status=ready` in the same request",
+            "do not stop at draft to ask whether alignment should run",
+        ])
         self.assert_contains_all("README.md", [
             "Before setting or reporting `planning.status=ready`, primary/control must evaluate Package Alignment Gate",
             "Primary/control self-review is not sufficient evidence",
+            "Do not stop at `planning.status=draft` to ask whether alignment should run",
+            "automatically drive the required alignment work",
             "the package must remain `draft` or `blocked`",
         ])
         self.assert_contains_all("zh/README.md", [
             "在设置或汇报 `planning.status=ready` 之前",
             "primary/control 自审不是充分证据",
+            "不要停在 `planning.status=draft` 询问是否要执行 alignment",
+            "必须自动推进所需 alignment",
             "package 必须保持 `draft` 或 `blocked`",
         ])
 

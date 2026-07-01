@@ -278,6 +278,8 @@ discipline = quick、standard、strict 等质量预设
 
 在设置或汇报 `planning.status=ready` 之前，primary/control 必须评估 Package Alignment Gate。只要任何 Job 使用非 `direct` 执行、隔离执行或审查、external CLI、handoff、后续会话执行，或涉及高风险的跨模块、构建、AIDL、发布、安全、数据、目标设备行为，或验证路径不清、存在已知歧义，就必须先取得独立 alignment review。primary/control 自审不是充分证据；没有通过的独立审查时，package 必须保持 `draft` 或 `blocked`。
 
+当用户要求创建、编制或准备任务包时，primary/control 必须把 `planning.status=ready` 作为同一请求的目标状态。不要停在 `planning.status=draft` 询问是否要执行 alignment。只要存在可用 reviewer、clean session、external CLI 或已配置 executor，primary/control 必须自动推进所需 alignment；只有存在阻止 ready 的具体 blocker，或用户明确要求保留 draft 时，才可以停在 `draft`。
+
 ## Job 格式
 
 每个 Job 的控制输入位于 package root：

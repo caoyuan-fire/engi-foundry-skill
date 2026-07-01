@@ -296,6 +296,8 @@ A package is both human-readable and machine-readable.
 
 Before setting or reporting `planning.status=ready`, primary/control must evaluate Package Alignment Gate. If any Job uses non-`direct` execution, isolated execution or review, external CLI execution, handoff, later-session execution, high-risk cross-module/build/AIDL/release/security/data/target-device behavior, unclear verification, or known ambiguity, independent alignment review is required. Primary/control self-review is not sufficient evidence, and without a passing independent review the package must remain `draft` or `blocked`.
 
+When the user asks to create, compile, or prepare a task package, primary/control must treat `planning.status=ready` as the target state for the same request. Do not stop at `planning.status=draft` to ask whether alignment should run. Primary/control must automatically drive the required alignment work when a usable reviewer, clean session, external CLI, or configured executor is available; stopping at `draft` is only acceptable when a concrete blocker prevents a ready package or the user explicitly asks for a draft.
+
 ## Job Format
 
 Each Job has control inputs under the package root:
