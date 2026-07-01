@@ -38,9 +38,13 @@ class GovernanceDocsTests(unittest.TestCase):
         ])
 
     def test_dual_entry_plugin_gate_contract_is_documented(self):
-        phrases = [
+        readme_phrases = [
             "$engifoundry-gate",
             "$engifoundry",
+            "The gate only decides whether EngiFoundry is available in the current workspace",
+            "It does not force package mode, create Jobs, or apply package governance by itself",
+        ]
+        spec_phrases = [
             "The gate only decides whether the current workspace makes EngiFoundry available",
             "`.git/` as a super signal",
             "ordinary project scaffold signals such as build files, package manifests, source directories, app directories, or test directories",
@@ -50,8 +54,8 @@ class GovernanceDocsTests(unittest.TestCase):
             "does not force package governance",
         ]
 
-        self.assert_contains_all("README.md", phrases)
-        self.assert_contains_all("docs/platform-metadata.md", phrases)
+        self.assert_contains_all("README.md", readme_phrases)
+        self.assert_contains_all("docs/platform-metadata.md", spec_phrases)
         self.assert_contains_all("skills/engifoundry-gate/SKILL.md", [
             "If a first-level child named `.git` exists, the gate matches immediately.",
             "`gradle.properties`",
@@ -97,17 +101,15 @@ class GovernanceDocsTests(unittest.TestCase):
         ])
 
     def test_installation_contract_is_plugin_first_for_repository_requests(self):
-        phrases = [
+        readme_phrases = [
             "Plugin installation is the preferred full installation mode",
-            "install the latest EngiFoundry skill from GitHub",
-            "install this skill: <repository URL>",
-            "Skills-only installation is a compatibility fallback",
             ".agents/plugins/marketplace.json",
-            "Updates must be pulled from the hosted repository snapshot",
-            "do not maintain a separate local mirror under `~/plugins/` as the source of truth",
+            ".codex-plugin/plugin.json",
+            "Detailed installation and publication rules live in",
+            "Update through the same installation channel you used",
         ]
 
-        self.assert_contains_all("README.md", phrases)
+        self.assert_contains_all("README.md", readme_phrases)
         self.assert_contains_all("docs/publication.md", [
             "## Installer Contract",
             "install the latest EngiFoundry skill from GitHub",
@@ -155,10 +157,9 @@ class GovernanceDocsTests(unittest.TestCase):
         self.assertEqual(marketplace["plugins"][0]["source"], ".")
 
         self.assert_contains_all("README.md", [
-            "Claude does not use `.agents/plugins/marketplace.json`; that file is Codex-specific",
             ".claude-plugin/marketplace.json",
             "--skills-dir <directory>",
-            "do not add Kimi marketplace metadata unless Kimi publishes a supported schema",
+            "For hosts without plugin marketplace support",
         ])
         self.assert_contains_all("docs/platform-metadata.md", [
             "Claude does not use Codex's `.agents/plugins/marketplace.json`",
@@ -189,6 +190,39 @@ class GovernanceDocsTests(unittest.TestCase):
 
         manifest = json.loads(read("engifoundry.manifest.json"))
         self.assertIn("plugin", manifest["installModes"]["skillsOnly"]["exclusiveWith"])
+
+    def test_public_readme_is_human_entrypoint_not_protocol_specification(self):
+        self.assert_contains_all("README.md", [
+            "# EngiFoundry",
+            "## Quickstart",
+            "## How It Works",
+            "## Installation",
+            "## Updating",
+            "## What's Inside",
+            "## Development",
+            "## License",
+            "Detailed installation and publication rules live in",
+            "Keep root documentation readable for humans",
+        ])
+        self.assert_contains_all("docs/publication.md", [
+            "Keep README as a human-facing project entry point, not a protocol specification",
+            "Do not duplicate long rules across README, docs, and references",
+        ])
+
+        readme = read("README.md")
+        forbidden_phrases = [
+            "## Artifact Root",
+            "## Artifact Root Layout",
+            "## Execution Config",
+            "## Package Format",
+            "## Job Format",
+            "Package Alignment Gate",
+            "Executor Invocation Profiles",
+            "```json",
+        ]
+        for phrase in forbidden_phrases:
+            with self.subTest(phrase=phrase):
+                self.assertNotIn(phrase, readme)
 
     def test_package_governance_constraints_are_synced_to_installable_references(self):
         expectations = {
@@ -308,7 +342,10 @@ class GovernanceDocsTests(unittest.TestCase):
         ]
 
         self.assert_contains_all("docs/configuration.md", phrases)
-        self.assert_contains_all("README.md", phrases)
+        self.assert_contains_all("README.md", [
+            "without requiring a separate \"initialize\"",
+            "[Configuration](docs/configuration.md)",
+        ])
 
     def test_lazy_automatic_initialization_is_required_for_new_projects(self):
         phrases = [
@@ -323,7 +360,10 @@ class GovernanceDocsTests(unittest.TestCase):
         self.assert_contains_all("docs/configuration.md", phrases)
         self.assert_contains_all("docs/artifact-protocol.md", phrases)
         self.assert_contains_all("skills/engifoundry/references/artifact-protocol.md", phrases)
-        self.assert_contains_all("README.md", phrases)
+        self.assert_contains_all("README.md", [
+            "without requiring a separate \"initialize\"",
+            "[Artifact protocol](docs/artifact-protocol.md)",
+        ])
         self.assert_contains_all("skills/engifoundry/SKILL.md", [
             "If EngiFoundry workflow starts in a project with no `.engifoundry.config.json`, artifact root, or package root",
             "initialize the default project config, artifact root, directory config, and package root automatically before the first durable EngiFoundry read or write",
@@ -464,11 +504,8 @@ class GovernanceDocsTests(unittest.TestCase):
             "do not stop at draft to ask whether alignment should run",
         ])
         self.assert_contains_all("README.md", [
-            "Before setting or reporting `planning.status=ready`, primary/control must evaluate Package Alignment Gate",
-            "Primary/control self-review is not sufficient evidence",
-            "Do not stop at `planning.status=draft` to ask whether alignment should run",
-            "automatically drive the required alignment work",
-            "the package must remain `draft` or `blocked`",
+            "broad, risky, multi-step, ambiguous, or handoff-oriented changes use structured task packages",
+            "[Package format](docs/package-format.md)",
         ])
         self.assert_contains_all("zh/README.md", [
             "在设置或汇报 `planning.status=ready` 之前",
