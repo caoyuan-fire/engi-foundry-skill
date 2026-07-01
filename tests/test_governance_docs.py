@@ -25,6 +25,40 @@ class GovernanceDocsTests(unittest.TestCase):
         self.assert_contains_all("skills/engifoundry/SKILL.md", phrases)
         self.assert_contains_all("skills/engifoundry/references/intent-routing.md", phrases)
 
+    def test_dual_entry_plugin_gate_contract_is_documented(self):
+        phrases = [
+            "$engifoundry-gate",
+            "$engifoundry",
+            "The gate only decides whether the current workspace makes EngiFoundry available",
+            "`.git/` as a super signal",
+            "does not force package governance",
+        ]
+
+        self.assert_contains_all("README.md", phrases)
+        self.assert_contains_all("docs/platform-metadata.md", phrases)
+        self.assert_contains_all("skills/engifoundry-gate/SKILL.md", [
+            "If a first-level child named `.git` exists, the gate matches immediately.",
+            "It does not mean:",
+            "Use package mode.",
+            "Gate detection is environment-driven. Main workflow selection is prompt-driven.",
+        ])
+
+    def test_plugin_manifests_expose_shared_skills_directory(self):
+        codex = json.loads(read(".codex-plugin/plugin.json"))
+        claude = json.loads(read(".claude-plugin/plugin.json"))
+        repository_manifest = json.loads(read("engifoundry.manifest.json"))
+
+        for manifest in [codex, claude]:
+            self.assertEqual(manifest["name"], "engifoundry")
+            self.assertEqual(manifest["version"], repository_manifest["version"])
+            self.assertEqual(manifest["skills"], "./skills/")
+            self.assertIn("interface", manifest)
+
+        self.assertEqual(repository_manifest["skillPath"], "skills/engifoundry")
+        self.assertEqual(repository_manifest["gateSkillPath"], "skills/engifoundry-gate")
+        self.assertEqual(repository_manifest["pluginManifests"]["codex"], ".codex-plugin/plugin.json")
+        self.assertEqual(repository_manifest["pluginManifests"]["claude"], ".claude-plugin/plugin.json")
+
     def test_package_governance_constraints_are_synced_to_installable_references(self):
         expectations = {
             "role-protocol.md": [

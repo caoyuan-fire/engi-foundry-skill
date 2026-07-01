@@ -47,7 +47,7 @@ EngiFoundrySkill/
     └── README.md
 ```
 
-可安装的 skill 本体位于 `skills/engifoundry/`。根目录文档面向用户和维护者。
+主入口 skill 位于 `skills/engifoundry/`。插件自动加载门位于 `skills/engifoundry-gate/`。根目录文档面向用户和维护者。
 
 ## 核心概念
 
@@ -337,19 +337,39 @@ package root 不同。它保存执行依据，可以被 EngiFoundry 自动加入
 
 已安装 skill 的版本记录在 `skills/engifoundry/VERSION`。版本只是维护标签。EngiFoundry 可以在每个会话首次对齐时、且有网络权限时最多检查一次更新；没有更新或检查失败时保持静默。
 
-推荐使用完整安装。复制或软链接可安装的 skill 目录：
+支持插件安装时，推荐使用插件形式。
+
+Codex 兼容安装使用：
 
 ```text
+.codex-plugin/plugin.json
+skills/
+```
+
+Claude 兼容安装使用：
+
+```text
+.claude-plugin/plugin.json
+skills/
+```
+
+Kimi 兼容安装应将 `skills/` 下的入口安装或软链接到 Kimi 支持的 skills 目录。本仓库不假定 Kimi 已有稳定 marketplace。
+
+仍支持 skills-only 安装。复制或软链接两个 skill 目录：
+
+```text
+skills/engifoundry-gate/
 skills/engifoundry/
 ```
 
-到 Codex skills 目录：
+到目标 agent 的 skills 目录。Codex skills-only 安装示例：
 
 ```text
+~/.codex/skills/engifoundry-gate/
 ~/.codex/skills/engifoundry/
 ```
 
-然后重启 Codex，让它重新扫描 skill metadata。
+然后重启宿主，让它重新扫描 skill metadata。
 
 也支持 kernel-only 轻量分享模式。该模式需要 `SKILL.md`、`engifoundry.manifest.json` 和 `skills/engifoundry/scripts/resolve_module.py`。缺失模块只会在用户明确确认后从 manifest 声明的 GitHub 源下载，下载内容会缓存到项目 artifact root 之外。
 

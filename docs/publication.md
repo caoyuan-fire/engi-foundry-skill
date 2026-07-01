@@ -6,8 +6,11 @@ EngiFoundry uses a public repository structure that separates user documentation
 
 - `README.md`: English public introduction and quick reference.
 - `zh/README.md`: Chinese public introduction with equivalent content.
+- `.codex-plugin/plugin.json`: Codex plugin manifest.
+- `.claude-plugin/plugin.json`: Claude plugin manifest.
 - `docs/`: formal specification basis.
-- `skills/engifoundry/`: installable skill.
+- `skills/engifoundry-gate/`: lightweight plugin autoload gate.
+- `skills/engifoundry/`: main manual skill entry point and workflow launcher.
 - `examples/`: examples after the format stabilizes.
 - `tests/`: repository-level validation for scripts and publishable behavior.
 
@@ -17,13 +20,15 @@ The README explains:
 
 - what EngiFoundry is;
 - how the repository is structured;
-- where the installable skill lives;
+- where the plugin manifests and skill entries live;
 - core artifact, package, Job, role, and Git policies;
 - where to read more.
 
 `docs/` explains the full specification.
 
-`skills/engifoundry/SKILL.md` stays concise and operational.
+`skills/engifoundry-gate/SKILL.md` stays lightweight. It may inspect only first-level current-working-directory children, and it must not apply package governance.
+
+`skills/engifoundry/SKILL.md` stays concise and operational. It is the main manual entry point and the workflow launcher after the gate matches.
 
 `skills/engifoundry/references/` contains agent-facing details loaded on demand.
 
@@ -61,7 +66,7 @@ If no newer version is available, say nothing. If the check fails or network is 
 - Do not expose local scratch paths or private notes in public documentation.
 - Do not make the skill body a long specification document.
 - Do not duplicate long rules across README, docs, and references.
-- Do not add platform-specific metadata files without a stable schema.
+- Do not add platform-specific metadata files without a stable schema or an explicit adapter policy.
 - Do not write module caches or resolver lockfiles into project artifact roots.
 - Keep public docs readable for humans.
 - Keep references actionable for agents.

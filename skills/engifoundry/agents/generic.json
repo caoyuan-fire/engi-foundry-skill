@@ -4,9 +4,11 @@
   "displayName": "EngiFoundry",
   "shortDescription": "Structured engineering workflow skill",
   "defaultPrompt": "Use $engifoundry to plan, execute, review, and close out an engineering task with durable artifacts.",
-  "entrypoint": "SKILL.md",
-  "visibility": "single-skill-entrypoint",
+  "manualEntrypoint": "skills/engifoundry/SKILL.md",
+  "autoloadGateEntrypoint": "skills/engifoundry-gate/SKILL.md",
+  "visibility": "dual-skill-entrypoint",
   "canonicalInvocation": "$engifoundry",
+  "autoloadInvocation": "$engifoundry-gate",
   "compatibility": {
     "coreFormat": "Agent Skills SKILL.md",
     "requires": [
@@ -20,8 +22,8 @@
     ]
   },
   "platformNotes": {
-    "openai": "Use agents/openai.yaml when supported by Codex/OpenAI surfaces.",
-    "claude": "Claude-compatible surfaces should read SKILL.md frontmatter as the core metadata.",
-    "kimi": "No stable platform-specific metadata schema is declared here; use SKILL.md frontmatter and this generic metadata as a human/tooling hint."
+    "openai": "Use .codex-plugin/plugin.json for Codex plugin installation and agents/openai.yaml when supported by Codex/OpenAI surfaces.",
+    "claude": "Use .claude-plugin/plugin.json for Claude plugin installation; Claude-compatible surfaces should read SKILL.md frontmatter as the core skill metadata.",
+    "kimi": "No stable Kimi marketplace schema is assumed here; install or symlink skills/engifoundry-gate and skills/engifoundry into a Kimi-supported skills directory."
   }
 }

@@ -7,12 +7,26 @@ EngiFoundry keeps public repository documentation separate from the installable 
 - `README.md`: public introduction and quick reference.
 - `zh/README.md`: Chinese public introduction.
 - `docs/`: formal specification and maintainable design basis.
-- `skills/engifoundry/SKILL.md`: concise agent entry point.
+- `skills/engifoundry-gate/SKILL.md`: lightweight plugin autoload gate.
+- `skills/engifoundry/SKILL.md`: concise main agent entry point.
 - `skills/engifoundry/references/`: operational rules for agents, loaded only when needed.
 
-## Skill Body
+## Gate Body
 
-The skill body should stay small enough to load frequently.
+The gate body should stay small enough to load at session start.
+
+It should:
+
+- inspect only first-level current-working-directory children;
+- treat `.git/` as a super signal;
+- decide whether EngiFoundry is available;
+- avoid loading full EngiFoundry rules for non-engineering requests.
+
+It should not apply package governance or write artifacts.
+
+## Main Skill Body
+
+The main skill body should stay small enough to load frequently.
 
 It should:
 

@@ -15,6 +15,10 @@ EngiFoundry is not tied to any single product as the permanent controller. Roles
 ```text
 EngiFoundrySkill/
 ├── README.md
+├── .codex-plugin/
+│   └── plugin.json
+├── .claude-plugin/
+│   └── plugin.json
 ├── engifoundry.manifest.json
 ├── docs/
 │   ├── adapter-contract.md
@@ -31,6 +35,8 @@ EngiFoundrySkill/
 │   ├── role-protocol.md
 │   └── repository-structure.md
 ├── skills/
+│   ├── engifoundry-gate/
+│   │   └── SKILL.md
 │   └── engifoundry/
 │       ├── SKILL.md
 │       ├── agents/
@@ -47,11 +53,25 @@ EngiFoundrySkill/
     └── README.md
 ```
 
-The installable skill is `skills/engifoundry/`. Root-level documentation is for users and maintainers.
+The main manual skill entry point is `skills/engifoundry/`. The plugin autoload gate is `skills/engifoundry-gate/`. Root-level documentation is for users and maintainers.
 
 ## Core Concepts
 
-EngiFoundry has one public entry point and several operating modes:
+EngiFoundry has two skill entry points and several operating modes.
+
+Manual users should invoke the main entry point:
+
+```text
+$engifoundry
+```
+
+Plugin autoload should target the gate entry point:
+
+```text
+$engifoundry-gate
+```
+
+The gate only decides whether the current workspace makes EngiFoundry available. It inspects first-level children of the current working directory, treats `.git/` as a super signal, and does not recurse. A gate match does not force package governance; the main `engifoundry` skill still selects the actual mode from the user's prompt and project state.
 
 | Mode | Purpose |
 | --- | --- |
@@ -337,19 +357,39 @@ The package root is different. It contains execution inputs and may be automatic
 
 The installed skill version is recorded in `skills/engifoundry/VERSION`. Version is a maintenance label. EngiFoundry may check for updates at most once per session during first alignment when network access is available; no-update and failed checks stay silent.
 
-Full installation is recommended. Copy or symlink the installable skill folder:
+Plugin installation is recommended when the host supports it.
+
+Codex-compatible installations use:
 
 ```text
+.codex-plugin/plugin.json
+skills/
+```
+
+Claude-compatible installations use:
+
+```text
+.claude-plugin/plugin.json
+skills/
+```
+
+Kimi-compatible installations should install or symlink the `skills/` entries into a Kimi-supported skills directory. This repository does not assume a stable Kimi marketplace.
+
+Skills-only installation is still supported. Copy or symlink both skill folders:
+
+```text
+skills/engifoundry-gate/
 skills/engifoundry/
 ```
 
-to the Codex skills directory:
+to the target agent's skills directory. For Codex skills-only installation:
 
 ```text
+~/.codex/skills/engifoundry-gate/
 ~/.codex/skills/engifoundry/
 ```
 
-Then restart Codex so the skill metadata is rescanned.
+Then restart the host so skill metadata is rescanned.
 
 Kernel-only installation is supported for lightweight sharing. It requires `SKILL.md`, `engifoundry.manifest.json`, and `skills/engifoundry/scripts/resolve_module.py`. Missing modules are resolved from the declared GitHub source only after explicit confirmation, and downloaded modules are cached outside any project artifact root.
 

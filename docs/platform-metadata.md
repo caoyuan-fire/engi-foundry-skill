@@ -1,14 +1,22 @@
 # Platform Metadata
 
-EngiFoundry exposes one installable skill entry point:
+EngiFoundry exposes two skill entry points:
 
 ```text
+$engifoundry-gate
 $engifoundry
 ```
+
+`$engifoundry` is the main manual entry point. Users who want EngiFoundry should prefer this entry point.
+
+`$engifoundry-gate` is the plugin autoload gate. Plugin installation should target this entry point for session-start preheating. It only decides whether EngiFoundry is available in the current workspace; it does not apply the full workflow.
+
+The gate only decides whether the current workspace makes EngiFoundry available. It inspects only first-level current-working-directory children, treats `.git/` as a super signal, and does not force package governance.
 
 The canonical runtime metadata is the YAML frontmatter in:
 
 ```text
+skills/engifoundry-gate/SKILL.md
 skills/engifoundry/SKILL.md
 ```
 
@@ -16,7 +24,19 @@ That frontmatter contains the required `name` and `description` fields. Platform
 
 ## OpenAI / Codex
 
-EngiFoundry includes OpenAI/Codex-facing UI metadata:
+EngiFoundry includes a Codex plugin manifest:
+
+```text
+.codex-plugin/plugin.json
+```
+
+The Codex plugin manifest declares:
+
+- the plugin name and interface metadata;
+- the shared `skills/` directory;
+- the `engifoundry-gate` autoload gate and `engifoundry` main entry through normal skill discovery.
+
+EngiFoundry also includes OpenAI/Codex-facing UI metadata:
 
 ```text
 skills/engifoundry/agents/openai.yaml
@@ -36,19 +56,25 @@ This file is for humans, installers, and third-party tooling. It is not required
 
 ## Claude-Compatible Surfaces
 
-Claude-compatible skill surfaces should use `SKILL.md` frontmatter as the core metadata source.
+EngiFoundry includes a Claude plugin manifest:
 
-EngiFoundry does not currently include a separate Claude-specific metadata file because the stable shared contract is the skill folder plus `SKILL.md`.
+```text
+.claude-plugin/plugin.json
+```
+
+Claude-compatible skill surfaces should use the plugin manifest when available and `SKILL.md` frontmatter as the core skill metadata source.
 
 ## Kimi-Compatible Surfaces
 
-EngiFoundry does not currently include a Kimi-specific metadata file because no stable Kimi-specific skill metadata schema is declared in this repository.
+EngiFoundry does not currently include a Kimi marketplace manifest because no stable marketplace catalog contract is assumed here.
 
 Kimi-compatible usage should rely on:
 
 - `SKILL.md` frontmatter;
 - `agents/generic.json`;
 - public documentation in this repository.
+
+Install or symlink both `skills/engifoundry-gate/` and `skills/engifoundry/` into a Kimi-supported skills directory. If Kimi plugin installation is used, the plugin package must still expose the shared `skills/` directory.
 
 ## Rule
 

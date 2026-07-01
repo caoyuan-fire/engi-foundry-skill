@@ -5,9 +5,14 @@ EngiFoundry uses a publishable repository layout with the installable skill unde
 ```text
 EngiFoundrySkill/
 ├── README.md
+├── .codex-plugin/
+│   └── plugin.json
+├── .claude-plugin/
+│   └── plugin.json
 ├── engifoundry.manifest.json
 ├── docs/
 ├── skills/
+│   ├── engifoundry-gate/
 │   └── engifoundry/
 ├── examples/
 ├── tests/
@@ -18,6 +23,8 @@ EngiFoundrySkill/
 
 - `README.md`: public English introduction and quick reference.
 - `engifoundry.manifest.json`: repository-level skill manifest.
+- `.codex-plugin/plugin.json`: Codex plugin manifest.
+- `.claude-plugin/plugin.json`: Claude plugin manifest.
 - `.gitignore`: repository hygiene only.
 
 ## `docs/`
@@ -39,13 +46,23 @@ These documents are the main basis for future implementation work:
 - `platform-metadata.md`
 - `publication.md`
 
-## `skills/engifoundry/`
+## `skills/engifoundry-gate/`
 
-`skills/engifoundry/` is the installable skill.
+`skills/engifoundry-gate/` is the plugin autoload gate.
 
 It contains:
 
-- `SKILL.md`: concise entry point and routing rules;
+- `SKILL.md`: lightweight environment gate for current-working-directory detection.
+
+The gate inspects only first-level children of the current working directory. It treats `.git/` as a super signal. A gate match only makes EngiFoundry available; it does not force package governance.
+
+## `skills/engifoundry/`
+
+`skills/engifoundry/` is the main manual skill entry point and workflow launcher.
+
+It contains:
+
+- `SKILL.md`: concise main entry point and routing rules;
 - `agents/openai.yaml`: product-facing skill metadata;
 - `agents/generic.json`: platform-neutral metadata for humans and tooling;
 - `references/`: agent-facing operational rules loaded on demand;

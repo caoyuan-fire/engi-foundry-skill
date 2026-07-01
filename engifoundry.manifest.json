@@ -4,10 +4,15 @@
   "version": "0.1.2",
   "status": "public-layout-draft",
   "skillPath": "skills/engifoundry",
+  "gateSkillPath": "skills/engifoundry-gate",
+  "pluginManifests": {
+    "codex": ".codex-plugin/plugin.json",
+    "claude": ".claude-plugin/plugin.json"
+  },
   "installModes": {
     "full": {
       "recommended": true,
-      "description": "Install the EngiFoundry skill folder, including SKILL.md, references, modules, and agent metadata."
+      "description": "Install both EngiFoundry skill folders, including the autoload gate, main SKILL.md, references, modules, and agent metadata."
     },
     "kernelOnly": {
       "supported": true,
