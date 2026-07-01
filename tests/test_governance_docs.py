@@ -335,15 +335,33 @@ class GovernanceDocsTests(unittest.TestCase):
     def test_package_alignment_is_planning_ready_gate_not_third_status_dimension(self):
         phrases = [
             "A package records only two status dimensions: `planning.status` and `execution.status`",
-            "Package alignment is a gate for reporting package planning as ready",
+            "Before setting or reporting `planning.status=ready`, primary/control must evaluate whether Package Alignment Gate is required",
+            "Package alignment is a hard gate for reporting package planning as ready",
             "Do not add `alignmentStatus`, `alignmentRequired`, or `alignmentPassed`",
+            "any Job uses an executor other than `direct`",
+            "primary/control self-review is not sufficient evidence",
+            "must not write `planning.status=ready`",
+            "report package planning as complete",
             "Alignment evidence is recorded as review evidence",
+            "reviewer identity",
+            "reviewed files",
+            "pass/block decision",
             "A package may be reported as compiled only after `planning.status` can be set to `ready`",
             "execution start must check `planning.status=ready`",
         ]
 
         self.assert_contains_all("docs/package-format.md", phrases)
         self.assert_contains_all("skills/engifoundry/references/package-format.md", phrases)
+        self.assert_contains_all("README.md", [
+            "Before setting or reporting `planning.status=ready`, primary/control must evaluate Package Alignment Gate",
+            "Primary/control self-review is not sufficient evidence",
+            "the package must remain `draft` or `blocked`",
+        ])
+        self.assert_contains_all("zh/README.md", [
+            "在设置或汇报 `planning.status=ready` 之前",
+            "primary/control 自审不是充分证据",
+            "package 必须保持 `draft` 或 `blocked`",
+        ])
 
         forbidden_phrases = [
             "Review a package before execution",

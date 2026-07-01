@@ -290,6 +290,8 @@ A package is both human-readable and machine-readable.
 
 `package.config.json` is the machine-readable package contract. It should define package planning status, execution status, Job order, default execution policy, acceptance gates, checkpoint references, and closeout requirements.
 
+Before setting or reporting `planning.status=ready`, primary/control must evaluate Package Alignment Gate. If any Job uses non-`direct` execution, isolated execution or review, external CLI execution, handoff, later-session execution, high-risk cross-module/build/AIDL/release/security/data/target-device behavior, unclear verification, or known ambiguity, independent alignment review is required. Primary/control self-review is not sufficient evidence, and without a passing independent review the package must remain `draft` or `blocked`.
+
 ## Job Format
 
 Each Job has control inputs under the package root:

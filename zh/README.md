@@ -268,6 +268,8 @@ discipline = quick、standard、strict 等质量预设
 
 `package.config.json` 是机器可读的 package 契约，应定义 package 编制状态、执行状态、Job 顺序、默认执行策略、验收门槛、checkpoint 引用和 closeout 要求。
 
+在设置或汇报 `planning.status=ready` 之前，primary/control 必须评估 Package Alignment Gate。只要任何 Job 使用非 `direct` 执行、隔离执行或审查、external CLI、handoff、后续会话执行，或涉及高风险的跨模块、构建、AIDL、发布、安全、数据、目标设备行为，或验证路径不清、存在已知歧义，就必须先取得独立 alignment review。primary/control 自审不是充分证据；没有通过的独立审查时，package 必须保持 `draft` 或 `blocked`。
+
 ## Job 格式
 
 每个 Job 的控制输入位于 package root：

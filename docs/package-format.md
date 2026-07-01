@@ -157,11 +157,24 @@ Package Alignment Gate only applies after work enters a package flow.
 
 A package records only two status dimensions: `planning.status` and `execution.status`. Do not add `alignmentStatus`, `alignmentRequired`, or `alignmentPassed` to the package state model.
 
-Package alignment is a gate for reporting package planning as ready when the package uses isolated executors or reviewers, external CLI execution, human handoff, cross-module or high-risk work, security-sensitive work, data-sensitive work, release-sensitive work, unclear verification, or known ambiguity.
+Before setting or reporting `planning.status=ready`, primary/control must evaluate whether Package Alignment Gate is required.
+
+Package alignment is a hard gate for reporting package planning as ready when any of these conditions are true:
+
+- any Job uses an executor other than `direct`;
+- any Job uses isolated execution or isolated review;
+- the package is intended for external CLI execution, reviewer handoff, human handoff, later session execution, or other bounded execution;
+- the package touches cross-module behavior, build behavior, AIDL or interface contracts, release behavior, security-sensitive behavior, data-sensitive behavior, or target-device behavior;
+- the verification path is unclear, non-runnable, target-dependent, or depends on evidence that cannot be produced in the current planning session;
+- any known ambiguity or unresolved dependency exists.
+
+If Package Alignment Gate is required, primary/control self-review is not sufficient evidence. The package must receive an independent alignment review from the configured executor, reviewer, clean session, external CLI, or human reviewer before planning may be marked ready.
+
+When Package Alignment Gate is required and no independent alignment review has passed, primary/control must not write `planning.status=ready`, report the package as ready, report package planning as complete, or describe the package as compiled. Keep `planning.status` as `draft` or set it to `blocked`.
 
 Package alignment is optional for simple direct packages and does not apply to `ad-hoc` work with no package.
 
-Alignment evidence is recorded as review evidence. Alignment records should capture the reviewer role, understanding restatement, findings, required package revisions, accepted non-blocking risks, and primary/control decision.
+Alignment evidence is recorded as review evidence. Alignment records should capture reviewer identity, reviewer role, reviewed files, understanding restatement, findings, required package revisions, accepted non-blocking risks, pass/block decision, and primary/control decision.
 
 Alignment records are review records, not Jobs. Do not add package alignment as a synthetic Job in the Job order.
 
