@@ -6,7 +6,9 @@ EngiFoundry uses a public repository structure that separates user documentation
 
 - `README.md`: English public introduction and quick reference.
 - `zh/README.md`: Chinese public introduction with equivalent content.
+- `.agents/plugins/marketplace.json`: Codex Git marketplace manifest.
 - `.codex-plugin/plugin.json`: Codex plugin manifest.
+- `.claude-plugin/marketplace.json`: Claude Git marketplace manifest.
 - `.claude-plugin/plugin.json`: Claude plugin manifest.
 - `docs/`: formal specification basis.
 - `skills/engifoundry-gate/`: lightweight plugin autoload gate.
@@ -82,7 +84,9 @@ For Codex-compatible hosts, `.agents/plugins/marketplace.json` makes the GitHub 
 
 Codex updates must refresh the configured Git marketplace snapshot and reinstall from that hosted marketplace. Local source directories are acceptable only as transient Codex cache output, not as maintained plugin sources.
 
-For Claude-compatible hosts, `.claude-plugin/plugin.json` provides the same plugin-first signal.
+For Claude-compatible hosts, `.claude-plugin/marketplace.json` makes the GitHub repository a Claude plugin marketplace, and `.claude-plugin/plugin.json` makes the repository root the `engifoundry-bundle` plugin package. Claude does not use `.agents/plugins/marketplace.json`; that file is Codex-specific.
+
+Kimi-compatible hosts should use `SKILL.md` discovery from `skills/` or an explicit `--skills-dir`-style skill directory. Do not add Kimi marketplace metadata unless Kimi publishes a stable marketplace catalog schema.
 
 Skills-only installation is a fallback for hosts without plugin support or for explicit user requests for skills-only installation.
 

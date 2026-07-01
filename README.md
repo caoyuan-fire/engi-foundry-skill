@@ -15,9 +15,13 @@ EngiFoundry is not tied to any single product as the permanent controller. Roles
 ```text
 EngiFoundrySkill/
 ├── README.md
+├── .agents/
+│   └── plugins/
+│       └── marketplace.json
 ├── .codex-plugin/
 │   └── plugin.json
 ├── .claude-plugin/
+│   ├── marketplace.json
 │   └── plugin.json
 ├── engifoundry.manifest.json
 ├── docs/
@@ -363,7 +367,7 @@ The installed skill version is recorded in `skills/engifoundry/VERSION`. Version
 
 Plugin installation is the preferred full installation mode when the host supports plugins. Installers should choose plugin installation whenever `.codex-plugin/plugin.json` or `.claude-plugin/plugin.json` is present. Skills-only installation is a compatibility fallback, not the preferred full install.
 
-Codex-compatible installations use:
+Codex-compatible installations use the Git-hosted Codex marketplace:
 
 ```text
 .agents/plugins/marketplace.json
@@ -373,14 +377,17 @@ skills/
 
 For a prompt such as "install the latest EngiFoundry skill from GitHub" or "install this skill: <repository URL>", a Codex-compatible installer should add the GitHub repository as a Git marketplace and install `engifoundry-bundle` from that hosted marketplace. Updates must be pulled from the hosted repository snapshot; do not maintain a separate local mirror under `~/plugins/` as the source of truth.
 
-Claude-compatible installations use:
+Claude-compatible installations use the Git-hosted Claude marketplace:
 
 ```text
+.claude-plugin/marketplace.json
 .claude-plugin/plugin.json
 skills/
 ```
 
-Kimi-compatible installations should install or symlink the `skills/` entries into a Kimi-supported skills directory. This repository does not assume a stable Kimi marketplace.
+Claude does not use `.agents/plugins/marketplace.json`; that file is Codex-specific. Claude-compatible installers should add the GitHub repository as a Claude plugin marketplace and install `engifoundry-bundle` from that hosted marketplace.
+
+Kimi-compatible installations should install or symlink the `skills/` entries into a Kimi-supported skills directory, or launch Kimi with `--skills-dir <directory>`. This repository does not assume a stable Kimi marketplace catalog; do not add Kimi marketplace metadata unless Kimi publishes a supported schema.
 
 Skills-only installation is still supported when the host has no plugin support or the user explicitly requests skills-only installation. Copy or symlink both skill folders:
 

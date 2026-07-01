@@ -65,12 +65,13 @@ This file is for humans, installers, and third-party tooling. It is not required
 EngiFoundry includes a Claude plugin manifest:
 
 ```text
+.claude-plugin/marketplace.json
 .claude-plugin/plugin.json
 ```
 
 The Claude plugin package uses the same `engifoundry-bundle` package name.
 
-Claude-compatible skill surfaces should use the plugin manifest when available and `SKILL.md` frontmatter as the core skill metadata source.
+Claude-compatible skill surfaces should use the Claude marketplace and plugin manifests when available and `SKILL.md` frontmatter as the core skill metadata source. Claude does not use Codex's `.agents/plugins/marketplace.json`.
 
 ## Kimi-Compatible Surfaces
 
@@ -83,6 +84,8 @@ Kimi-compatible usage should rely on:
 - public documentation in this repository.
 
 Install or symlink both `skills/engifoundry-gate/` and `skills/engifoundry/` into a Kimi-supported skills directory. If Kimi plugin installation is used, the plugin package must still expose the shared `skills/` directory.
+
+Kimi Code currently supports explicit skill loading through `--skills-dir <dir>`, so repository compatibility is maintained through the `skills/` layout and `SKILL.md` files rather than a marketplace manifest.
 
 ## Rule
 

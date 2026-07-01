@@ -23,7 +23,7 @@
   },
   "platformNotes": {
     "openai": "Use .codex-plugin/plugin.json for Codex plugin installation and agents/openai.yaml when supported by Codex/OpenAI surfaces.",
-    "claude": "Use .claude-plugin/plugin.json for Claude plugin installation; Claude-compatible surfaces should read SKILL.md frontmatter as the core skill metadata.",
-    "kimi": "No stable Kimi marketplace schema is assumed here; install or symlink skills/engifoundry-gate and skills/engifoundry into a Kimi-supported skills directory."
+    "claude": "Use .claude-plugin/marketplace.json for Claude marketplace installation and .claude-plugin/plugin.json for the plugin package; Claude-compatible surfaces should read SKILL.md frontmatter as the core skill metadata.",
+    "kimi": "No stable Kimi marketplace schema is assumed here; install or symlink skills/engifoundry-gate and skills/engifoundry into a Kimi-supported skills directory, or launch Kimi with --skills-dir."
   }
 }

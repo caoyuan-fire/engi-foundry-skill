@@ -15,6 +15,14 @@ English documentation: [../README.md](../README.md).
 ```text
 EngiFoundrySkill/
 ├── README.md
+├── .agents/
+│   └── plugins/
+│       └── marketplace.json
+├── .codex-plugin/
+│   └── plugin.json
+├── .claude-plugin/
+│   ├── marketplace.json
+│   └── plugin.json
 ├── engifoundry.manifest.json
 ├── docs/
 │   ├── adapter-contract.md
@@ -341,7 +349,7 @@ package root 不同。它保存执行依据，可以被 EngiFoundry 自动加入
 
 宿主支持插件安装时，插件安装是首选完整安装模式。安装器发现 `.codex-plugin/plugin.json` 或 `.claude-plugin/plugin.json` 时，应优先选择插件安装。skills-only 安装只是兼容回退方式，不是首选完整安装。
 
-Codex 兼容安装使用：
+Codex 兼容安装使用 Git 托管的 Codex marketplace：
 
 ```text
 .agents/plugins/marketplace.json
@@ -351,14 +359,17 @@ skills/
 
 对于“从 GitHub 安装最新 EngiFoundry skill”或“安装这个 skill: <repository URL>”这类提示，Codex 兼容安装器应将 GitHub 仓库添加为 Git marketplace，并从该托管 marketplace 安装 `engifoundry-bundle`。更新必须从托管仓库 snapshot 拉取；不要维护 `~/plugins/` 下的本地镜像作为事实来源。
 
-Claude 兼容安装使用：
+Claude 兼容安装使用 Git 托管的 Claude marketplace：
 
 ```text
+.claude-plugin/marketplace.json
 .claude-plugin/plugin.json
 skills/
 ```
 
-Kimi 兼容安装应将 `skills/` 下的入口安装或软链接到 Kimi 支持的 skills 目录。本仓库不假定 Kimi 已有稳定 marketplace。
+Claude 不使用 `.agents/plugins/marketplace.json`；该文件只面向 Codex。Claude 兼容安装器应将 GitHub 仓库添加为 Claude plugin marketplace，并从该托管 marketplace 安装 `engifoundry-bundle`。
+
+Kimi 兼容安装应将 `skills/` 下的入口安装或软链接到 Kimi 支持的 skills 目录，或用 `--skills-dir <directory>` 启动 Kimi。本仓库不假定 Kimi 已有稳定 marketplace catalog；除非 Kimi 发布受支持的 schema，否则不要添加 Kimi marketplace metadata。
 
 当宿主不支持插件，或用户明确要求 skills-only 安装时，仍支持 skills-only 安装。复制或软链接两个 skill 目录：
 

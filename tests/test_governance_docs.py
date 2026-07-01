@@ -102,6 +102,14 @@ class GovernanceDocsTests(unittest.TestCase):
             "hosted marketplace installation requests",
             "maintaining a separate local `~/plugins/` source mirror",
         ])
+        self.assert_contains_all("docs/repository-structure.md", [
+            ".agents/plugins/marketplace.json",
+            ".claude-plugin/marketplace.json",
+        ])
+        self.assert_contains_all("docs/publication.md", [
+            ".agents/plugins/marketplace.json",
+            ".claude-plugin/marketplace.json",
+        ])
         self.assert_contains_all("zh/README.md", [
             ".agents/plugins/marketplace.json",
             "Git marketplace",
@@ -119,6 +127,33 @@ class GovernanceDocsTests(unittest.TestCase):
         self.assertEqual(marketplace["plugins"][0]["name"], "engifoundry-bundle")
         self.assertEqual(marketplace["plugins"][0]["source"]["source"], "local")
         self.assertEqual(marketplace["plugins"][0]["source"]["path"], ".")
+
+    def test_claude_and_kimi_installation_contracts_are_explicit(self):
+        marketplace = json.loads(read(".claude-plugin/marketplace.json"))
+        self.assertEqual(marketplace["name"], "engi-foundry-skill")
+        self.assertEqual(marketplace["plugins"][0]["name"], "engifoundry-bundle")
+        self.assertEqual(marketplace["plugins"][0]["source"], ".")
+
+        self.assert_contains_all("README.md", [
+            "Claude does not use `.agents/plugins/marketplace.json`; that file is Codex-specific",
+            ".claude-plugin/marketplace.json",
+            "--skills-dir <directory>",
+            "do not add Kimi marketplace metadata unless Kimi publishes a supported schema",
+        ])
+        self.assert_contains_all("docs/platform-metadata.md", [
+            "Claude does not use Codex's `.agents/plugins/marketplace.json`",
+            "Kimi Code currently supports explicit skill loading through `--skills-dir <dir>`",
+            "rather than a marketplace manifest",
+        ])
+        self.assert_contains_all("docs/publication.md", [
+            "`.claude-plugin/marketplace.json` makes the GitHub repository a Claude plugin marketplace",
+            "Kimi-compatible hosts should use `SKILL.md` discovery",
+            "Do not add Kimi marketplace metadata",
+        ])
+        self.assert_contains_all("skills/engifoundry/agents/generic.json", [
+            ".claude-plugin/marketplace.json",
+            "launch Kimi with --skills-dir",
+        ])
 
     def test_plugin_and_skills_only_installation_are_exclusive(self):
         phrases = [

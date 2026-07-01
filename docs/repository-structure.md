@@ -5,9 +5,13 @@ EngiFoundry uses a publishable repository layout with the installable skill unde
 ```text
 EngiFoundrySkill/
 ├── README.md
+├── .agents/
+│   └── plugins/
+│       └── marketplace.json
 ├── .codex-plugin/
 │   └── plugin.json
 ├── .claude-plugin/
+│   ├── marketplace.json
 │   └── plugin.json
 ├── engifoundry.manifest.json
 ├── docs/
@@ -23,7 +27,9 @@ EngiFoundrySkill/
 
 - `README.md`: public English introduction and quick reference.
 - `engifoundry.manifest.json`: repository-level skill manifest.
+- `.agents/plugins/marketplace.json`: Codex Git marketplace manifest for hosted installation.
 - `.codex-plugin/plugin.json`: Codex plugin manifest.
+- `.claude-plugin/marketplace.json`: Claude Git marketplace manifest for hosted installation.
 - `.claude-plugin/plugin.json`: Claude plugin manifest.
 - `.gitignore`: repository hygiene only.
 
