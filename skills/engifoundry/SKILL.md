@@ -54,6 +54,7 @@ Read only the references needed by the classified mode:
 - When aligning a new project or new EngiFoundry session to project workflow state, prefer reading `<artifact-root>/execution.config.json` after locating the artifact root, if it exists.
 - If no package, Job, prompt, or execution config specifies an executor, use `direct` for ad-hoc and simple `primary/control` work.
 - If package work requires bounded or isolated execution and no usable executor config exists, safely discover local executor capability or ask the user before using a bounded executor.
+- If EngiFoundry workflow starts in a project with no `.engifoundry.config.json`, artifact root, or package root, initialize the default project config, artifact root, directory config, and package root automatically before the first durable EngiFoundry read or write. Do not require the user to request initialization as a separate step.
 - The artifact root defaults to `.engifoundry/`, unless `.engifoundry.config.json` or the user specifies another path.
 - The artifact root is for durable work products only. Do not write cache, temporary files, session dumps, credentials, or private runtime state there.
 - The package root defaults to `.engifoundry-packages/`, unless `.engifoundry.config.json` or the user specifies another path.

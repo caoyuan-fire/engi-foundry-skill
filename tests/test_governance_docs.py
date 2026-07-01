@@ -310,6 +310,31 @@ class GovernanceDocsTests(unittest.TestCase):
         self.assert_contains_all("docs/configuration.md", phrases)
         self.assert_contains_all("README.md", phrases)
 
+    def test_lazy_automatic_initialization_is_required_for_new_projects(self):
+        phrases = [
+            "## Automatic Initialization",
+            "EngiFoundry supports lazy automatic initialization",
+            "If EngiFoundry workflow starts in a project with no `.engifoundry.config.json`, artifact root, or package root",
+            "initialize the default project config, artifact root, directory config, and package root automatically before the first durable EngiFoundry read or write",
+            "Do not require the user to request \"initialize EngiFoundry\" as a separate step",
+            "Ask before initializing only when the default paths are unsafe or ambiguous",
+        ]
+
+        self.assert_contains_all("docs/configuration.md", phrases)
+        self.assert_contains_all("docs/artifact-protocol.md", phrases)
+        self.assert_contains_all("skills/engifoundry/references/artifact-protocol.md", phrases)
+        self.assert_contains_all("README.md", phrases)
+        self.assert_contains_all("skills/engifoundry/SKILL.md", [
+            "If EngiFoundry workflow starts in a project with no `.engifoundry.config.json`, artifact root, or package root",
+            "initialize the default project config, artifact root, directory config, and package root automatically before the first durable EngiFoundry read or write",
+            "Do not require the user to request initialization as a separate step",
+        ])
+        self.assert_contains_all("zh/README.md", [
+            "## 自动初始化",
+            "EngiFoundry 支持惰性自动初始化",
+            "不要要求用户把“初始化 EngiFoundry 工作目录”作为规划、创建任务包、使用 roadmap、记录执行、审查、验证或 closeout 之前的单独步骤",
+        ])
+
     def test_skill_version_policy_is_low_noise_and_documented(self):
         phrases = [
             "Skill version is a maintenance label",

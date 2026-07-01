@@ -158,6 +158,12 @@ The artifact root is for durable work products. The package root is for executio
 
 The artifact root should contain only durable, inspectable, useful work products.
 
+## Automatic Initialization
+
+EngiFoundry supports lazy automatic initialization. If EngiFoundry workflow starts in a project with no `.engifoundry.config.json`, artifact root, or package root, initialize the default project config, artifact root, directory config, and package root automatically before the first durable EngiFoundry read or write.
+
+Do not require the user to request "initialize EngiFoundry" as a separate step before planning, package creation, roadmap use, execution records, reviews, verification records, or closeout records. Use `.engifoundry/` and `.engifoundry-packages/` by default unless the user specified alternatives. Ask before initializing only when the default paths are unsafe or ambiguous, such as an existing conflicting file, a path collision, missing write permission, or an explicit user instruction not to create EngiFoundry artifacts.
+
 ## Roadmaps
 
 ROADMAP archives are durable alignment artifacts and live under `<artifact-root>/roadmaps/`.

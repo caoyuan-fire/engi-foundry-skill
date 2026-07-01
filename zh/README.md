@@ -140,6 +140,12 @@ artifact root 用于持久成果物。package root 用于任务包和 Job 契约
 
 artifact root 只应包含持久、可检查、有价值的工作成果。
 
+## 自动初始化
+
+EngiFoundry 支持惰性自动初始化。如果 EngiFoundry workflow 在一个没有 `.engifoundry.config.json`、artifact root 或 package root 的工程中开始工作，应在第一次持久 EngiFoundry 读写前，自动初始化默认 project config、artifact root、directory config 和 package root。
+
+不要要求用户把“初始化 EngiFoundry 工作目录”作为规划、创建任务包、使用 roadmap、记录执行、审查、验证或 closeout 之前的单独步骤。默认使用 `.engifoundry/` 和 `.engifoundry-packages/`，除非用户指定其它路径。只有默认路径不安全或有歧义时才先询问，例如已存在冲突文件、路径冲突、缺少写权限，或用户明确要求不要创建 EngiFoundry artifacts。
+
 ## ROADMAP
 
 ROADMAP 存档是持久对齐成果物，位于 `<artifact-root>/roadmaps/`。

@@ -62,6 +62,27 @@ Do not store Git ignore state in `.engifoundry.config.json`. Git is the source o
 
 Project config is a discovery and alignment aid. It should not be treated as a mandatory read before every ad-hoc task. Read it when locating artifact or package roots, resuming package flow, writing durable records, or aligning a new session to project workflow state.
 
+## Automatic Initialization
+
+EngiFoundry supports lazy automatic initialization.
+
+If EngiFoundry workflow starts in a project with no `.engifoundry.config.json`, artifact root, or package root, initialize the default project config, artifact root, directory config, and package root automatically before the first durable EngiFoundry read or write.
+
+Do not require the user to request "initialize EngiFoundry" as a separate step before planning, package creation, roadmap use, execution records, reviews, verification records, or closeout records.
+
+Use the default paths unless the user specified alternatives:
+
+- artifact root: `.engifoundry/`;
+- package root: `.engifoundry-packages/`.
+
+Prefer the provided initialization scripts for this setup:
+
+1. `create_root_config`
+2. `create_standard_dirs`
+3. `create_directory_config`
+
+Ask before initializing only when the default paths are unsafe or ambiguous, such as an existing conflicting file, a path collision, missing write permission, or an explicit user instruction not to create EngiFoundry artifacts.
+
 ## Allowed Contents
 
 The artifact root may contain:

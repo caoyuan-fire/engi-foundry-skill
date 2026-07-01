@@ -51,6 +51,16 @@ Do not store Git ignore state in project config. Whether the package root is ver
 
 Do not store roadmap state in project config. The project config locates the artifact root; roadmap state belongs to `<artifact-root>/roadmaps/ROADMAP.md` and `<artifact-root>/roadmaps/roadmap.index.json`.
 
+## Automatic Initialization
+
+EngiFoundry supports lazy automatic initialization. If EngiFoundry workflow starts in a project with no `.engifoundry.config.json`, artifact root, or package root, initialize the default project config, artifact root, directory config, and package root automatically before the first durable EngiFoundry read or write.
+
+Do not require the user to request "initialize EngiFoundry" as a separate step before planning, package creation, roadmap use, execution records, reviews, verification records, or closeout records.
+
+Use the default paths unless the user specified alternatives: `.engifoundry/` for durable artifacts and `.engifoundry-packages/` for package execution inputs.
+
+Ask before initializing only when the default paths are unsafe or ambiguous, such as an existing conflicting file, a path collision, missing write permission, or an explicit user instruction not to create EngiFoundry artifacts.
+
 ## Initialization Scripts
 
 EngiFoundry provides functional initialization scripts for macOS, Linux, and Windows. They do not require Python. Use POSIX shell scripts on macOS and Linux, and PowerShell scripts on Windows.
