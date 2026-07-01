@@ -22,8 +22,20 @@ class GovernanceDocsTests(unittest.TestCase):
             "Package-only governance must not be applied",
         ]
 
-        self.assert_contains_all("skills/engifoundry/SKILL.md", phrases)
-        self.assert_contains_all("skills/engifoundry/references/intent-routing.md", phrases)
+        self.assert_contains_all("skills/engifoundry/SKILL.md", phrases + [
+            "If the user asks to start implementing a broad, risky, multi-step, cross-module, handoff-oriented, or ambiguous feature and no package exists",
+            "do not ask the user to manually compile a package first and do not start direct TDD implementation",
+            "Treat package planning as the next automatic `primary/control` step",
+            "This is not a default user approval pause",
+        ])
+        self.assert_contains_all("skills/engifoundry/references/intent-routing.md", phrases + [
+            "When the user asks to start implementing a feature and no package exists",
+            "For bounded low-risk implementation requests with clear scope and acceptance criteria",
+            "do not ask the user to manually compile a package as a separate prerequisite and do not start direct TDD implementation",
+            "Treat package planning as the next automatic primary/control step",
+            "Package planning for such implementation requests is not a default user approval pause",
+            "continue into execution unless the user explicitly requested an approval gate",
+        ])
 
     def test_dual_entry_plugin_gate_contract_is_documented(self):
         phrases = [
@@ -31,6 +43,10 @@ class GovernanceDocsTests(unittest.TestCase):
             "$engifoundry",
             "The gate only decides whether the current workspace makes EngiFoundry available",
             "`.git/` as a super signal",
+            "ordinary project scaffold signals such as build files, package manifests, source directories, app directories, or test directories",
+            ".engifoundry.config.json",
+            ".engifoundry/",
+            ".engifoundry-packages/",
             "does not force package governance",
         ]
 
@@ -38,6 +54,10 @@ class GovernanceDocsTests(unittest.TestCase):
         self.assert_contains_all("docs/platform-metadata.md", phrases)
         self.assert_contains_all("skills/engifoundry-gate/SKILL.md", [
             "If a first-level child named `.git` exists, the gate matches immediately.",
+            "`gradle.properties`",
+            "`gradlew`",
+            "A standard project scaffold matches through ordinary project signals even when EngiFoundry has not been initialized",
+            "`.engifoundry.config.json`",
             "It does not mean:",
             "Use package mode.",
             "Gate detection is environment-driven. Main workflow selection is prompt-driven.",

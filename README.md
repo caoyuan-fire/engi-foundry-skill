@@ -75,7 +75,7 @@ Plugin autoload should target the gate entry point:
 $engifoundry-gate
 ```
 
-The gate only decides whether the current workspace makes EngiFoundry available. It inspects first-level children of the current working directory, treats `.git/` as a super signal, and does not recurse. A gate match does not force package governance; the main `engifoundry` skill still selects the actual mode from the user's prompt and project state.
+The gate only decides whether the current workspace makes EngiFoundry available. It inspects first-level children of the current working directory, treats `.git/` as a super signal, recognizes ordinary project scaffold signals such as build files, package manifests, source directories, app directories, or test directories, and also recognizes EngiFoundry initialization signals such as `.engifoundry.config.json`, `.engifoundry/`, and `.engifoundry-packages/`. It does not recurse. A gate match does not force package governance; the main `engifoundry` skill still selects the actual mode from the user's prompt and project state.
 
 The plugin package name is `engifoundry-bundle`. The main manual skill remains `$engifoundry`.
 
@@ -91,6 +91,8 @@ The plugin package name is `engifoundry-bundle`. The main manual skill remains `
 | `audit` | Process, cost, quality, or workflow retrospective |
 
 EngiFoundry uses the least ceremony compatible with risk. Small work may stay ad-hoc. Broad, risky, multi-step, or handoff-oriented work should use package mode.
+
+When the user asks to start implementing a feature and no package exists, EngiFoundry classifies by risk and clarity before editing code. Bounded low-risk requests with clear scope may proceed ad-hoc with engineering discipline, including test-first development when feasible. Broad, risky, multi-step, cross-module, handoff-oriented, or ambiguous implementation requests automatically enter package planning first; EngiFoundry should not ask the user to manually compile a package as a separate prerequisite and should not start direct TDD implementation until the package contract is ready or the missing information is clarified. This package planning step is not a default user approval pause; after the package is ready, EngiFoundry continues into execution unless the user requested approval, the package requires human approval, or a concrete blocker remains.
 
 ## Artifact Root
 

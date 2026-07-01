@@ -26,6 +26,8 @@ Use the least ceremony compatible with risk. Absence of a package is not enough 
 
 `ad-hoc` remains a first-class mode. Package-only governance must not be applied to bounded low-risk work that has not entered a package flow.
 
+If the user asks to start implementing a broad, risky, multi-step, cross-module, handoff-oriented, or ambiguous feature and no package exists, do not ask the user to manually compile a package first and do not start direct TDD implementation. Treat package planning as the next automatic `primary/control` step, clarify only missing information that cannot be inferred safely, drive the package to `planning.status=ready` when possible, and then proceed from the ready package contract. This is not a default user approval pause; pause only when the user requested approval, the package requires human approval before implementation, or a concrete blocker remains.
+
 Skill version is a maintenance label, not a hard execution requirement. Check at most once per session during the first EngiFoundry alignment, only when network access is available. Use `scripts/check_version.sh` or `scripts/check_version.ps1`; if no update is available, say nothing. If the check fails or network is unavailable, do not mention it unless the user explicitly asks. Version checks must not block normal EngiFoundry work.
 
 ## Required References

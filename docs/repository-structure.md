@@ -60,7 +60,7 @@ It contains:
 
 - `SKILL.md`: lightweight environment gate for current-working-directory detection.
 
-The gate inspects only first-level children of the current working directory. It treats `.git/` as a super signal. A gate match only makes EngiFoundry available; it does not force package governance.
+The gate inspects only first-level children of the current working directory. It treats `.git/` as a super signal, recognizes ordinary project scaffold signals such as build files, package manifests, source directories, app directories, or test directories, and recognizes EngiFoundry initialization signals such as `.engifoundry.config.json`, `.engifoundry/`, and `.engifoundry-packages/`. A gate match only makes EngiFoundry available; it does not force package governance.
 
 ## `skills/engifoundry/`
 

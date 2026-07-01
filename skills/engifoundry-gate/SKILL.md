@@ -29,11 +29,17 @@ If a first-level child named `.git` exists, the gate matches immediately.
 
 If any first-level child matches one of these names or patterns, the gate matches:
 
+- `.engifoundry.config.json`
+- `.engifoundry`
+- `.engifoundry-packages`
 - `pom.xml`
 - `build.gradle`
 - `build.gradle.kts`
 - `settings.gradle`
 - `settings.gradle.kts`
+- `gradle.properties`
+- `gradlew`
+- `gradlew.bat`
 - `package.json`
 - `Cargo.toml`
 - `go.mod`
@@ -46,6 +52,8 @@ If any first-level child matches one of these names or patterns, the gate matche
 - `*.csproj`
 - `AndroidManifest.xml`
 
+A standard project scaffold matches through ordinary project signals even when EngiFoundry has not been initialized. For example, a new project root with build files, package manifests, source directories, app directories, or test directories should make EngiFoundry available when it meets the L1, L2, or L3 signal rules above.
+
 ### L3 Medium Engineering Signals
 
 If two or more first-level children match these names or patterns, the gate matches:
@@ -56,6 +64,7 @@ If two or more first-level children match these names or patterns, the gate matc
 - `*manifest*`
 - `src`
 - `app`
+- `gradle`
 - `lib`
 - `tests`
 - `test`

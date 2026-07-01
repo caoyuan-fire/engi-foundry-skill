@@ -11,7 +11,7 @@ $engifoundry
 
 `$engifoundry-gate` is the plugin autoload gate. Plugin installation should target this entry point for session-start preheating. It only decides whether EngiFoundry is available in the current workspace; it does not apply the full workflow.
 
-The gate only decides whether the current workspace makes EngiFoundry available. It inspects only first-level current-working-directory children, treats `.git/` as a super signal, and does not force package governance.
+The gate only decides whether the current workspace makes EngiFoundry available. It inspects only first-level current-working-directory children, treats `.git/` as a super signal, recognizes ordinary project scaffold signals such as build files, package manifests, source directories, app directories, or test directories, recognizes EngiFoundry initialization signals such as `.engifoundry.config.json`, `.engifoundry/`, and `.engifoundry-packages/`, and does not force package governance.
 
 The canonical runtime metadata is the YAML frontmatter in:
 
