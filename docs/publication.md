@@ -71,3 +71,13 @@ If no newer version is available, say nothing. If the check fails or network is 
 - Keep public docs readable for humans.
 - Keep references actionable for agents.
 - Keep generated runtime state out of publishable files.
+
+## Installer Contract
+
+When a user asks to install EngiFoundry from a GitHub repository, installers must prefer plugin installation if the target host supports plugins and the repository contains that host's plugin manifest.
+
+For Codex-compatible hosts, `.codex-plugin/plugin.json` makes the repository a plugin package. A request phrased as "install the latest EngiFoundry skill from GitHub" or "install this skill: <repository URL>" should still install the plugin package, not only copy `skills/engifoundry/`.
+
+For Claude-compatible hosts, `.claude-plugin/plugin.json` provides the same plugin-first signal.
+
+Skills-only installation is a fallback for hosts without plugin support or for explicit user requests for skills-only installation.

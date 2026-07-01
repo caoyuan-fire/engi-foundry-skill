@@ -10,9 +10,21 @@
     "claude": ".claude-plugin/plugin.json"
   },
   "installModes": {
+    "preference": "plugin-first",
     "full": {
       "recommended": true,
+      "preferred": "plugin",
       "description": "Install both EngiFoundry skill folders, including the autoload gate, main SKILL.md, references, modules, and agent metadata."
+    },
+    "plugin": {
+      "recommended": true,
+      "codexManifest": ".codex-plugin/plugin.json",
+      "claudeManifest": ".claude-plugin/plugin.json",
+      "description": "Preferred full installation when the host supports plugins. Repository-level skill installation prompts should install this plugin package when a compatible plugin manifest is present."
+    },
+    "skillsOnly": {
+      "supported": true,
+      "description": "Fallback installation for hosts without plugin support or explicit skills-only requests. Install both skills/engifoundry-gate and skills/engifoundry."
     },
     "kernelOnly": {
       "supported": true,

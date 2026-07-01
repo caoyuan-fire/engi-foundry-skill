@@ -337,7 +337,7 @@ package root 不同。它保存执行依据，可以被 EngiFoundry 自动加入
 
 已安装 skill 的版本记录在 `skills/engifoundry/VERSION`。版本只是维护标签。EngiFoundry 可以在每个会话首次对齐时、且有网络权限时最多检查一次更新；没有更新或检查失败时保持静默。
 
-支持插件安装时，推荐使用插件形式。
+宿主支持插件安装时，插件安装是首选完整安装模式。安装器发现 `.codex-plugin/plugin.json` 或 `.claude-plugin/plugin.json` 时，应优先选择插件安装。skills-only 安装只是兼容回退方式，不是首选完整安装。
 
 Codex 兼容安装使用：
 
@@ -345,6 +345,8 @@ Codex 兼容安装使用：
 .codex-plugin/plugin.json
 skills/
 ```
+
+对于“从 GitHub 安装最新 EngiFoundry skill”或“安装这个 skill: <repository URL>”这类提示，Codex 兼容安装器应因为仓库存在 `.codex-plugin/plugin.json` 而将其视为插件包，并安装插件，使 `engifoundry-gate` 和 `engifoundry` 通过共享的 `skills/` 目录被发现。
 
 Claude 兼容安装使用：
 
@@ -355,7 +357,7 @@ skills/
 
 Kimi 兼容安装应将 `skills/` 下的入口安装或软链接到 Kimi 支持的 skills 目录。本仓库不假定 Kimi 已有稳定 marketplace。
 
-仍支持 skills-only 安装。复制或软链接两个 skill 目录：
+当宿主不支持插件，或用户明确要求 skills-only 安装时，仍支持 skills-only 安装。复制或软链接两个 skill 目录：
 
 ```text
 skills/engifoundry-gate/

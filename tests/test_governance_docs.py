@@ -59,6 +59,28 @@ class GovernanceDocsTests(unittest.TestCase):
         self.assertEqual(repository_manifest["pluginManifests"]["codex"], ".codex-plugin/plugin.json")
         self.assertEqual(repository_manifest["pluginManifests"]["claude"], ".claude-plugin/plugin.json")
 
+    def test_installation_contract_is_plugin_first_for_repository_requests(self):
+        phrases = [
+            "Plugin installation is the preferred full installation mode",
+            "install the latest EngiFoundry skill from GitHub",
+            "install this skill: <repository URL>",
+            "Skills-only installation is a compatibility fallback",
+        ]
+
+        self.assert_contains_all("README.md", phrases)
+        self.assert_contains_all("docs/publication.md", [
+            "## Installer Contract",
+            "install the latest EngiFoundry skill from GitHub",
+            "install this skill: <repository URL>",
+            "plugin package, not only copy `skills/engifoundry/`",
+            "Skills-only installation is a fallback",
+        ])
+
+        manifest = json.loads(read("engifoundry.manifest.json"))
+        self.assertEqual(manifest["installModes"]["preference"], "plugin-first")
+        self.assertEqual(manifest["installModes"]["full"]["preferred"], "plugin")
+        self.assertTrue(manifest["installModes"]["plugin"]["recommended"])
+
     def test_package_governance_constraints_are_synced_to_installable_references(self):
         expectations = {
             "role-protocol.md": [

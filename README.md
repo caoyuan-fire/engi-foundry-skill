@@ -357,7 +357,7 @@ The package root is different. It contains execution inputs and may be automatic
 
 The installed skill version is recorded in `skills/engifoundry/VERSION`. Version is a maintenance label. EngiFoundry may check for updates at most once per session during first alignment when network access is available; no-update and failed checks stay silent.
 
-Plugin installation is recommended when the host supports it.
+Plugin installation is the preferred full installation mode when the host supports plugins. Installers should choose plugin installation whenever `.codex-plugin/plugin.json` or `.claude-plugin/plugin.json` is present. Skills-only installation is a compatibility fallback, not the preferred full install.
 
 Codex-compatible installations use:
 
@@ -365,6 +365,8 @@ Codex-compatible installations use:
 .codex-plugin/plugin.json
 skills/
 ```
+
+For a prompt such as "install the latest EngiFoundry skill from GitHub" or "install this skill: <repository URL>", a Codex-compatible installer should treat this repository as a plugin package because `.codex-plugin/plugin.json` is present, then install the plugin so the `engifoundry-gate` and `engifoundry` entries are discovered from the shared `skills/` directory.
 
 Claude-compatible installations use:
 
@@ -375,7 +377,7 @@ skills/
 
 Kimi-compatible installations should install or symlink the `skills/` entries into a Kimi-supported skills directory. This repository does not assume a stable Kimi marketplace.
 
-Skills-only installation is still supported. Copy or symlink both skill folders:
+Skills-only installation is still supported when the host has no plugin support or the user explicitly requests skills-only installation. Copy or symlink both skill folders:
 
 ```text
 skills/engifoundry-gate/

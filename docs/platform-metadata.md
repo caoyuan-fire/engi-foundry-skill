@@ -36,6 +36,8 @@ The Codex plugin manifest declares:
 - the shared `skills/` directory;
 - the `engifoundry-gate` autoload gate and `engifoundry` main entry through normal skill discovery.
 
+Codex-compatible installers should treat repository-level requests such as "install the latest EngiFoundry skill from GitHub" or "install this skill: <repository URL>" as plugin installation requests when `.codex-plugin/plugin.json` is present. Copying only `skills/engifoundry/` is not the preferred full installation.
+
 EngiFoundry also includes OpenAI/Codex-facing UI metadata:
 
 ```text
