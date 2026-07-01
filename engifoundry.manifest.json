@@ -8,7 +8,8 @@
   "gateSkillPath": "skills/engifoundry-gate",
   "pluginManifests": {
     "codex": ".codex-plugin/plugin.json",
-    "claude": ".claude-plugin/plugin.json"
+    "claude": ".claude-plugin/plugin.json",
+    "kimi": ".kimi-plugin/plugin.json"
   },
   "installModes": {
     "preference": "plugin-first",
@@ -21,6 +22,7 @@
       "recommended": true,
       "codexManifest": ".codex-plugin/plugin.json",
       "claudeManifest": ".claude-plugin/plugin.json",
+      "kimiManifest": ".kimi-plugin/plugin.json",
       "description": "Preferred full installation when the host supports plugins. Repository-level skill installation prompts should install this plugin package when a compatible plugin manifest is present."
     },
     "skillsOnly": {

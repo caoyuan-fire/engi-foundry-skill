@@ -70,19 +70,22 @@ class GovernanceDocsTests(unittest.TestCase):
     def test_plugin_manifests_expose_shared_skills_directory(self):
         codex = json.loads(read(".codex-plugin/plugin.json"))
         claude = json.loads(read(".claude-plugin/plugin.json"))
+        kimi = json.loads(read(".kimi-plugin/plugin.json"))
         repository_manifest = json.loads(read("engifoundry.manifest.json"))
 
-        for manifest in [codex, claude]:
+        for manifest in [codex, claude, kimi]:
             self.assertEqual(manifest["name"], "engifoundry-bundle")
             self.assertEqual(manifest["version"], repository_manifest["version"])
             self.assertEqual(manifest["skills"], "./skills/")
             self.assertIn("interface", manifest)
 
+        self.assertEqual(kimi["sessionStart"]["skill"], "engifoundry-gate")
         self.assertEqual(repository_manifest["pluginName"], "engifoundry-bundle")
         self.assertEqual(repository_manifest["skillPath"], "skills/engifoundry")
         self.assertEqual(repository_manifest["gateSkillPath"], "skills/engifoundry-gate")
         self.assertEqual(repository_manifest["pluginManifests"]["codex"], ".codex-plugin/plugin.json")
         self.assertEqual(repository_manifest["pluginManifests"]["claude"], ".claude-plugin/plugin.json")
+        self.assertEqual(repository_manifest["pluginManifests"]["kimi"], ".kimi-plugin/plugin.json")
 
     def test_plugin_package_name_is_distinct_from_main_skill_name(self):
         phrases = [
@@ -103,6 +106,8 @@ class GovernanceDocsTests(unittest.TestCase):
     def test_installation_contract_is_plugin_first_for_repository_requests(self):
         readme_phrases = [
             "Plugin installation is the preferred full installation mode",
+            "codex plugin marketplace add https://github.com/caoyuan-fire/engi-foundry-skill",
+            "codex plugin add engifoundry-bundle@engi-foundry-skill",
             ".agents/plugins/marketplace.json",
             ".codex-plugin/plugin.json",
             "Detailed installation and publication rules live in",
@@ -127,12 +132,16 @@ class GovernanceDocsTests(unittest.TestCase):
         self.assert_contains_all("docs/repository-structure.md", [
             ".agents/plugins/marketplace.json",
             ".claude-plugin/marketplace.json",
+            ".kimi-plugin/plugin.json",
         ])
         self.assert_contains_all("docs/publication.md", [
             ".agents/plugins/marketplace.json",
             ".claude-plugin/marketplace.json",
+            ".kimi-plugin/plugin.json",
         ])
         self.assert_contains_all("zh/README.md", [
+            "codex plugin marketplace add https://github.com/caoyuan-fire/engi-foundry-skill",
+            "codex plugin add engifoundry-bundle@engi-foundry-skill",
             ".agents/plugins/marketplace.json",
             ".codex-plugin/plugin.json",
             "详细安装和发布规则见",
@@ -153,28 +162,36 @@ class GovernanceDocsTests(unittest.TestCase):
 
     def test_claude_and_kimi_installation_contracts_are_explicit(self):
         marketplace = json.loads(read(".claude-plugin/marketplace.json"))
+        kimi = json.loads(read(".kimi-plugin/plugin.json"))
         self.assertEqual(marketplace["name"], "engi-foundry-skill")
         self.assertEqual(marketplace["plugins"][0]["name"], "engifoundry-bundle")
         self.assertEqual(marketplace["plugins"][0]["source"], ".")
+        self.assertEqual(kimi["name"], "engifoundry-bundle")
+        self.assertEqual(kimi["skills"], "./skills/")
+        self.assertEqual(kimi["sessionStart"]["skill"], "engifoundry-gate")
 
         self.assert_contains_all("README.md", [
+            "/plugin marketplace add caoyuan-fire/engi-foundry-skill",
+            "/plugin install engifoundry-bundle@engi-foundry-skill",
             ".claude-plugin/marketplace.json",
-            "--skills-dir <directory>",
-            "For hosts without plugin marketplace support",
+            "/plugins install https://github.com/caoyuan-fire/engi-foundry-skill",
+            ".kimi-plugin/plugin.json",
         ])
         self.assert_contains_all("docs/platform-metadata.md", [
             "Claude does not use Codex's `.agents/plugins/marketplace.json`",
-            "Kimi Code currently supports explicit skill loading through `--skills-dir <dir>`",
-            "rather than a marketplace manifest",
+            ".kimi-plugin/plugin.json",
+            "/plugins install https://github.com/caoyuan-fire/engi-foundry-skill",
+            "Official Kimi marketplace search visibility is separate from repository compatibility",
         ])
         self.assert_contains_all("docs/publication.md", [
             "`.claude-plugin/marketplace.json` makes the GitHub repository a Claude plugin marketplace",
-            "Kimi-compatible hosts should use `SKILL.md` discovery",
-            "Do not add Kimi marketplace metadata",
+            "`.kimi-plugin/plugin.json` makes the GitHub repository directly installable",
+            "Official Kimi marketplace search visibility is a separate publication channel",
         ])
         self.assert_contains_all("skills/engifoundry/agents/generic.json", [
             ".claude-plugin/marketplace.json",
-            "launch Kimi with --skills-dir",
+            ".kimi-plugin/plugin.json",
+            "/plugins install https://github.com/caoyuan-fire/engi-foundry-skill",
         ])
 
     def test_plugin_and_skills_only_installation_are_exclusive(self):

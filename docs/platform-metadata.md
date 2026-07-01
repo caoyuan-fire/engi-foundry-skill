@@ -75,18 +75,32 @@ Claude-compatible skill surfaces should use the Claude marketplace and plugin ma
 
 ## Kimi-Compatible Surfaces
 
-EngiFoundry does not currently include a Kimi marketplace manifest because no stable marketplace catalog contract is assumed here.
+EngiFoundry includes a Kimi plugin manifest:
 
-Kimi-compatible usage should rely on:
+```text
+.kimi-plugin/plugin.json
+```
+
+Kimi Code can install directly from the GitHub repository with:
+
+```text
+/plugins install https://github.com/caoyuan-fire/engi-foundry-skill
+```
+
+The Kimi manifest declares:
+
+- the plugin package name `engifoundry-bundle`;
+- the shared `skills/` directory;
+- `engifoundry-gate` as the session-start skill.
+
+Kimi-compatible usage should also rely on:
 
 - `SKILL.md` frontmatter;
 - `agents/generic.json`;
 - public documentation in this repository.
 
-Install or symlink both `skills/engifoundry-gate/` and `skills/engifoundry/` into a Kimi-supported skills directory. If Kimi plugin installation is used, the plugin package must still expose the shared `skills/` directory.
-
-Kimi Code currently supports explicit skill loading through `--skills-dir <dir>`, so repository compatibility is maintained through the `skills/` layout and `SKILL.md` files rather than a marketplace manifest.
+Official Kimi marketplace search visibility is separate from repository compatibility. It depends on Kimi marketplace publication or curation outside this repository.
 
 ## Rule
 
-Do not add platform-specific metadata files unless the platform has a stable schema or the repository explicitly documents the file as non-authoritative tooling metadata.
+Do not add platform-specific metadata files unless the platform has a stable schema or the repository explicitly documents the file as supported tooling metadata.

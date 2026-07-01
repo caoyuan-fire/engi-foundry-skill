@@ -1,0 +1,35 @@
+{
+  "name": "engifoundry-bundle",
+  "version": "0.1.2",
+  "description": "Structured engineering workflow for planning, execution governance, durable artifacts, review, verification, and handoff.",
+  "author": {
+    "name": "EngiFoundry",
+    "url": "https://github.com/caoyuan-fire/engi-foundry-skill"
+  },
+  "homepage": "https://github.com/caoyuan-fire/engi-foundry-skill",
+  "license": "MIT",
+  "keywords": [
+    "engineering",
+    "planning",
+    "workflow",
+    "verification",
+    "handoff",
+    "agent-skills"
+  ],
+  "skills": "./skills/",
+  "sessionStart": {
+    "skill": "engifoundry-gate"
+  },
+  "interface": {
+    "displayName": "EngiFoundry Bundle",
+    "shortDescription": "Structured engineering delivery workflow",
+    "longDescription": "Use EngiFoundry to align engineering state, plan and execute structured work, preserve durable artifacts, review results, verify changes, and close out delivery.",
+    "developerName": "EngiFoundry",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/caoyuan-fire/engi-foundry-skill"
+  }
+}

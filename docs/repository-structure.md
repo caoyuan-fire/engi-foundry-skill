@@ -13,6 +13,8 @@ EngiFoundrySkill/
 ├── .claude-plugin/
 │   ├── marketplace.json
 │   └── plugin.json
+├── .kimi-plugin/
+│   └── plugin.json
 ├── engifoundry.manifest.json
 ├── docs/
 ├── skills/
@@ -31,6 +33,7 @@ EngiFoundrySkill/
 - `.codex-plugin/plugin.json`: Codex plugin manifest.
 - `.claude-plugin/marketplace.json`: Claude Git marketplace manifest for hosted installation.
 - `.claude-plugin/plugin.json`: Claude plugin manifest.
+- `.kimi-plugin/plugin.json`: Kimi plugin manifest for direct repository installation.
 - `.gitignore`: repository hygiene only.
 
 ## `docs/`

@@ -45,7 +45,19 @@ plugin 包名是 `engifoundry-bundle`。手动 skill 入口仍是 `$engifoundry`
 
 ### Codex
 
-Codex 兼容安装使用本仓库作为 Git marketplace，并从该 marketplace 安装 `engifoundry-bundle` plugin。
+Codex 兼容安装使用本仓库作为 Git marketplace：
+
+```bash
+codex plugin marketplace add https://github.com/caoyuan-fire/engi-foundry-skill
+codex plugin add engifoundry-bundle@engi-foundry-skill
+```
+
+更新：
+
+```bash
+codex plugin marketplace upgrade engi-foundry-skill
+codex plugin add engifoundry-bundle@engi-foundry-skill
+```
 
 相关文件：
 
@@ -57,7 +69,12 @@ skills/
 
 ### Claude
 
-Claude 兼容安装使用本仓库作为 Claude plugin marketplace，并从该 marketplace 安装 `engifoundry-bundle` plugin。
+Claude 兼容安装使用本仓库作为 Claude plugin marketplace：
+
+```text
+/plugin marketplace add caoyuan-fire/engi-foundry-skill
+/plugin install engifoundry-bundle@engi-foundry-skill
+```
 
 相关文件：
 
@@ -67,7 +84,28 @@ Claude 兼容安装使用本仓库作为 Claude plugin marketplace，并从该 m
 skills/
 ```
 
-### Kimi 和 Skills-Only 宿主
+### Kimi Code
+
+Kimi Code 可以直接从本仓库安装：
+
+```text
+/plugins install https://github.com/caoyuan-fire/engi-foundry-skill
+```
+
+也可以在 Kimi 插件界面搜索：
+
+```text
+/plugins
+```
+
+仓库安装使用：
+
+```text
+.kimi-plugin/plugin.json
+skills/
+```
+
+### Skills-Only 宿主
 
 对于不支持 plugin marketplace 的宿主，把两个 skill 目录安装或符号链接到宿主的 skills 目录：
 
@@ -75,8 +113,6 @@ skills/
 skills/engifoundry-gate/
 skills/engifoundry/
 ```
-
-Kimi 兼容宿主也可以在宿主支持时使用显式 skills 目录，例如类似 `--skills-dir <directory>` 的选项。
 
 不要在同一个 host home 中同时安装 plugin 包和 skills-only 入口；两者并存可能暴露重复的 `$engifoundry-gate` 和 `$engifoundry` 条目。
 

@@ -45,7 +45,19 @@ The plugin package name is `engifoundry-bundle`. The main manual skill remains `
 
 ### Codex
 
-Codex-compatible installations use this repository as a Git marketplace and install the `engifoundry-bundle` plugin from that marketplace.
+Codex-compatible installations use this repository as a Git marketplace:
+
+```bash
+codex plugin marketplace add https://github.com/caoyuan-fire/engi-foundry-skill
+codex plugin add engifoundry-bundle@engi-foundry-skill
+```
+
+Update with:
+
+```bash
+codex plugin marketplace upgrade engi-foundry-skill
+codex plugin add engifoundry-bundle@engi-foundry-skill
+```
 
 Relevant files:
 
@@ -57,7 +69,12 @@ skills/
 
 ### Claude
 
-Claude-compatible installations use this repository as a Claude plugin marketplace and install the `engifoundry-bundle` plugin from that marketplace.
+Claude-compatible installations use this repository as a Claude plugin marketplace:
+
+```text
+/plugin marketplace add caoyuan-fire/engi-foundry-skill
+/plugin install engifoundry-bundle@engi-foundry-skill
+```
 
 Relevant files:
 
@@ -67,7 +84,28 @@ Relevant files:
 skills/
 ```
 
-### Kimi and Skills-Only Hosts
+### Kimi Code
+
+Kimi Code can install directly from this repository:
+
+```text
+/plugins install https://github.com/caoyuan-fire/engi-foundry-skill
+```
+
+You can also search the Kimi plugin UI with:
+
+```text
+/plugins
+```
+
+Repository installs use:
+
+```text
+.kimi-plugin/plugin.json
+skills/
+```
+
+### Skills-Only Hosts
 
 For hosts without plugin marketplace support, install or symlink both skill folders into the host's skills directory:
 
@@ -75,8 +113,6 @@ For hosts without plugin marketplace support, install or symlink both skill fold
 skills/engifoundry-gate/
 skills/engifoundry/
 ```
-
-Kimi-compatible hosts can also launch with an explicit skills directory, for example with a `--skills-dir <directory>` style option when supported by the host.
 
 Do not install both the plugin package and skills-only entries into the same host home; doing both can expose duplicate `$engifoundry-gate` and `$engifoundry` entries.
 

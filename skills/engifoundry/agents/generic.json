@@ -24,6 +24,6 @@
   "platformNotes": {
     "openai": "Use .codex-plugin/plugin.json for Codex plugin installation and agents/openai.yaml when supported by Codex/OpenAI surfaces.",
     "claude": "Use .claude-plugin/marketplace.json for Claude marketplace installation and .claude-plugin/plugin.json for the plugin package; Claude-compatible surfaces should read SKILL.md frontmatter as the core skill metadata.",
-    "kimi": "No stable Kimi marketplace schema is assumed here; install or symlink skills/engifoundry-gate and skills/engifoundry into a Kimi-supported skills directory, or launch Kimi with --skills-dir."
+    "kimi": "Use .kimi-plugin/plugin.json for direct Kimi Code repository installation with /plugins install https://github.com/caoyuan-fire/engi-foundry-skill. Official marketplace search visibility depends on Kimi marketplace publication outside this repository."
   }
 }
