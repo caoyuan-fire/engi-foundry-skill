@@ -49,15 +49,32 @@ class GovernanceDocsTests(unittest.TestCase):
         repository_manifest = json.loads(read("engifoundry.manifest.json"))
 
         for manifest in [codex, claude]:
-            self.assertEqual(manifest["name"], "engifoundry")
+            self.assertEqual(manifest["name"], "engifoundry-bundle")
             self.assertEqual(manifest["version"], repository_manifest["version"])
             self.assertEqual(manifest["skills"], "./skills/")
             self.assertIn("interface", manifest)
 
+        self.assertEqual(repository_manifest["pluginName"], "engifoundry-bundle")
         self.assertEqual(repository_manifest["skillPath"], "skills/engifoundry")
         self.assertEqual(repository_manifest["gateSkillPath"], "skills/engifoundry-gate")
         self.assertEqual(repository_manifest["pluginManifests"]["codex"], ".codex-plugin/plugin.json")
         self.assertEqual(repository_manifest["pluginManifests"]["claude"], ".claude-plugin/plugin.json")
+
+    def test_plugin_package_name_is_distinct_from_main_skill_name(self):
+        phrases = [
+            "The plugin package name is `engifoundry-bundle`",
+            "The main manual skill remains `$engifoundry`",
+        ]
+
+        self.assert_contains_all("README.md", phrases)
+        self.assert_contains_all("docs/platform-metadata.md", [
+            "The plugin package name is `engifoundry-bundle`",
+            "differs from the main `$engifoundry` skill name",
+        ])
+        self.assert_contains_all("docs/publication.md", [
+            "The plugin package name is `engifoundry-bundle`",
+            "Do not rename the main manual skill",
+        ])
 
     def test_installation_contract_is_plugin_first_for_repository_requests(self):
         phrases = [

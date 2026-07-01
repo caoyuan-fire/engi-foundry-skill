@@ -1,5 +1,6 @@
 {
   "name": "engifoundry",
+  "pluginName": "engifoundry-bundle",
   "displayName": "EngiFoundry",
   "version": "0.1.2",
   "status": "public-layout-draft",

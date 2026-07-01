@@ -1,5 +1,5 @@
 {
-  "name": "engifoundry",
+  "name": "engifoundry-bundle",
   "version": "0.1.2",
   "description": "Structured engineering workflow for planning, execution governance, durable artifacts, review, verification, and handoff.",
   "author": {
@@ -19,7 +19,7 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "EngiFoundry",
+    "displayName": "EngiFoundry Bundle",
     "shortDescription": "Structured engineering delivery workflow",
     "longDescription": "Use EngiFoundry to align engineering state, plan and execute structured work, preserve durable artifacts, review results, verify changes, and close out delivery.",
     "developerName": "EngiFoundry",

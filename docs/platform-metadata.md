@@ -30,6 +30,8 @@ EngiFoundry includes a Codex plugin manifest:
 .codex-plugin/plugin.json
 ```
 
+The plugin package name is `engifoundry-bundle`. The package name intentionally differs from the main `$engifoundry` skill name so host UIs that expose both plugin packages and skills do not show two ambiguous `engifoundry` entries.
+
 The Codex plugin manifest declares:
 
 - the plugin name and interface metadata;
@@ -63,6 +65,8 @@ EngiFoundry includes a Claude plugin manifest:
 ```text
 .claude-plugin/plugin.json
 ```
+
+The Claude plugin package uses the same `engifoundry-bundle` package name.
 
 Claude-compatible skill surfaces should use the plugin manifest when available and `SKILL.md` frontmatter as the core skill metadata source.
 

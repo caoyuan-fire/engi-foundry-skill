@@ -73,6 +73,8 @@ $engifoundry-gate
 
 The gate only decides whether the current workspace makes EngiFoundry available. It inspects first-level children of the current working directory, treats `.git/` as a super signal, and does not recurse. A gate match does not force package governance; the main `engifoundry` skill still selects the actual mode from the user's prompt and project state.
 
+The plugin package name is `engifoundry-bundle`. The main manual skill remains `$engifoundry`.
+
 | Mode | Purpose |
 | --- | --- |
 | `ad-hoc` | Bounded low-risk work without package ceremony |

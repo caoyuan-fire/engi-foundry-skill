@@ -30,6 +30,8 @@ The README explains:
 
 `skills/engifoundry/SKILL.md` stays concise and operational. It is the main manual entry point and the workflow launcher after the gate matches.
 
+The plugin package name is `engifoundry-bundle`. Do not rename the main manual skill to match the package; keeping `$engifoundry` separate from the plugin package avoids ambiguous host UI entries.
+
 `skills/engifoundry/references/` contains agent-facing details loaded on demand.
 
 `skills/engifoundry/agents/` contains optional platform and tooling metadata. Core discovery must still work from `SKILL.md`.
