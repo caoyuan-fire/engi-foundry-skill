@@ -27,22 +27,35 @@ The artifact root is for durable work products such as execution records, review
 
 ## Roadmaps
 
-Roadmaps are phase-level package-flow planning inputs. They capture agreed planning, requirement alignment, sequencing decisions, and next-step intent that may guide packages in that phase.
+Roadmaps are package-flow planning inputs. They capture agreed planning, requirement alignment, sequencing decisions, and next-step intent.
 
-Roadmaps live under the package root, scoped by phase:
+The package root may contain a master roadmap for cross-phase planning:
+
+```text
+<package-root>/
+└── ROADMAP.md
+```
+
+The master roadmap may cover multiple phases and should capture long-range direction, boundaries, phase sequence, and cross-phase dependencies.
+
+Phases may contain sub-roadmaps:
 
 ```text
 <package-root>/PHASE-001/
 └── ROADMAP.md
 ```
 
-`ROADMAP.md` exists only when planning or alignment produced a roadmap for the phase. Projects without a meaningful phase concept use `PHASE-001`.
+Phase roadmaps should capture the executable view for that phase, including additional phase-local load that does not change the master roadmap direction.
 
-Create or update the phase `ROADMAP.md` when the user has performed requirement alignment, planning, roadmap, or pre-task discussion and asks to persist, archive, save, land, or use it as later execution input.
+Do not mechanically create one phase directory per phase merely because the master roadmap mentions multiple phases. Create `PHASE-*` directories when a phase is being refined, packaged, executed, handed off, or used as current decision input.
 
-When the user asks what to do next, asks to confirm the next step, or requests an engineering decision that depends on prior alignment, EngiFoundry should check the relevant phase for `ROADMAP.md`. If a roadmap exists, use it as decision input together with current progress. If no roadmap exists, decide from the current session context, visible project state, and the user's stated goal.
+`ROADMAP.md` exists only when planning or alignment produced one. Projects without a meaningful phase concept use `PHASE-001` for executable phase work.
 
-Do not store roadmap state in `.engifoundry.config.json`. The project config locates the package root. Phase `ROADMAP.md` files are the source of truth for roadmap state.
+Create or update the package-root `ROADMAP.md` when the user has aligned a broad roadmap that spans multiple phases. Create or update a phase `ROADMAP.md` when the user has aligned phase-specific execution detail.
+
+When the user asks what to do next, asks to confirm the next step, or requests an engineering decision that depends on prior alignment, EngiFoundry should check the relevant phase for `ROADMAP.md` first. If no phase roadmap exists, check `<package-root>/ROADMAP.md` for the relevant phase section. If no roadmap exists, decide from the current session context, visible project state, and the user's stated goal.
+
+Do not store roadmap state in `.engifoundry.config.json`. The project config locates the package root. Package-root and phase `ROADMAP.md` files are the source of truth for roadmap state.
 
 ## Package Root
 
@@ -144,7 +157,8 @@ If an adapter needs runtime state, it must use an explicit external location out
 | `<artifact-root>/docs/design/` | Durable output | Architecture, UX, data-flow, test-strategy, and domain design documents. | Temporary scratch notes, raw chat transcripts. |
 | `<artifact-root>/docs/reference/` | Durable input reference | External or upstream reference material used as context for decisions. | Secrets, credentials, downloaded dependency caches. |
 | `<artifact-root>/docs/archive/` | Durable output archive | Historical documents that remain useful as readable background but are not current records. | Active package contracts, cache files. |
-| `<package-root>/PHASE-001/ROADMAP.md` | Planning input | Phase roadmap for requirement alignment, sequencing, and next-step decisions when one exists. | Execution records, verification evidence, reviews, raw logs. |
+| `<package-root>/ROADMAP.md` | Planning input | Master roadmap for cross-phase direction, boundaries, sequencing, and dependencies when one exists. | Execution records, verification evidence, reviews, raw logs. |
+| `<package-root>/PHASE-001/ROADMAP.md` | Planning input | Phase sub-roadmap for executable phase planning and phase-local load when one exists. | Execution records, verification evidence, reviews, raw logs. |
 | `<package-root>/PHASE-001/PAK-001/` | Execution input | Task package summary, package control JSON, Job contracts, and package-flow control data. | Execution records, reviews, verification evidence, closeout notes, raw logs. |
 
 Ad-hoc, review-only, and audit work may write records under `records/` when the output has durable value.
@@ -167,6 +181,7 @@ Package-flow execution inputs live under the package root:
 
 ```text
 <package-root>/
+├── ROADMAP.md
 └── PHASE-001/
     ├── ROADMAP.md
     └── PAK-001/

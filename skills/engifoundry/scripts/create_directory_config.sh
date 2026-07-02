@@ -149,9 +149,15 @@ else
       "mustNotContain": ["active package contracts", "cache files"]
     },
     {
+      "path": "<package-root>/ROADMAP.md",
+      "category": "Planning input",
+      "purpose": "Master roadmap for cross-phase direction, boundaries, sequencing, and dependencies when one exists.",
+      "mustNotContain": ["execution records", "verification evidence", "reviews", "raw logs"]
+    },
+    {
       "path": "<package-root>/PHASE-001/ROADMAP.md",
       "category": "Planning input",
-      "purpose": "Phase roadmap for requirement alignment, sequencing, and next-step decisions when one exists.",
+      "purpose": "Phase sub-roadmap for executable phase planning and phase-local load when one exists.",
       "mustNotContain": ["execution records", "verification evidence", "reviews", "raw logs"]
     },
     {

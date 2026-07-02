@@ -7,6 +7,30 @@ Markdown explains. JSON controls.
 ## Directory Layout
 
 ```text
+<package-root>/
+├── ROADMAP.md
+└── PHASE-001/
+    ├── ROADMAP.md
+    └── PAK-001/
+        ├── summary.md
+        ├── package.config.json
+        └── jobs/
+            └── JOB-001/
+                ├── job.md
+                └── job.config.json
+```
+
+The package-root `ROADMAP.md` is an optional master roadmap for cross-phase planning. It may cover multiple phases and should capture the long-range direction, boundaries, phase sequence, and cross-phase dependencies.
+
+Phase `ROADMAP.md` files are optional phase sub-roadmaps. They should capture the executable view for that phase, including additional phase-local load that does not change the master roadmap direction.
+
+Do not mechanically create one phase directory per phase merely because the master roadmap mentions multiple phases. Create `PHASE-*` directories when a phase is being refined, packaged, executed, handed off, or used as current decision input.
+
+When executing or planning inside a phase, prefer `<package-root>/PHASE-001/ROADMAP.md` when it exists. If it does not exist, use the relevant section of `<package-root>/ROADMAP.md` when present.
+
+Package layout:
+
+```text
 <package-root>/PHASE-001/
 ├── ROADMAP.md
 └── PAK-001/
@@ -34,7 +58,7 @@ If phase-level planning happened, the phase may contain a roadmap:
 <package-root>/PHASE-001/ROADMAP.md
 ```
 
-`ROADMAP.md` is package-flow planning input, not an execution record. It exists only when planning or alignment produced one.
+`ROADMAP.md` is package-flow planning input, not an execution record. A master roadmap exists only when cross-phase planning produced one. A phase roadmap exists only when planning or alignment produced one for that phase.
 
 Package-flow durable outputs use the package records area:
 
@@ -62,7 +86,8 @@ Legacy durable outputs at `<artifact-root>/records/packages/<package-id>/` may b
 - `packageId` must use `PAK-001` sequence format within its phase.
 - `jobId` must use `JOB-001` sequence format within its package.
 - Execution records, reviews, verification evidence, and closeout notes are durable outputs and live under the artifact root.
-- Roadmaps are phase-level package-flow planning inputs and live under the package root when present.
+- Roadmaps are package-flow planning inputs and live under the package root when present.
+- A package-root roadmap is the master cross-phase plan. Phase roadmaps are executable sub-roadmaps that may add phase-local detail without changing the master direction.
 - Markdown files carry human meaning and review context.
 - JSON files carry machine-readable control data.
 - JSON must not duplicate long Markdown narratives.

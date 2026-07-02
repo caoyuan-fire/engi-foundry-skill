@@ -66,7 +66,8 @@ if ($Mode -eq "empty") {
       [ordered]@{ path = "<artifact-root>/docs/design/"; category = "Durable output"; purpose = "Architecture, UX, data-flow, test-strategy, and domain design documents."; mustNotContain = @("temporary scratch notes", "raw chat transcripts") },
       [ordered]@{ path = "<artifact-root>/docs/reference/"; category = "Durable input reference"; purpose = "External or upstream reference material used as context for decisions."; mustNotContain = @("secrets", "credentials", "downloaded dependency caches") },
       [ordered]@{ path = "<artifact-root>/docs/archive/"; category = "Durable output archive"; purpose = "Historical documents that remain useful as readable background but are not current records."; mustNotContain = @("active package contracts", "cache files") },
-      [ordered]@{ path = "<package-root>/PHASE-001/ROADMAP.md"; category = "Planning input"; purpose = "Phase roadmap for requirement alignment, sequencing, and next-step decisions when one exists."; mustNotContain = @("execution records", "verification evidence", "reviews", "raw logs") },
+      [ordered]@{ path = "<package-root>/ROADMAP.md"; category = "Planning input"; purpose = "Master roadmap for cross-phase direction, boundaries, sequencing, and dependencies when one exists."; mustNotContain = @("execution records", "verification evidence", "reviews", "raw logs") },
+      [ordered]@{ path = "<package-root>/PHASE-001/ROADMAP.md"; category = "Planning input"; purpose = "Phase sub-roadmap for executable phase planning and phase-local load when one exists."; mustNotContain = @("execution records", "verification evidence", "reviews", "raw logs") },
       [ordered]@{ path = "<package-root>/PHASE-001/PAK-001/"; category = "Execution input"; purpose = "Task package summary, package control JSON, Job contracts, and package-flow control data."; mustNotContain = @("execution records", "reviews", "verification evidence", "closeout notes", "raw logs") }
     )
   }

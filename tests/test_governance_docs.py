@@ -333,7 +333,11 @@ class GovernanceDocsTests(unittest.TestCase):
 
     def test_roadmap_protocol_is_package_root_phase_state_not_project_config_state(self):
         phrases = [
+            "<package-root>/ROADMAP.md",
             "<package-root>/PHASE-001/ROADMAP.md",
+            "master roadmap for cross-phase planning",
+            "Phase roadmaps should capture the executable view",
+            "Do not mechanically create one phase directory per phase",
             "ROADMAP.md",
             "Do not store roadmap state in `.engifoundry.config.json`",
             "When the user asks what to do next",
@@ -347,6 +351,7 @@ class GovernanceDocsTests(unittest.TestCase):
             [
                 "When the user asks what to do next",
                 "check the relevant package-root phase for `ROADMAP.md`",
+                "check `<package-root>/ROADMAP.md` for the relevant phase section",
                 "If no roadmap exists",
             ],
         )
@@ -365,6 +370,7 @@ class GovernanceDocsTests(unittest.TestCase):
             "`<artifact-root>/docs/design/`",
             "`<artifact-root>/docs/reference/`",
             "`<artifact-root>/docs/archive/`",
+            "`<package-root>/ROADMAP.md`",
             "`<package-root>/PHASE-001/ROADMAP.md`",
             "`<package-root>/PHASE-001/PAK-001/`",
             "Execution input",
