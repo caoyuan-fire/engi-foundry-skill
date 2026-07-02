@@ -26,6 +26,8 @@ Phase `ROADMAP.md` files are optional phase sub-roadmaps. They should capture th
 
 Do not mechanically create one phase directory per phase merely because the master roadmap mentions multiple phases. Create `PHASE-*` directories when a phase is being refined, packaged, executed, handed off, or used as current decision input.
 
+When roadmap alignment produces content and the target is not explicitly stated, Agent should infer the storage target from package-root facts and conversation content. Default to the package-root `ROADMAP.md` unless there is strong evidence that the discussion is extending a specific existing, progressing, latest completed, or pending phase.
+
 When executing or planning inside a phase, prefer `<package-root>/PHASE-001/ROADMAP.md` when it exists. If it does not exist, use the relevant section of `<package-root>/ROADMAP.md` when present.
 
 Package layout:

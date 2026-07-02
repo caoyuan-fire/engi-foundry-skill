@@ -158,7 +158,15 @@ Do not mechanically create one phase directory per phase merely because the mast
 
 `ROADMAP.md` exists only when planning or alignment produced one. Projects without a meaningful phase concept use `PHASE-001` for executable phase work.
 
-Create or update the package-root `ROADMAP.md` when the user has aligned a broad roadmap that spans multiple phases. Create or update a phase `ROADMAP.md` when the user has aligned phase-specific execution detail.
+When discussion or alignment produces roadmap content, EngiFoundry should decide where to store it from project facts and conversation content. Do not require the user to explicitly say whether the roadmap is master-level or phase-level.
+
+Default to the package-root `ROADMAP.md` when there is no strong evidence that the discussion belongs to a specific phase. This keeps broad alignment as the master plan until execution context narrows it.
+
+Create or update a phase `ROADMAP.md` when known facts or conversation content show that the discussion is extending a specific phase. Strong signals include an existing progressing phase, a latest completed phase being extended, an explicitly pending phase, active package or Job work under that phase, or discussion framed around carrying forward from a completed/progressing/pending phase.
+
+Use the discussion content as evidence. Future direction, cross-phase sequencing, broad scope boundaries, or long-range dependency planning usually belongs in the master roadmap. Execution detail, phase-local load, refinements to current phase scope, or work derived from the latest completed/progressing/pending phase usually belongs in that phase roadmap.
+
+Ask the user only when local facts and conversation evidence conflict or when choosing the wrong roadmap would materially change execution scope.
 
 When the user asks what to do next, asks to confirm the next step, or requests an engineering decision that depends on prior alignment, EngiFoundry should check the relevant phase for `ROADMAP.md` first. If no phase roadmap exists, check `<package-root>/ROADMAP.md` for the relevant phase section. If no roadmap exists, decide from the current session context, visible project state, and the user's stated goal.
 

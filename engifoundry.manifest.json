@@ -2,7 +2,7 @@
   "name": "engifoundry",
   "pluginName": "engifoundry-bundle",
   "displayName": "EngiFoundry",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "status": "public-layout-draft",
   "skillPath": "skills/engifoundry",
   "gateSkillPath": "skills/engifoundry-gate",
