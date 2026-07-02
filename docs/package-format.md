@@ -7,19 +7,39 @@ Markdown explains. JSON controls.
 ## Directory Layout
 
 ```text
-<package-root>/<package-id>/
-├── summary.md
-├── package.config.json
-└── jobs/
-    └── JOB-001/
-        ├── job.md
-        └── job.config.json
+<package-root>/PHASE-001/
+├── ROADMAP.md
+└── PAK-001/
+    ├── summary.md
+    ├── package.config.json
+    └── jobs/
+        └── JOB-001/
+            ├── job.md
+            └── job.config.json
 ```
+
+`PHASE-001` is the default phase when a project has no meaningful phase or schedule concept. Longer engineering efforts may continue with `PHASE-002`, `PHASE-003`, and so on.
+
+`PAK-001` is the package identifier. Package identifiers must use the `PAK-001` sequence format within a phase. Human-readable names may appear as package titles or slugs, but machine references should use the numbered package id.
+
+Job identifiers must use the `JOB-001` sequence format within a package.
+
+The full package reference is the phase id plus the package id, for example `PHASE-001/PAK-001`. A bare `packageId` is scoped to its phase.
+
+Legacy packages at `<package-root>/<package-id>/jobs/JOB-001/` may be read as `PHASE-001/<package-id>/jobs/JOB-001/` for compatibility, but new packages should use the phase/package layout.
+
+If phase-level planning happened, the phase may contain a roadmap:
+
+```text
+<package-root>/PHASE-001/ROADMAP.md
+```
+
+`ROADMAP.md` is package-flow planning input, not an execution record. It exists only when planning or alignment produced one.
 
 Package-flow durable outputs use the package records area:
 
 ```text
-<artifact-root>/records/packages/<package-id>/
+<artifact-root>/records/packages/PHASE-001/PAK-001/
 ├── jobs/
 │   └── JOB-001/
 │       ├── record.md
@@ -30,11 +50,19 @@ Package-flow durable outputs use the package records area:
 └── closeout.md
 ```
 
+Legacy durable outputs at `<artifact-root>/records/packages/<package-id>/` may be read for compatibility.
+
 ## Package Rules
 
 - A package is both human-readable and machine-readable.
 - A package is execution input by default and lives under the package root, not the artifact root.
+- A phase is a coarse engineering period or planning stage. Projects without that concept use only `PHASE-001`.
+- A phase can contain one or more packages. A package usually contains multiple Jobs.
+- `phaseId` must use `PHASE-001` sequence format.
+- `packageId` must use `PAK-001` sequence format within its phase.
+- `jobId` must use `JOB-001` sequence format within its package.
 - Execution records, reviews, verification evidence, and closeout notes are durable outputs and live under the artifact root.
+- Roadmaps are phase-level package-flow planning inputs and live under the package root when present.
 - Markdown files carry human meaning and review context.
 - JSON files carry machine-readable control data.
 - JSON must not duplicate long Markdown narratives.
@@ -76,7 +104,9 @@ The table is a readable summary. It is not authoritative configuration.
 It should record:
 
 - `schemaVersion`;
+- `phaseId`;
 - `packageId`;
+- optional package title or slug;
 - package planning status;
 - package execution status;
 - Job list;
@@ -94,7 +124,10 @@ Example:
 ```json
 {
   "schemaVersion": 1,
-  "packageId": "pkg-example",
+  "phaseId": "PHASE-001",
+  "packageId": "PAK-001",
+  "packageRef": "PHASE-001/PAK-001",
+  "title": "Example package",
   "planning": {
     "status": "draft"
   },
@@ -130,7 +163,7 @@ Example:
 
 Reader Acknowledgement only applies after work enters a package flow.
 
-Before executor or reviewer work starts on a package or Job, the session should acknowledge that it has read the relevant package summary, package config, Job config, dependencies, allowed areas, forbidden areas, stop conditions, and verification requirements.
+Before executor or reviewer work starts on a package or Job, the session should acknowledge that it has read the relevant phase roadmap when present, package summary, package config, Job config, dependencies, allowed areas, forbidden areas, stop conditions, and verification requirements.
 
 The acknowledgement does not grant extra authority. It confirms the reader understands the package-first contract before acting.
 
@@ -141,6 +174,7 @@ The acknowledgement does not grant extra authority. It confirms the reader under
   "handoff": {
     "entrypoint": "summary.md",
     "requiredAcknowledgement": [
+      "phase-roadmap-if-present",
       "package-summary",
       "package-config",
       "job-config",

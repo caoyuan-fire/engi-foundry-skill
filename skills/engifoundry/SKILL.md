@@ -59,7 +59,7 @@ Read only the references needed by the classified mode:
 - The artifact root is for durable work products only. Do not write cache, temporary files, session dumps, credentials, or private runtime state there.
 - The package root defaults to `.engifoundry-packages/`, unless `.engifoundry.config.json` or the user specifies another path.
 - Package root Git visibility is determined by Git. Do not store ignore state in `.engifoundry.config.json`.
-- Roadmap state belongs under the artifact root. Do not store roadmap state in `.engifoundry.config.json`.
+- Roadmap state belongs under the package root, scoped by phase. Do not store roadmap state in `.engifoundry.config.json`.
 - Missing modules may be resolved only through `references/module-resolution.md`; ask before downloading and keep caches outside artifact roots.
 - `summary.md` is for humans only. Machine control belongs in JSON config files.
 - Markdown explains. JSON controls.

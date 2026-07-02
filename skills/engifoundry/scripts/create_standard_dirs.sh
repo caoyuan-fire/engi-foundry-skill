@@ -39,7 +39,6 @@ artifact_root="${artifact_root:-.engifoundry}"
 package_root="${package_root:-.engifoundry-packages}"
 
 mkdir -p \
-  "$project_root/$artifact_root/roadmaps/archive" \
   "$project_root/$artifact_root/records/ad-hoc" \
   "$project_root/$artifact_root/records/packages" \
   "$project_root/$artifact_root/records/reviews" \

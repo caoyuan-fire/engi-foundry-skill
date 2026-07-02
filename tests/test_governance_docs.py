@@ -321,7 +321,7 @@ class GovernanceDocsTests(unittest.TestCase):
         phrases = [
             "The artifact root is for durable work products",
             "The package root is for execution inputs",
-            "<artifact-root>/records/packages/<package-id>/",
+            "<artifact-root>/records/packages/PHASE-001/PAK-001/",
             "EngiFoundry may automatically add the package root to `.gitignore`",
             "Tell the user only when the ignore rule is first added",
             "Do not store Git ignore state in `.engifoundry.config.json`",
@@ -331,11 +331,10 @@ class GovernanceDocsTests(unittest.TestCase):
         self.assert_contains_all("docs/artifact-protocol.md", phrases)
         self.assert_contains_all("skills/engifoundry/references/artifact-protocol.md", phrases)
 
-    def test_roadmap_protocol_is_artifact_root_state_not_project_config_state(self):
+    def test_roadmap_protocol_is_package_root_phase_state_not_project_config_state(self):
         phrases = [
-            "<artifact-root>/roadmaps/",
+            "<package-root>/PHASE-001/ROADMAP.md",
             "ROADMAP.md",
-            "roadmap.index.json",
             "Do not store roadmap state in `.engifoundry.config.json`",
             "When the user asks what to do next",
             "If no roadmap exists",
@@ -347,6 +346,7 @@ class GovernanceDocsTests(unittest.TestCase):
             "skills/engifoundry/references/intent-routing.md",
             [
                 "When the user asks what to do next",
+                "check the relevant package-root phase for `ROADMAP.md`",
                 "If no roadmap exists",
             ],
         )
@@ -356,7 +356,7 @@ class GovernanceDocsTests(unittest.TestCase):
             "## Directory Function Table",
             "| Path | Category | Purpose | Must Not Contain |",
             "`<artifact-root>/records/ad-hoc/`",
-            "`<artifact-root>/records/packages/<package-id>/`",
+            "`<artifact-root>/records/packages/PHASE-001/PAK-001/`",
             "`<artifact-root>/records/reviews/`",
             "`<artifact-root>/records/audits/`",
             "`<artifact-root>/directory.config.json`",
@@ -365,7 +365,8 @@ class GovernanceDocsTests(unittest.TestCase):
             "`<artifact-root>/docs/design/`",
             "`<artifact-root>/docs/reference/`",
             "`<artifact-root>/docs/archive/`",
-            "`<package-root>/<package-id>/`",
+            "`<package-root>/PHASE-001/ROADMAP.md`",
+            "`<package-root>/PHASE-001/PAK-001/`",
             "Execution input",
             "Durable output",
         ]

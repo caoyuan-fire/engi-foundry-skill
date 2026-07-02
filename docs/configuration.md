@@ -49,7 +49,7 @@ This execution-config read is a session-alignment step, not a mandatory read bef
 
 Do not store Git ignore state in project config. Whether the package root is versioned comes from Git behavior, especially `.gitignore` and `git status`.
 
-Do not store roadmap state in project config. The project config locates the artifact root; roadmap state belongs to `<artifact-root>/roadmaps/ROADMAP.md` and `<artifact-root>/roadmaps/roadmap.index.json`.
+Do not store roadmap state in project config. The project config locates the package root; roadmap state belongs to phase-level files such as `<package-root>/PHASE-001/ROADMAP.md`.
 
 ## Automatic Initialization
 

@@ -2,7 +2,7 @@
 
 EngiFoundry uses a durable artifact root in the user's project.
 
-The artifact root and package root have different purposes. The artifact root is for durable work products. The package root is for execution inputs.
+The artifact root and package root have different purposes. The artifact root is for durable work products. The package root is for execution inputs and package roadmaps.
 
 ## Project Config
 
@@ -75,10 +75,6 @@ Artifact root layout:
 <artifact-root>/
 ├── execution.config.json
 ├── directory.config.json
-├── roadmaps/
-│   ├── ROADMAP.md
-│   ├── roadmap.index.json
-│   └── archive/
 ├── records/
 │   ├── ad-hoc/
 │   ├── packages/
@@ -99,19 +95,17 @@ Artifact root layout:
 | `<project-root>/.engifoundry.config.json` | Project discovery config | Locates EngiFoundry roots and durable workflow defaults for session alignment. | Secrets, tokens, runtime state, Git ignore state, roadmap state. |
 | `<artifact-root>/execution.config.json` | Artifact-root execution config | Records executor registry and selection policy. | Secrets, tokens, package authority grants, transient executor state. |
 | `<artifact-root>/directory.config.json` | Artifact-root directory config | Records the standard directory taxonomy as a formal editable file. | Runtime state, secrets, task package content, raw logs. |
-| `<artifact-root>/roadmaps/ROADMAP.md` | Durable output | Current roadmap for requirement alignment, sequencing, and next-step decisions. | Raw chat dumps, private runtime state, package control JSON. |
-| `<artifact-root>/roadmaps/roadmap.index.json` | Artifact-root index | Points to the current roadmap and records roadmap metadata. | Project root discovery settings, Git ignore state, secrets. |
-| `<artifact-root>/roadmaps/archive/` | Durable output archive | Historical roadmap snapshots that still have alignment or audit value. | Temporary drafts, cache files, raw model logs. |
 | `<artifact-root>/records/ad-hoc/` | Durable output | Records from bounded low-risk work that did not enter package flow. | Task package control inputs, caches, session dumps. |
-| `<artifact-root>/records/packages/<package-id>/` | Durable output | Package-flow execution records, reviews, verification evidence, checkpoints, handoffs, and closeout notes. | Package root control inputs unless copied as explicit evidence; raw long logs; private state. |
+| `<artifact-root>/records/packages/PHASE-001/PAK-001/` | Durable output | Package-flow execution records, reviews, verification evidence, checkpoints, handoffs, and closeout notes. | Package root control inputs unless copied as explicit evidence; raw long logs; private state. |
 | `<artifact-root>/records/reviews/` | Durable output | Review-only records that are not owned by a specific package record tree. | Implementation scratch files, task package control inputs, secrets. |
 | `<artifact-root>/records/audits/` | Durable output | Process, cost, quality, migration, policy, and workflow retrospective records. | Runtime cache, downloaded modules, unreviewable session dumps. |
 | `<artifact-root>/docs/generated/` | Durable output | Generated documents with review, delivery, or handoff value. | Cache output, throwaway drafts, raw model logs. |
 | `<artifact-root>/docs/integration/` | Durable output | Host integration, API integration, installation, and adapter-facing user documentation. | Executor runtime state, package control JSON. |
 | `<artifact-root>/docs/design/` | Durable output | Architecture, UX, data-flow, test-strategy, and domain design documents. | Temporary scratch notes, raw chat transcripts. |
 | `<artifact-root>/docs/reference/` | Durable input reference | External or upstream reference material used as context for decisions. | Secrets, credentials, downloaded dependency caches. |
-| `<artifact-root>/docs/archive/` | Durable output archive | Historical documents that remain useful as readable background but are not current records. | Current ROADMAP, active package contracts, cache files. |
-| `<package-root>/<package-id>/` | Execution input | Task package summary, package control JSON, Job contracts, and package-flow control data. | Execution records, reviews, verification evidence, closeout notes, raw logs. |
+| `<artifact-root>/docs/archive/` | Durable output archive | Historical documents that remain useful as readable background but are not current records. | Active package contracts, cache files. |
+| `<package-root>/PHASE-001/ROADMAP.md` | Planning input | Phase roadmap for requirement alignment, sequencing, and next-step decisions when one exists. | Execution records, verification evidence, reviews, raw logs. |
+| `<package-root>/PHASE-001/PAK-001/` | Execution input | Task package summary, package control JSON, Job contracts, and package-flow control data. | Execution records, reviews, verification evidence, closeout notes, raw logs. |
 
 The artifact root stores durable outputs only:
 
@@ -121,7 +115,6 @@ The artifact root stores durable outputs only:
 - closeout records;
 - ad-hoc records;
 - audit records;
-- roadmap archives;
 - generated docs with review or delivery value.
 
 Do not write these into the artifact root:
@@ -140,29 +133,27 @@ If an adapter needs runtime state, use an explicit external location outside the
 
 ## Roadmaps
 
-ROADMAP archives are durable alignment artifacts. They capture agreed planning, requirement alignment, sequencing decisions, and next-step intent that may guide the current session or a later session.
+Roadmaps are phase-level package-flow planning inputs. They capture agreed planning, requirement alignment, sequencing decisions, and next-step intent that may guide packages in that phase.
 
-Roadmaps live under the artifact root:
+Roadmaps live under the package root, scoped by phase:
 
 ```text
-<artifact-root>/roadmaps/
-├── ROADMAP.md
-├── roadmap.index.json
-└── archive/
+<package-root>/PHASE-001/
+└── ROADMAP.md
 ```
 
-`ROADMAP.md` is the current roadmap. `roadmap.index.json` is the artifact-root-local roadmap index and may record `schemaVersion`, `current`, `updatedAt`, `source`, and whether the current roadmap should be considered active input for planning decisions.
+`ROADMAP.md` exists only when planning or alignment produced a roadmap for the phase. Projects without a meaningful phase concept use `PHASE-001`.
 
-Create or update a ROADMAP archive when the user has performed requirement alignment, planning, roadmap, or pre-task discussion and asks to persist, archive, save, land, or use it as later execution input.
+Create or update the phase `ROADMAP.md` when the user has performed requirement alignment, planning, roadmap, or pre-task discussion and asks to persist, archive, save, land, or use it as later execution input.
 
-When the user asks what to do next, asks to confirm the next step, or requests an engineering decision that depends on prior alignment, EngiFoundry should check the artifact root for an active roadmap. If a roadmap exists, use it as decision input together with current progress. If no roadmap exists, decide from the current session context, visible project state, and the user's stated goal.
+When the user asks what to do next, asks to confirm the next step, or requests an engineering decision that depends on prior alignment, EngiFoundry should check the relevant phase for `ROADMAP.md`. If a roadmap exists, use it as decision input together with current progress. If no roadmap exists, decide from the current session context, visible project state, and the user's stated goal.
 
-Do not store roadmap state in `.engifoundry.config.json`. The project config locates the artifact root. The roadmap files and `roadmap.index.json` are the source of truth for roadmap state.
+Do not store roadmap state in `.engifoundry.config.json`. The project config locates the package root. Phase `ROADMAP.md` files are the source of truth for roadmap state.
 
 Package-flow durable outputs live under:
 
 ```text
-<artifact-root>/records/packages/<package-id>/
+<artifact-root>/records/packages/PHASE-001/PAK-001/
 ├── jobs/
 │   └── JOB-001/
 │       ├── record.md
@@ -181,7 +172,7 @@ Default:
 <project-root>/.engifoundry-packages/
 ```
 
-The package root stores execution inputs:
+The package root stores phase roadmaps and execution inputs:
 
 - task packages;
 - Job contracts;
@@ -191,10 +182,12 @@ Package root layout:
 
 ```text
 <package-root>/
-└── <package-id>/
-    ├── summary.md
-    ├── package.config.json
-    └── jobs/
+└── PHASE-001/
+    ├── ROADMAP.md
+    └── PAK-001/
+        ├── summary.md
+        ├── package.config.json
+        └── jobs/
 ```
 
 Package execution outputs with durable value belong in the artifact root as records.
@@ -278,7 +271,7 @@ Do not silently modify `.gitignore` for the artifact root. The artifact root is 
 
 If users do not want EngiFoundry artifacts in version control, they may explicitly ignore their chosen artifact root.
 
-EngiFoundry may automatically add the package root to `.gitignore` because packages are execution inputs by default. Tell the user only when the ignore rule is first added.
+EngiFoundry may automatically add the package root to `.gitignore` because phase roadmaps and packages are planning and execution inputs by default. Tell the user only when the ignore rule is first added.
 
 Use a recognizable block when EngiFoundry writes the ignore rule:
 

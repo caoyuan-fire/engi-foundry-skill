@@ -76,7 +76,6 @@ class InitScriptsTests(unittest.TestCase):
             self.run_script("create_standard_dirs.sh", cwd=project)
 
             for relative in [
-                "docs/roadmaps/archive",
                 "docs/records/ad-hoc",
                 "docs/records/packages",
                 "docs/records/reviews",
@@ -129,7 +128,9 @@ class InitScriptsTests(unittest.TestCase):
             paths = {entry["path"] for entry in filled_config["directories"]}
             self.assertIn("<artifact-root>/docs/integration/", paths)
             self.assertIn("<artifact-root>/records/ad-hoc/", paths)
-            self.assertIn("<package-root>/<package-id>/", paths)
+            self.assertIn("<artifact-root>/records/packages/PHASE-001/PAK-001/", paths)
+            self.assertIn("<package-root>/PHASE-001/ROADMAP.md", paths)
+            self.assertIn("<package-root>/PHASE-001/PAK-001/", paths)
             self.assertIn("createdBy", filled_config)
 
 

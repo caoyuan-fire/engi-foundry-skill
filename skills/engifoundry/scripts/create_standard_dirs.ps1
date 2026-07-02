@@ -25,7 +25,6 @@ if ([string]::IsNullOrWhiteSpace($PackageRoot)) {
 }
 
 $directories = @(
-  "$ArtifactRoot/roadmaps/archive",
   "$ArtifactRoot/records/ad-hoc",
   "$ArtifactRoot/records/packages",
   "$ArtifactRoot/records/reviews",

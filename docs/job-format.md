@@ -5,7 +5,7 @@ Each EngiFoundry Job has human-readable intent, machine-readable control, and du
 ## Control Input Layout
 
 ```text
-<package-root>/<package-id>/jobs/JOB-001/
+<package-root>/PHASE-001/PAK-001/jobs/JOB-001/
 ├── job.md
 └── job.config.json
 ```
@@ -13,7 +13,7 @@ Each EngiFoundry Job has human-readable intent, machine-readable control, and du
 ## Durable Output Layout
 
 ```text
-<artifact-root>/records/packages/<package-id>/jobs/JOB-001/
+<artifact-root>/records/packages/PHASE-001/PAK-001/jobs/JOB-001/
 ├── record.md
 ├── review.md
 └── verification.md
@@ -43,6 +43,8 @@ It should describe:
 It should record:
 
 - `schemaVersion`;
+- `phaseId`;
+- `packageId`;
 - `jobId`;
 - status;
 - `type`: `delegable | primary-control-only | review-only | blocked`;
@@ -63,6 +65,8 @@ Example:
 ```json
 {
   "schemaVersion": 1,
+  "phaseId": "PHASE-001",
+  "packageId": "PAK-001",
   "jobId": "JOB-001",
   "status": "planned",
   "type": "delegable",
@@ -118,7 +122,7 @@ Allowed values:
 
 Normal executor handback should be compact. It should include enough evidence paths and known gaps for primary/control review without copying raw command logs, full file contents, or verbose process streams.
 
-Required outputs are durable records and should be written under `<artifact-root>/records/packages/<package-id>/jobs/<job-id>/` unless the package contract explicitly records another artifact-root path.
+Required outputs are durable records and should be written under `<artifact-root>/records/packages/<phase-id>/<package-id>/jobs/<job-id>/` unless the package contract explicitly records another artifact-root path.
 
 ## `record.md`
 
