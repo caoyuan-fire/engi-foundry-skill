@@ -77,6 +77,8 @@ Extension phases use the same layout:
 
 `PAK-001` is the package identifier. Package identifiers must use the `PAK-001` sequence format within a phase. Human-readable names may appear as package titles or slugs, but machine references should use the numbered package id.
 
+Package identifiers are allocated monotonically within a phase. Discarded, blocked, closed, or otherwise inactive packages keep their allocated ids and must not be reused or skipped over when allocating the next package id. If the latest allocated package in a phase is `PAK-003` and it is discarded, the next new package is `PAK-004`.
+
 Job identifiers must use the `JOB-001` sequence format within a package.
 
 The full package reference is the phase id plus the package id, for example `PHASE-001/PAK-001`. A bare `packageId` is scoped to its phase.
@@ -116,6 +118,7 @@ Legacy durable outputs at `<artifact-root>/records/packages/<package-id>/` may b
 - `phaseId` must use `PHASE-001` sequence format.
 - Extension `phaseId` values must use `PHASE-001-EX01` sequence format and record `basePhaseId`.
 - `packageId` must use `PAK-001` sequence format within its phase.
+- Package id allocation uses the highest allocated `PAK-*` id in the phase, regardless of package status.
 - `jobId` must use `JOB-001` sequence format within its package.
 - Execution records, reviews, verification evidence, and closeout notes are durable outputs and live under the artifact root.
 - Roadmaps are package-flow planning inputs and live under the package root when present.
@@ -253,6 +256,25 @@ It should record:
 - closeout requirements.
 - handoff entrypoint;
 - required reader acknowledgement;
+
+Package planning status values:
+
+- `draft`: package content is being written and is not ready for execution.
+- `ready`: package content is approved as executable planning input.
+- `blocked`: package planning cannot become ready until a blocker is resolved.
+- `discarded`: package content is not approved or is no longer applicable; keep it only as archive and do not execute it.
+
+Package execution status values:
+
+- `not-started`: no execution has started.
+- `in-progress`: one or more Jobs are active or partially complete.
+- `blocked`: execution cannot continue until a blocker is resolved.
+- `completed`: package execution has completed under the package acceptance rules.
+- `discarded`: execution is intentionally abandoned or skipped; keep the package only as archive and do not execute remaining Jobs.
+
+A discarded package is retained for traceability but is not executable input. The execution layer must ignore discarded packages: do not start their Jobs, do not treat their unfinished Jobs as pending work, and do not let a discarded latest package block creation of a newer package.
+
+Discarding a package does not roll back numbering. New package allocation must continue from the highest allocated `PAK-*` id in the phase, independent of `planning.status` or `execution.status`.
 
 Example:
 

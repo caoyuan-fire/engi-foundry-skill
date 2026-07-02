@@ -593,6 +593,27 @@ class GovernanceDocsTests(unittest.TestCase):
                 with self.subTest(path=path, phrase=phrase):
                     self.assertNotIn(phrase, content)
 
+    def test_discarded_packages_are_archived_and_do_not_block_numbering(self):
+        phrases = [
+            "Package identifiers are allocated monotonically within a phase",
+            "If the latest allocated package in a phase is `PAK-003` and it is discarded, the next new package is `PAK-004`",
+            "Package planning status values",
+            "`discarded`: package content is not approved or is no longer applicable",
+            "Package execution status values",
+            "`discarded`: execution is intentionally abandoned or skipped",
+            "A discarded package is retained for traceability but is not executable input",
+            "The execution layer must ignore discarded packages",
+            "do not start their Jobs",
+            "do not treat their unfinished Jobs as pending work",
+            "do not let a discarded latest package block creation of a newer package",
+            "Discarding a package does not roll back numbering",
+            "New package allocation must continue from the highest allocated `PAK-*` id in the phase",
+            "independent of `planning.status` or `execution.status`",
+        ]
+
+        self.assert_contains_all("docs/package-format.md", phrases)
+        self.assert_contains_all("skills/engifoundry/references/package-format.md", phrases)
+
 
 if __name__ == "__main__":
     unittest.main()
