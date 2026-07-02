@@ -18,8 +18,10 @@ Package layout:
 
 ```text
 <package-root>/
+├── phase.index.json
 ├── ROADMAP.md
 └── PHASE-001/
+    ├── phase.config.json
     ├── ROADMAP.md
     └── PAK-001/
         ├── summary.md
@@ -36,7 +38,24 @@ Phase `ROADMAP.md` files are optional phase sub-roadmaps. They should capture th
 
 Do not mechanically create one phase directory per phase merely because the master roadmap mentions multiple phases. Create `PHASE-*` directories when a phase is being refined, packaged, executed, handed off, or used as current decision input.
 
-When roadmap alignment produces content and the target is not explicitly stated, Agent should infer the storage target from package-root facts and conversation content. Default to the package-root `ROADMAP.md` unless there is strong evidence that the discussion is extending a specific existing, progressing, latest completed, or pending phase.
+Phase status is machine-readable and intentionally coarse. It describes whether a phase is usable for planning and execution governance, not fine-grained progress.
+
+Allowed phase statuses:
+
+- `available`: the phase may accept roadmap updates, packages, Jobs, and execution.
+- `blocked`: the phase cannot progress until a blocker or upstream decision is resolved.
+- `closed`: the phase is normally sealed; do not automatically reopen it.
+- `invalidated`: the phase's assumptions, scope, target, or dependency basis is no longer valid; do not use it as execution input.
+
+When roadmap alignment produces content and the target is not explicitly stated, Agent should infer the storage target from package-root facts and conversation content. Default to the package-root `ROADMAP.md` unless there is strong evidence that the discussion is extending a specific `available` phase.
+
+If the relevant base phase is `closed`, do not automatically reopen it. If the discussion is a non-mainline extension, bridge, preparation, validation, cleanup, risk-reduction, or compatibility follow-up tied to that base phase and not suitable for the master roadmap or next main phase, create or update an extension phase such as `PHASE-002-EX01`.
+
+If the relevant base phase is `invalidated`, do not create ordinary extension work from it. Create only migration, replacement, or mitigation work when the reason is explicit in the phase metadata or roadmap.
+
+Main phase identifiers use `PHASE-001`. Extension phase identifiers use `PHASE-001-EX01`. Extension phases are attached to a base phase, do not participate in mainline phase ordering, and must not cause later main phases to be renumbered.
+
+Do not insert a new mainline phase between existing phase numbers, or renumber existing phase, package, Job, roadmap, or record references, unless the user explicitly authorizes an insertion or migration. When authorized, record the affected references and migration decision.
 
 When executing or planning inside a phase, prefer `<package-root>/PHASE-001/ROADMAP.md` when it exists. If it does not exist, use the relevant section of `<package-root>/ROADMAP.md` when present.
 
@@ -44,6 +63,7 @@ Package layout:
 
 ```text
 <package-root>/PHASE-001/
+├── phase.config.json
 ├── ROADMAP.md
 └── PAK-001/
     ├── summary.md
@@ -55,6 +75,15 @@ Package layout:
 ```
 
 `PHASE-001` is the default phase when a project has no meaningful phase or schedule concept. Longer engineering efforts may continue with `PHASE-002`, `PHASE-003`, and so on.
+
+Extension phases use the same layout:
+
+```text
+<package-root>/PHASE-001-EX01/
+├── phase.config.json
+├── ROADMAP.md
+└── PAK-001/
+```
 
 `PAK-001` is the package identifier. Package identifiers must use the `PAK-001` sequence format within a phase. Human-readable names may appear as package titles or slugs, but machine references should use the numbered package id.
 
@@ -87,6 +116,73 @@ Package-flow durable outputs use the package records area:
 ```
 
 Legacy durable outputs at `<artifact-root>/records/packages/<package-id>/` may be read for compatibility.
+
+## `phase.index.json`
+
+`phase.index.json` is the machine-readable phase registry for the package root.
+
+It records allocated mainline phase ids, allocated extension phase ids, mainline phase order, phase statuses, extension phase base links, latest known available or closed phases, and the next unallocated mainline phase id.
+
+Example:
+
+```json
+{
+  "schemaVersion": 1,
+  "mainlinePhases": ["PHASE-001", "PHASE-002", "PHASE-003"],
+  "extensionPhases": ["PHASE-002-EX01"],
+  "phaseOrder": ["PHASE-001", "PHASE-002", "PHASE-003"],
+  "phases": {
+    "PHASE-001": {
+      "status": "closed"
+    },
+    "PHASE-002": {
+      "status": "closed"
+    },
+    "PHASE-002-EX01": {
+      "status": "available",
+      "kind": "extension",
+      "basePhaseId": "PHASE-002"
+    },
+    "PHASE-003": {
+      "status": "available"
+    }
+  },
+  "latestClosedPhase": "PHASE-002",
+  "latestAvailablePhase": "PHASE-003",
+  "nextMainlinePhaseId": "PHASE-004"
+}
+```
+
+## `phase.config.json`
+
+`phase.config.json` is the machine-readable phase contract for one phase.
+
+It should record:
+
+- `schemaVersion`;
+- `phaseId`;
+- `kind`: `mainline | extension`;
+- `basePhaseId` for extension phases;
+- `status`: `available | blocked | closed | invalidated`;
+- status reason when relevant;
+- roadmap path when present;
+- package list;
+- closeout or invalidation record references when relevant.
+
+Example:
+
+```json
+{
+  "schemaVersion": 1,
+  "phaseId": "PHASE-002-EX01",
+  "kind": "extension",
+  "basePhaseId": "PHASE-002",
+  "status": "available",
+  "statusReason": "Post-closeout validation and compatibility work tied to PHASE-002.",
+  "roadmap": "ROADMAP.md",
+  "packages": ["PAK-001"]
+}
+```
 
 ## `summary.md`
 

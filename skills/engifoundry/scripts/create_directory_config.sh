@@ -149,9 +149,21 @@ else
       "mustNotContain": ["active package contracts", "cache files"]
     },
     {
+      "path": "<package-root>/phase.index.json",
+      "category": "Execution input",
+      "purpose": "Machine-readable phase registry, mainline order, extension links, statuses, and next unallocated phase id.",
+      "mustNotContain": ["execution records", "verification evidence", "reviews", "raw logs"]
+    },
+    {
       "path": "<package-root>/ROADMAP.md",
       "category": "Planning input",
       "purpose": "Master roadmap for cross-phase direction, boundaries, sequencing, and dependencies when one exists.",
+      "mustNotContain": ["execution records", "verification evidence", "reviews", "raw logs"]
+    },
+    {
+      "path": "<package-root>/PHASE-001/phase.config.json",
+      "category": "Execution input",
+      "purpose": "Machine-readable phase contract and status for one phase.",
       "mustNotContain": ["execution records", "verification evidence", "reviews", "raw logs"]
     },
     {

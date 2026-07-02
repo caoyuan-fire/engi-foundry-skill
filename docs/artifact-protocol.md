@@ -42,6 +42,7 @@ Phases may contain sub-roadmaps:
 
 ```text
 <package-root>/PHASE-001/
+├── phase.config.json
 └── ROADMAP.md
 ```
 
@@ -55,9 +56,17 @@ When discussion or alignment produces roadmap content, EngiFoundry should decide
 
 Default to the package-root `ROADMAP.md` when there is no strong evidence that the discussion belongs to a specific phase. This keeps broad alignment as the master plan until execution context narrows it.
 
-Create or update a phase `ROADMAP.md` when known facts or conversation content show that the discussion is extending a specific phase. Strong signals include an existing progressing phase, a latest completed phase being extended, an explicitly pending phase, active package or Job work under that phase, or discussion framed around carrying forward from a completed/progressing/pending phase.
+Create or update a phase `ROADMAP.md` when known facts or conversation content show that the discussion is extending a specific `available` phase. Strong signals include an available phase, active package or Job work under that phase, or discussion framed around carrying forward from that phase.
 
-Use the discussion content as evidence. Future direction, cross-phase sequencing, broad scope boundaries, or long-range dependency planning usually belongs in the master roadmap. Execution detail, phase-local load, refinements to current phase scope, or work derived from the latest completed/progressing/pending phase usually belongs in that phase roadmap.
+Use the discussion content as evidence. Future direction, cross-phase sequencing, broad scope boundaries, or long-range dependency planning usually belongs in the master roadmap. Execution detail, phase-local load, or refinements to an `available` phase usually belong in that phase roadmap.
+
+Phase status is coarse machine state. Allowed values are `available`, `blocked`, `closed`, and `invalidated`. `available` phases may accept planning and execution input. `blocked` phases require blocker resolution before scope expansion. `closed` phases are sealed; do not automatically reopen them. `invalidated` phases are no longer reliable execution input.
+
+When discussion is tied to a `closed` base phase but is not suitable for the master roadmap or next mainline phase, create or update an extension phase such as `PHASE-002-EX01`. Extension phases are non-mainline containers for post-closeout follow-up, bridge work, preparation, validation, cleanup, risk reduction, or compatibility work.
+
+When discussion is tied to an `invalidated` phase, do not create ordinary extension work from it. Use the master roadmap or a replacement phase, unless the extension is explicitly for migration, mitigation, or replacement.
+
+Do not insert a mainline phase between existing phase numbers, and do not renumber existing phases, packages, Jobs, roadmaps, or records, unless the user explicitly authorizes the insertion or migration.
 
 Ask the user only when local facts and conversation evidence conflict or when choosing the wrong roadmap would materially change execution scope.
 
@@ -67,7 +76,7 @@ Do not store roadmap state in `.engifoundry.config.json`. The project config loc
 
 ## Package Root
 
-The package root stores phase roadmaps, task packages, Job contracts, and other package-flow control inputs.
+The package root stores the phase registry, phase roadmaps, task packages, Job contracts, and other package-flow control inputs.
 
 The default package root is:
 
@@ -165,7 +174,9 @@ If an adapter needs runtime state, it must use an explicit external location out
 | `<artifact-root>/docs/design/` | Durable output | Architecture, UX, data-flow, test-strategy, and domain design documents. | Temporary scratch notes, raw chat transcripts. |
 | `<artifact-root>/docs/reference/` | Durable input reference | External or upstream reference material used as context for decisions. | Secrets, credentials, downloaded dependency caches. |
 | `<artifact-root>/docs/archive/` | Durable output archive | Historical documents that remain useful as readable background but are not current records. | Active package contracts, cache files. |
+| `<package-root>/phase.index.json` | Execution input | Machine-readable phase registry, mainline order, extension links, statuses, and next unallocated phase id. | Execution records, verification evidence, reviews, raw logs. |
 | `<package-root>/ROADMAP.md` | Planning input | Master roadmap for cross-phase direction, boundaries, sequencing, and dependencies when one exists. | Execution records, verification evidence, reviews, raw logs. |
+| `<package-root>/PHASE-001/phase.config.json` | Execution input | Machine-readable phase contract and status for one phase. | Execution records, verification evidence, reviews, raw logs. |
 | `<package-root>/PHASE-001/ROADMAP.md` | Planning input | Phase sub-roadmap for executable phase planning and phase-local load when one exists. | Execution records, verification evidence, reviews, raw logs. |
 | `<package-root>/PHASE-001/PAK-001/` | Execution input | Task package summary, package control JSON, Job contracts, and package-flow control data. | Execution records, reviews, verification evidence, closeout notes, raw logs. |
 
@@ -189,8 +200,10 @@ Package-flow execution inputs live under the package root:
 
 ```text
 <package-root>/
+├── phase.index.json
 ├── ROADMAP.md
 └── PHASE-001/
+    ├── phase.config.json
     ├── ROADMAP.md
     └── PAK-001/
         ├── summary.md
