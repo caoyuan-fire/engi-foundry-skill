@@ -1,12 +1,49 @@
 # EngiFoundry
 
-EngiFoundry is a platform-neutral engineering workflow skill for AI-assisted software work.
+EngiFoundry is an execution framework for AI-assisted software engineering.
 
-It helps coding agents decide when to work directly, when to create a structured task package, how to preserve useful engineering records, and how to hand work across tools or sessions without losing control of scope, verification, and review.
+It helps coding agents move from one-shot answers to controlled engineering delivery: plan when risk is high, execute through the lightest suitable path, preserve durable artifacts, verify claims, and review important work from cleaner context.
+
+> Optimize for first-pass delivery, not cheapest generation.
 
 Keyword: `engifoundry`.
 
 中文说明见 [zh/README.md](zh/README.md).
+
+## Why EngiFoundry
+
+Most coding agents optimize for generation speed. That works for small changes, but larger work often fails through unclear scope, context drift, missing verification, weak handoff, or self-review bias.
+
+EngiFoundry adds an engineering execution model around the agent:
+
+- plan before high-risk execution;
+- scale collaboration by task risk;
+- use task packages for broad or ambiguous work;
+- separate execution inputs from durable records;
+- verify completion claims with evidence;
+- use isolated execution or review when the work justifies it.
+
+## Progressive Engineering
+
+EngiFoundry routes work into the lightest process compatible with risk.
+
+| Work type | Typical path |
+| --- | --- |
+| Small, clear, low-risk change | Direct ad-hoc execution |
+| Multi-step or ambiguous change | Task package |
+| Cross-module or high-risk change | Package plus stronger verification |
+| Review-sensitive work | Clean-context or external review |
+| Handoff-oriented work | Durable records and closeout |
+
+Heavyweight process is not the default. Engineering rigor should scale with task complexity.
+
+## Preload Gate
+
+EngiFoundry is preloaded, but not always activated.
+
+The autoload gate only decides whether EngiFoundry is available in the current workspace. It does not force package mode, create Jobs, or apply package governance by itself.
+
+Complex engineering tasks may still consume more tokens by design. EngiFoundry spends extra context on planning, records, verification, and review to reduce repeated rework.
 
 ## Quickstart
 
@@ -28,10 +65,11 @@ The gate only decides whether EngiFoundry is available in the current workspace.
 
 ## How It Works
 
-EngiFoundry routes engineering requests into the lightest workflow that still protects quality:
+EngiFoundry's main skill classifies each request into the workflow mode that matches the current risk and handoff needs:
 
-- small, clear, low-risk changes can run as ad-hoc work;
+- bounded low-risk tasks can run as ad-hoc work;
 - broad, risky, multi-step, ambiguous, or handoff-oriented changes use structured task packages;
+- isolated execution or review can be used when clean context matters;
 - package work records execution inputs separately from durable outputs;
 - completion claims require verification evidence or a clear non-runnable verification record.
 
