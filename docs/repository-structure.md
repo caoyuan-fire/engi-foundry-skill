@@ -15,6 +15,15 @@ EngiFoundrySkill/
 │   └── plugin.json
 ├── .kimi-plugin/
 │   └── plugin.json
+├── .github/
+│   └── plugin/
+│       ├── marketplace.json
+│       └── plugin.json
+├── .cursor-plugin/
+│   └── plugin.json
+├── .factory-plugin/
+│   ├── marketplace.json
+│   └── plugin.json
 ├── engifoundry.manifest.json
 ├── docs/
 ├── skills/
@@ -34,6 +43,11 @@ EngiFoundrySkill/
 - `.claude-plugin/marketplace.json`: Claude Git marketplace manifest for hosted installation.
 - `.claude-plugin/plugin.json`: Claude plugin manifest.
 - `.kimi-plugin/plugin.json`: Kimi plugin manifest for direct repository installation.
+- `.github/plugin/marketplace.json`: GitHub Copilot CLI marketplace manifest.
+- `.github/plugin/plugin.json`: GitHub Copilot CLI plugin manifest.
+- `.cursor-plugin/plugin.json`: Cursor plugin manifest.
+- `.factory-plugin/marketplace.json`: Factory Droid marketplace manifest.
+- `.factory-plugin/plugin.json`: Factory Droid plugin manifest.
 - `.gitignore`: repository hygiene only.
 
 ## `docs/`

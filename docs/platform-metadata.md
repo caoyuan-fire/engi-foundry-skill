@@ -101,6 +101,58 @@ Kimi-compatible usage should also rely on:
 
 Official Kimi marketplace search visibility is separate from repository compatibility. It depends on Kimi marketplace publication or curation outside this repository.
 
+## GitHub Copilot CLI
+
+EngiFoundry includes GitHub Copilot CLI plugin metadata:
+
+```text
+.github/plugin/marketplace.json
+.github/plugin/plugin.json
+```
+
+GitHub Copilot CLI can use this repository as a Git-hosted plugin marketplace with:
+
+```text
+copilot plugin marketplace add caoyuan-fire/engi-foundry-skill
+copilot plugin install engifoundry-bundle@engi-foundry-skill
+```
+
+The GitHub Copilot plugin manifest declares the shared `skills/` directory. Runtime skill discovery still comes from `SKILL.md` frontmatter.
+
+## Cursor-Compatible Surfaces
+
+EngiFoundry includes a Cursor plugin manifest:
+
+```text
+.cursor-plugin/plugin.json
+```
+
+The Cursor manifest declares:
+
+- the plugin package name `engifoundry-bundle`;
+- display and repository metadata;
+- the shared `skills/` directory.
+
+Cursor IDE plugin behavior and Cursor Agent CLI behavior may differ by Cursor version. Do not assume CLI parity unless the target Cursor version documents it.
+
+## Factory Droid
+
+EngiFoundry includes Factory Droid plugin metadata:
+
+```text
+.factory-plugin/marketplace.json
+.factory-plugin/plugin.json
+```
+
+Factory Droid can use this repository as a plugin marketplace with:
+
+```text
+droid plugin marketplace add https://github.com/caoyuan-fire/engi-foundry-skill
+droid plugin install engifoundry-bundle@engi-foundry-skill
+```
+
+The Factory manifest declares the shared `skills/` directory and does not add runtime code beyond the existing skill files.
+
 ## Rule
 
 Do not add platform-specific metadata files unless the platform has a stable schema or the repository explicitly documents the file as supported tooling metadata.

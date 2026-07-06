@@ -1,0 +1,16 @@
+{
+  "name": "engi-foundry-skill",
+  "owner": {
+    "name": "EngiFoundry"
+  },
+  "plugins": [
+    {
+      "name": "engifoundry-bundle",
+      "description": "Structured engineering workflow for planning, execution governance, durable artifacts, review, verification, and handoff.",
+      "source": {
+        "source": "url",
+        "url": "./"
+      }
+    }
+  ]
+}

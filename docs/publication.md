@@ -11,6 +11,11 @@ EngiFoundry uses a public repository structure that separates user documentation
 - `.claude-plugin/marketplace.json`: Claude Git marketplace manifest.
 - `.claude-plugin/plugin.json`: Claude plugin manifest.
 - `.kimi-plugin/plugin.json`: Kimi plugin manifest for direct repository installation.
+- `.github/plugin/marketplace.json`: GitHub Copilot CLI marketplace manifest.
+- `.github/plugin/plugin.json`: GitHub Copilot CLI plugin manifest.
+- `.cursor-plugin/plugin.json`: Cursor plugin manifest.
+- `.factory-plugin/marketplace.json`: Factory Droid marketplace manifest.
+- `.factory-plugin/plugin.json`: Factory Droid plugin manifest.
 - `docs/`: formal specification basis.
 - `skills/engifoundry-gate/`: lightweight plugin autoload gate.
 - `skills/engifoundry/`: main manual skill entry point and workflow launcher.
@@ -91,6 +96,12 @@ Codex updates must refresh the configured Git marketplace snapshot and reinstall
 For Claude-compatible hosts, `.claude-plugin/marketplace.json` makes the GitHub repository a Claude plugin marketplace, and `.claude-plugin/plugin.json` makes the repository root the `engifoundry-bundle` plugin package. Claude does not use `.agents/plugins/marketplace.json`; that file is Codex-specific.
 
 For Kimi Code, `.kimi-plugin/plugin.json` makes the GitHub repository directly installable with `/plugins install https://github.com/caoyuan-fire/engi-foundry-skill`. Official Kimi marketplace search visibility is a separate publication channel and is not guaranteed by repository metadata alone.
+
+For GitHub Copilot CLI, `.github/plugin/marketplace.json` makes the GitHub repository a plugin marketplace, and `.github/plugin/plugin.json` makes the repository root the `engifoundry-bundle` plugin package.
+
+For Cursor-compatible hosts, `.cursor-plugin/plugin.json` declares the repository root as the `engifoundry-bundle` plugin package and exposes the shared `skills/` directory. Cursor IDE and Cursor Agent CLI parity should not be assumed unless the target Cursor version documents it.
+
+For Factory Droid, `.factory-plugin/marketplace.json` makes the GitHub repository a Droid plugin marketplace, and `.factory-plugin/plugin.json` makes the repository root the `engifoundry-bundle` plugin package.
 
 Skills-only installation is a fallback for hosts without plugin support or for explicit user requests for skills-only installation.
 

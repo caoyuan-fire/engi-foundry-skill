@@ -71,12 +71,17 @@ class GovernanceDocsTests(unittest.TestCase):
         codex = json.loads(read(".codex-plugin/plugin.json"))
         claude = json.loads(read(".claude-plugin/plugin.json"))
         kimi = json.loads(read(".kimi-plugin/plugin.json"))
+        github_copilot = json.loads(read(".github/plugin/plugin.json"))
+        cursor = json.loads(read(".cursor-plugin/plugin.json"))
+        factory_droid = json.loads(read(".factory-plugin/plugin.json"))
         repository_manifest = json.loads(read("engifoundry.manifest.json"))
 
-        for manifest in [codex, claude, kimi]:
+        for manifest in [codex, claude, kimi, github_copilot, cursor, factory_droid]:
             self.assertEqual(manifest["name"], "engifoundry-bundle")
             self.assertEqual(manifest["version"], repository_manifest["version"])
             self.assertEqual(manifest["skills"], "./skills/")
+
+        for manifest in [codex, claude, kimi, github_copilot]:
             self.assertIn("interface", manifest)
 
         self.assertEqual(kimi["sessionStart"]["skill"], "engifoundry-gate")
@@ -86,6 +91,9 @@ class GovernanceDocsTests(unittest.TestCase):
         self.assertEqual(repository_manifest["pluginManifests"]["codex"], ".codex-plugin/plugin.json")
         self.assertEqual(repository_manifest["pluginManifests"]["claude"], ".claude-plugin/plugin.json")
         self.assertEqual(repository_manifest["pluginManifests"]["kimi"], ".kimi-plugin/plugin.json")
+        self.assertEqual(repository_manifest["pluginManifests"]["githubCopilot"], ".github/plugin/plugin.json")
+        self.assertEqual(repository_manifest["pluginManifests"]["cursor"], ".cursor-plugin/plugin.json")
+        self.assertEqual(repository_manifest["pluginManifests"]["factoryDroid"], ".factory-plugin/plugin.json")
 
     def test_plugin_package_name_is_distinct_from_main_skill_name(self):
         phrases = [
@@ -133,11 +141,17 @@ class GovernanceDocsTests(unittest.TestCase):
             ".agents/plugins/marketplace.json",
             ".claude-plugin/marketplace.json",
             ".kimi-plugin/plugin.json",
+            ".github/plugin/marketplace.json",
+            ".cursor-plugin/plugin.json",
+            ".factory-plugin/plugin.json",
         ])
         self.assert_contains_all("docs/publication.md", [
             ".agents/plugins/marketplace.json",
             ".claude-plugin/marketplace.json",
             ".kimi-plugin/plugin.json",
+            ".github/plugin/marketplace.json",
+            ".cursor-plugin/plugin.json",
+            ".factory-plugin/plugin.json",
         ])
         self.assert_contains_all("zh/README.md", [
             "codex plugin marketplace add https://github.com/caoyuan-fire/engi-foundry-skill",
@@ -192,6 +206,57 @@ class GovernanceDocsTests(unittest.TestCase):
             ".claude-plugin/marketplace.json",
             ".kimi-plugin/plugin.json",
             "/plugins install https://github.com/caoyuan-fire/engi-foundry-skill",
+        ])
+
+    def test_copilot_cursor_and_factory_installation_contracts_are_explicit(self):
+        copilot_marketplace = json.loads(read(".github/plugin/marketplace.json"))
+        copilot = json.loads(read(".github/plugin/plugin.json"))
+        cursor = json.loads(read(".cursor-plugin/plugin.json"))
+        factory_marketplace = json.loads(read(".factory-plugin/marketplace.json"))
+        factory = json.loads(read(".factory-plugin/plugin.json"))
+
+        self.assertEqual(copilot_marketplace["name"], "engi-foundry-skill")
+        self.assertEqual(copilot_marketplace["plugins"][0]["name"], "engifoundry-bundle")
+        self.assertEqual(copilot_marketplace["plugins"][0]["source"], ".")
+        self.assertEqual(copilot["name"], "engifoundry-bundle")
+        self.assertEqual(copilot["skills"], "./skills/")
+        self.assertEqual(cursor["name"], "engifoundry-bundle")
+        self.assertEqual(cursor["skills"], "./skills/")
+        self.assertEqual(factory_marketplace["name"], "engi-foundry-skill")
+        self.assertEqual(factory_marketplace["plugins"][0]["name"], "engifoundry-bundle")
+        self.assertEqual(factory_marketplace["plugins"][0]["source"]["source"], "url")
+        self.assertEqual(factory_marketplace["plugins"][0]["source"]["url"], "./")
+        self.assertEqual(factory["name"], "engifoundry-bundle")
+        self.assertEqual(factory["skills"], "./skills/")
+
+        self.assert_contains_all("README.md", [
+            "copilot plugin marketplace add caoyuan-fire/engi-foundry-skill",
+            "copilot plugin install engifoundry-bundle@engi-foundry-skill",
+            ".github/plugin/marketplace.json",
+            "/add-plugin https://github.com/caoyuan-fire/engi-foundry-skill",
+            ".cursor-plugin/plugin.json",
+            "Cursor IDE plugin support and Cursor Agent CLI support may not be identical",
+            "droid plugin marketplace add https://github.com/caoyuan-fire/engi-foundry-skill",
+            "droid plugin install engifoundry-bundle@engi-foundry-skill",
+            ".factory-plugin/marketplace.json",
+        ])
+        self.assert_contains_all("docs/platform-metadata.md", [
+            "GitHub Copilot CLI can use this repository as a Git-hosted plugin marketplace",
+            ".github/plugin/plugin.json",
+            "Cursor IDE plugin behavior and Cursor Agent CLI behavior may differ",
+            ".cursor-plugin/plugin.json",
+            "Factory Droid can use this repository as a plugin marketplace",
+            ".factory-plugin/plugin.json",
+        ])
+        self.assert_contains_all("docs/publication.md", [
+            "`.github/plugin/marketplace.json` makes the GitHub repository a plugin marketplace",
+            "`.cursor-plugin/plugin.json` declares the repository root as the `engifoundry-bundle` plugin package",
+            "`.factory-plugin/marketplace.json` makes the GitHub repository a Droid plugin marketplace",
+        ])
+        self.assert_contains_all("skills/engifoundry/agents/generic.json", [
+            ".github/plugin/marketplace.json",
+            ".cursor-plugin/plugin.json",
+            ".factory-plugin/marketplace.json",
         ])
 
     def test_plugin_and_skills_only_installation_are_exclusive(self):

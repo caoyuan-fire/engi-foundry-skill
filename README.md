@@ -77,7 +77,9 @@ For behavior changes, EngiFoundry prefers test-first development when feasible. 
 
 ## Installation
 
-Plugin installation is the preferred full installation mode when the host supports plugins.
+Installation differs by agent host. If you use more than one host, install EngiFoundry separately for each one.
+
+Plugin installation is the preferred full installation mode when the host supports plugins. For hosts without plugin support, use the skills-only fallback.
 
 The plugin package name is `engifoundry-bundle`. The main manual skill remains `$engifoundry`.
 
@@ -85,8 +87,15 @@ The plugin package name is `engifoundry-bundle`. The main manual skill remains `
 
 Codex-compatible installations use this repository as a Git marketplace:
 
+- Register the marketplace:
+
 ```bash
 codex plugin marketplace add https://github.com/caoyuan-fire/engi-foundry-skill
+```
+
+- Install the plugin:
+
+```bash
 codex plugin add engifoundry-bundle@engi-foundry-skill
 ```
 
@@ -109,8 +118,15 @@ skills/
 
 Claude-compatible installations use this repository as a Claude plugin marketplace:
 
+- Register the marketplace:
+
 ```text
 /plugin marketplace add caoyuan-fire/engi-foundry-skill
+```
+
+- Install the plugin:
+
+```text
 /plugin install engifoundry-bundle@engi-foundry-skill
 ```
 
@@ -126,6 +142,8 @@ skills/
 
 Kimi Code can install directly from this repository:
 
+- Install the plugin:
+
 ```text
 /plugins install https://github.com/caoyuan-fire/engi-foundry-skill
 ```
@@ -140,6 +158,73 @@ Repository installs use:
 
 ```text
 .kimi-plugin/plugin.json
+skills/
+```
+
+### GitHub Copilot CLI
+
+GitHub Copilot CLI can use this repository as a plugin marketplace:
+
+- Register the marketplace:
+
+```bash
+copilot plugin marketplace add caoyuan-fire/engi-foundry-skill
+```
+
+- Install the plugin:
+
+```bash
+copilot plugin install engifoundry-bundle@engi-foundry-skill
+```
+
+Relevant files:
+
+```text
+.github/plugin/marketplace.json
+.github/plugin/plugin.json
+skills/
+```
+
+### Cursor
+
+Cursor-compatible installations use the Cursor plugin manifest in this repository.
+
+- Install from Cursor Agent chat or the plugin UI:
+
+```text
+/add-plugin https://github.com/caoyuan-fire/engi-foundry-skill
+```
+
+Relevant files:
+
+```text
+.cursor-plugin/plugin.json
+skills/
+```
+
+Cursor IDE plugin support and Cursor Agent CLI support may not be identical in all versions.
+
+### Factory Droid
+
+Factory Droid can use this repository as a plugin marketplace:
+
+- Register the marketplace:
+
+```bash
+droid plugin marketplace add https://github.com/caoyuan-fire/engi-foundry-skill
+```
+
+- Install the plugin:
+
+```bash
+droid plugin install engifoundry-bundle@engi-foundry-skill
+```
+
+Relevant files:
+
+```text
+.factory-plugin/marketplace.json
+.factory-plugin/plugin.json
 skills/
 ```
 
@@ -174,6 +259,9 @@ skills/engifoundry/            Main skill, references, scripts, metadata
 .codex-plugin/                 Codex plugin manifest
 .claude-plugin/                Claude plugin manifest and marketplace metadata
 .agents/plugins/               Codex Git marketplace metadata
+.github/plugin/                GitHub Copilot CLI plugin metadata
+.cursor-plugin/                Cursor plugin manifest
+.factory-plugin/               Factory Droid plugin manifest and marketplace metadata
 tests/                         Repository-level validation
 zh/                            Chinese README
 ```

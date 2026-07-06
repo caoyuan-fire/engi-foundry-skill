@@ -1,0 +1,12 @@
+{
+  "name": "engi-foundry-skill",
+  "displayName": "EngiFoundry Skill",
+  "description": "Git-hosted marketplace for the EngiFoundry structured engineering workflow plugin.",
+  "plugins": [
+    {
+      "name": "engifoundry-bundle",
+      "source": ".",
+      "description": "Structured engineering workflow for planning, execution governance, durable artifacts, review, verification, and handoff."
+    }
+  ]
+}

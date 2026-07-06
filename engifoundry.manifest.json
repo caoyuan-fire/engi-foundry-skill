@@ -9,7 +9,10 @@
   "pluginManifests": {
     "codex": ".codex-plugin/plugin.json",
     "claude": ".claude-plugin/plugin.json",
-    "kimi": ".kimi-plugin/plugin.json"
+    "kimi": ".kimi-plugin/plugin.json",
+    "githubCopilot": ".github/plugin/plugin.json",
+    "cursor": ".cursor-plugin/plugin.json",
+    "factoryDroid": ".factory-plugin/plugin.json"
   },
   "installModes": {
     "preference": "plugin-first",
@@ -23,6 +26,9 @@
       "codexManifest": ".codex-plugin/plugin.json",
       "claudeManifest": ".claude-plugin/plugin.json",
       "kimiManifest": ".kimi-plugin/plugin.json",
+      "githubCopilotManifest": ".github/plugin/plugin.json",
+      "cursorManifest": ".cursor-plugin/plugin.json",
+      "factoryDroidManifest": ".factory-plugin/plugin.json",
       "description": "Preferred full installation when the host supports plugins. Repository-level skill installation prompts should install this plugin package when a compatible plugin manifest is present."
     },
     "skillsOnly": {
