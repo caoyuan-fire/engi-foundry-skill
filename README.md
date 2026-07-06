@@ -148,12 +148,6 @@ Kimi Code can install directly from this repository:
 /plugins install https://github.com/caoyuan-fire/engi-foundry-skill
 ```
 
-You can also search the Kimi plugin UI with:
-
-```text
-/plugins
-```
-
 Repository installs use:
 
 ```text

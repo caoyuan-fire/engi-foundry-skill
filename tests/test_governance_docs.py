@@ -208,6 +208,9 @@ class GovernanceDocsTests(unittest.TestCase):
             "/plugins install https://github.com/caoyuan-fire/engi-foundry-skill",
         ])
 
+        self.assertNotIn("You can also search the Kimi plugin UI", read("README.md"))
+        self.assertNotIn("也可以在 Kimi 插件界面搜索", read("zh/README.md"))
+
     def test_copilot_cursor_and_factory_installation_contracts_are_explicit(self):
         copilot_marketplace = json.loads(read(".github/plugin/marketplace.json"))
         copilot = json.loads(read(".github/plugin/plugin.json"))
