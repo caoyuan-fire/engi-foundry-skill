@@ -1,6 +1,6 @@
-# Publication
+# Publication and Platforms
 
-EngiFoundry uses a public repository structure that separates user documentation, formal specification, and installable skill content.
+This repository follows the official self-contained skill directory model. README files are human entry points. Runtime protocol details live under `skills/engifoundry/references/`.
 
 ## Public Files
 
@@ -16,7 +16,6 @@ EngiFoundry uses a public repository structure that separates user documentation
 - `.cursor-plugin/plugin.json`: Cursor plugin manifest.
 - `.factory-plugin/marketplace.json`: Factory Droid marketplace manifest.
 - `.factory-plugin/plugin.json`: Factory Droid plugin manifest.
-- `docs/`: formal specification basis.
 - `skills/engifoundry-gate/`: lightweight plugin autoload gate.
 - `skills/engifoundry/`: main manual skill entry point and workflow launcher.
 - `examples/`: examples after the format stabilizes.
@@ -24,17 +23,7 @@ EngiFoundry uses a public repository structure that separates user documentation
 
 ## Documentation Responsibilities
 
-The README explains:
-
-- what EngiFoundry is;
-- quickstart usage;
-- high-level workflow behavior;
-- installation and update entry points;
-- repository contents at a glance;
-- where to read the detailed specification;
-- license status.
-
-`docs/` explains the full specification.
+The README explains what EngiFoundry is, quickstart usage, high-level workflow behavior, installation and update entry points, repository contents at a glance, runtime reference location, and license status.
 
 `skills/engifoundry-gate/SKILL.md` stays lightweight. It may inspect only first-level current-working-directory children, and it must not apply package governance.
 
@@ -44,32 +33,62 @@ The plugin package name is `engifoundry-bundle`. Do not rename the main manual s
 
 `skills/engifoundry/references/` contains agent-facing details loaded on demand.
 
+Reference files should be focused and one level deep from `SKILL.md`. Each reference should cover one operational concern, such as artifact handling, role protocol, package format, or engineering discipline.
+
 `skills/engifoundry/agents/` contains optional platform and tooling metadata. Core discovery must still work from `SKILL.md`.
 
 `skills/engifoundry/scripts/` contains deterministic helper scripts that support optional workflows such as module resolution.
+
+Generated runtime state, private notes, local experiments, and non-publishable materials must stay out of publishable files.
+
+## Entry Points
+
+EngiFoundry exposes two skill entry points:
+
+```text
+$engifoundry-gate
+$engifoundry
+```
+
+`$engifoundry` is the main manual entry point. Users who want EngiFoundry should prefer this entry point.
+
+`$engifoundry-gate` is the plugin autoload gate. Plugin installation should target this entry point for session-start preheating. It only decides whether EngiFoundry is available in the current workspace; it does not apply the full workflow.
+
+The gate only decides whether the current workspace makes EngiFoundry available. It inspects only first-level current-working-directory children, treats `.git/` as a super signal, recognizes ordinary project scaffold signals such as build files, package manifests, source directories, app directories, or test directories, recognizes EngiFoundry initialization signals such as `.engifoundry.config.json`, `.engifoundry/`, and `.engifoundry-packages/`, and does not force package governance.
+
+The canonical runtime metadata is the YAML frontmatter in `skills/engifoundry-gate/SKILL.md` and `skills/engifoundry/SKILL.md`. That frontmatter contains the required `name` and `description` fields. Platforms that support Agent Skills should be able to discover the skill from those fields.
+
+## Platform Metadata
+
+The Codex marketplace and plugin manifests declare the Git-hosted marketplace entry for `engifoundry-bundle`, the plugin name and interface metadata, the shared `skills/` directory, and the `engifoundry-gate` autoload gate and `engifoundry` main entry through normal skill discovery.
+
+EngiFoundry also includes OpenAI/Codex-facing UI metadata in `skills/engifoundry/agents/openai.yaml`; this file provides display name, short description, and default prompt metadata for OpenAI surfaces that support it.
+
+EngiFoundry also includes platform-neutral metadata in `skills/engifoundry/agents/generic.json`; this file is for humans, installers, and third-party tooling. It is not required for EngiFoundry runtime behavior.
+
+Claude-compatible skill surfaces should use the Claude marketplace and plugin manifests when available and `SKILL.md` frontmatter as the core skill metadata source. Claude does not use Codex's `.agents/plugins/marketplace.json`.
+
+The Kimi manifest declares the plugin package name `engifoundry-bundle`, the shared `skills/` directory, and `engifoundry-gate` as the session-start skill. Kimi-compatible usage should also rely on `SKILL.md` frontmatter, `agents/generic.json`, and public documentation in this repository.
+
+Official Kimi marketplace search visibility is separate from repository compatibility. It depends on Kimi marketplace publication or curation outside this repository.
+
+The GitHub Copilot plugin manifest declares the shared `skills/` directory. Runtime skill discovery still comes from `SKILL.md` frontmatter.
+
+The Cursor manifest declares the plugin package name `engifoundry-bundle`, display and repository metadata, and the shared `skills/` directory. Cursor IDE plugin behavior and Cursor Agent CLI behavior may differ by Cursor version. Do not assume CLI parity unless the target Cursor version documents it.
+
+The Factory manifest declares the shared `skills/` directory and does not add runtime code beyond the existing skill files.
+
+Do not add platform-specific metadata files unless the platform has a stable schema or the repository explicitly documents the file as supported tooling metadata.
 
 ## Version Policy
 
 Skill version is a maintenance label, not a hard execution requirement.
 
-The canonical installable version is recorded in:
+The canonical installable version is recorded in `skills/engifoundry/VERSION`.
 
-```text
-skills/engifoundry/VERSION
-```
+The repository manifest should carry the same version in `engifoundry.manifest.json`.
 
-The repository manifest should carry the same version:
-
-```text
-engifoundry.manifest.json
-```
-
-Check at most once per session, during the first EngiFoundry alignment, only when network access is available. Use `check_version` scripts for this low-noise check:
-
-```text
-skills/engifoundry/scripts/check_version.sh
-skills/engifoundry/scripts/check_version.ps1
-```
+Check at most once per session, during the first EngiFoundry alignment, only when network access is available. Use `check_version` scripts for this low-noise check.
 
 If no newer version is available, say nothing. If the check fails or network is unavailable, do not mention it unless the user explicitly asks. Version checks must not block normal EngiFoundry work.
 
@@ -77,7 +96,7 @@ If no newer version is available, say nothing. If the check fails or network is 
 
 - Do not expose local scratch paths or private notes in public documentation.
 - Do not make the skill body a long specification document.
-- Do not duplicate long rules across README, docs, and references.
+- Do not duplicate long rules across README and references.
 - Keep README as a human-facing project entry point, not a protocol specification.
 - Do not add platform-specific metadata files without a stable schema or an explicit adapter policy.
 - Do not write module caches or resolver lockfiles into project artifact roots.
@@ -106,3 +125,17 @@ For Factory Droid, `.factory-plugin/marketplace.json` makes the GitHub repositor
 Skills-only installation is a fallback for hosts without plugin support or for explicit user requests for skills-only installation.
 
 Plugin installation and skills-only installation are mutually exclusive within one host home. Do not keep plugin-provided skill entries and copied global skill entries for the same EngiFoundry version in the same host home, because the host may expose duplicate `$engifoundry-gate` and `$engifoundry` entries.
+
+## Repository Structure
+
+EngiFoundry uses a publishable repository layout with the installable skill under `skills/`.
+
+Root files declare plugin marketplace metadata, plugin manifests, repository manifest, tests, examples, and localized README content.
+
+`skills/engifoundry-gate/` is the plugin autoload gate.
+
+`skills/engifoundry/` contains `SKILL.md`, `agents/openai.yaml`, `agents/generic.json`, `references/`, `scripts/`, and `modules/`.
+
+The skill body should stay concise. Detailed rules belong in references.
+
+`tests/` contains repository-level tests for deterministic helper scripts and publishable behavior.

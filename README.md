@@ -233,7 +233,7 @@ skills/engifoundry/
 
 Do not install both the plugin package and skills-only entries into the same host home; doing both can expose duplicate `$engifoundry-gate` and `$engifoundry` entries.
 
-Detailed installation and publication rules live in [docs/publication.md](docs/publication.md) and [docs/platform-metadata.md](docs/platform-metadata.md).
+Runtime protocol details live inside `skills/engifoundry/references/`. The repository follows the official self-contained skill directory model.
 
 ## Updating
 
@@ -247,7 +247,6 @@ The installable skill version is recorded in [skills/engifoundry/VERSION](skills
 ## What's Inside
 
 ```text
-docs/                         Formal specification and maintainer docs
 skills/engifoundry-gate/       Lightweight autoload gate
 skills/engifoundry/            Main skill, references, scripts, metadata
 .codex-plugin/                 Codex plugin manifest
@@ -260,16 +259,6 @@ tests/                         Repository-level validation
 zh/                            Chinese README
 ```
 
-Start with:
-
-- [Configuration](docs/configuration.md)
-- [Artifact protocol](docs/artifact-protocol.md)
-- [Execution policy](docs/execution-policy.md)
-- [Package format](docs/package-format.md)
-- [Job format](docs/job-format.md)
-- [Role protocol](docs/role-protocol.md)
-- [Publication](docs/publication.md)
-
 ## Development
 
 Run the repository tests with:
@@ -278,7 +267,7 @@ Run the repository tests with:
 python3 -m unittest discover -s tests
 ```
 
-Keep root documentation readable for humans. Detailed workflow rules belong in `docs/` and agent-facing operational details belong in `skills/engifoundry/references/`.
+Keep root documentation readable for humans. Runtime workflow rules belong inside the self-contained skill directory under `skills/engifoundry/references/`.
 
 ## License
 

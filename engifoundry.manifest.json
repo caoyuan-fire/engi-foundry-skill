@@ -2,7 +2,7 @@
   "name": "engifoundry",
   "pluginName": "engifoundry-bundle",
   "displayName": "EngiFoundry",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "status": "public-layout-draft",
   "skillPath": "skills/engifoundry",
   "gateSkillPath": "skills/engifoundry-gate",
@@ -53,14 +53,44 @@
     }
   },
   "modules": {
+    "operating-model": {
+      "requiredFor": ["all"],
+      "localPath": "skills/engifoundry/references/operating-model.md",
+      "required": true
+    },
+    "runtime-contracts": {
+      "requiredFor": ["all"],
+      "localPath": "skills/engifoundry/references/contracts.md",
+      "required": true
+    },
+    "runtime-namespaces": {
+      "requiredFor": ["all"],
+      "localPath": "skills/engifoundry/references/namespaces.md",
+      "required": true
+    },
     "intent-routing": {
       "requiredFor": ["all"],
       "localPath": "skills/engifoundry/references/intent-routing.md",
       "required": true
     },
-    "artifact-protocol": {
+    "package-planning": {
+      "requiredFor": ["package-planning", "package-alignment"],
+      "localPath": "skills/engifoundry/references/package-planning.md",
+      "required": true
+    },
+    "artifact-root": {
       "requiredFor": ["package-planning", "job-execution", "review-only", "closeout", "audit"],
-      "localPath": "skills/engifoundry/references/artifact-protocol.md",
+      "localPath": "skills/engifoundry/references/artifact-root.md",
+      "required": true
+    },
+    "execution-config": {
+      "requiredFor": ["package-planning", "package-alignment", "job-execution"],
+      "localPath": "skills/engifoundry/references/execution-config.md",
+      "required": true
+    },
+    "execution-policy": {
+      "requiredFor": ["package-planning", "package-alignment", "job-execution"],
+      "localPath": "skills/engifoundry/references/execution-policy.md",
       "required": true
     },
     "role-protocol": {
@@ -71,6 +101,21 @@
     "package-format": {
       "requiredFor": ["package-planning", "job-execution", "review-only", "package-revision", "closeout"],
       "localPath": "skills/engifoundry/references/package-format.md",
+      "required": true
+    },
+    "phase-roadmap": {
+      "requiredFor": ["package-planning", "job-execution", "package-revision", "closeout"],
+      "localPath": "skills/engifoundry/references/phase-roadmap.md",
+      "required": true
+    },
+    "job-format": {
+      "requiredFor": ["job-execution", "review-only", "closeout"],
+      "localPath": "skills/engifoundry/references/job-format.md",
+      "required": true
+    },
+    "handoff-and-checkpoint": {
+      "requiredFor": ["closeout", "handoff", "package-revision"],
+      "localPath": "skills/engifoundry/references/handoff-and-checkpoint.md",
       "required": true
     },
     "engineering-discipline": {
@@ -86,6 +131,11 @@
     "module-resolution": {
       "requiredFor": ["kernel-only", "missing-module", "dependency-resolution"],
       "localPath": "skills/engifoundry/references/module-resolution.md",
+      "required": true
+    },
+    "publication-and-platforms": {
+      "requiredFor": ["publication", "platform-metadata", "installation"],
+      "localPath": "skills/engifoundry/references/publication-and-platforms.md",
       "required": true
     },
     "superpowers-compatible-discipline": {

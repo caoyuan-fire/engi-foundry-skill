@@ -141,7 +141,7 @@ It should not dump raw long logs. Prefer concise evidence indexes.
 
 ## `review.md`
 
-`review.md` is the reviewer output.
+`review.md` is reviewer output.
 
 It should include:
 
@@ -154,7 +154,7 @@ It should include:
 
 ## `verification.md`
 
-`verification.md` records validation.
+`verification.md` records validation commands, context, pass/fail result, failure details, non-runnable reasons, and alternative evidence.
 
 It should include:
 

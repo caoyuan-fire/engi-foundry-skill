@@ -2,6 +2,8 @@
 
 Adapters map abstract isolated-context capabilities to concrete mechanisms.
 
+## Required Adapter Description
+
 An adapter must state:
 
 - supported capability;
@@ -22,11 +24,19 @@ An adapter must state:
 - known risks;
 - fallback behavior.
 
+## Boundaries
+
+Adapters cannot override EngiFoundry core rules.
+
 Core EngiFoundry rules remain authoritative.
 
 Adapter configuration belongs in `execution.config.json` when it is durable and non-sensitive.
 
 Secrets, private paths, transient session IDs, and runtime cache do not belong in the artifact root.
+
+Adapters cannot write runtime cache, session dumps, secrets, or private state into the artifact root.
+
+Sensitive values must live outside EngiFoundry artifacts.
 
 Adapters cannot grant primary/control authority by themselves.
 
@@ -36,7 +46,16 @@ Adapters describe mechanism. Package and Job configs decide policy.
 
 Executor Contract Gate only applies after work enters a package flow and uses an isolated executor, isolated reviewer, external CLI, human handoff, or other bounded execution mechanism.
 
-Before using an adapter for package work, `primary/control` must know or record invocation mechanism, prompt delivery method, stdin support, output retrieval method, write permissions, review-only support, timeout or watchdog behavior, and fallback behavior.
+Before using an adapter for package work, `primary/control` must know or record enough capability information to run and review the work safely:
+
+- invocation mechanism;
+- prompt delivery method;
+- stdin support;
+- output retrieval method;
+- write permissions;
+- review-only support;
+- timeout or watchdog behavior;
+- fallback behavior.
 
 Do not assume stdin support. If prompt delivery or stdin behavior is unknown, discover it with a harmless command or ask the user before using the adapter for real package work.
 
@@ -44,7 +63,7 @@ For a new project with no usable `execution.config.json`, direct execution is th
 
 Watchdog behavior must be explicit. The adapter contract should state how stalled, silent, timed-out, or partial executor runs are detected and reported.
 
-The adapter contract does not override package-first rules, Job dependencies, allowed and forbidden areas, verification requirements, or primary/control-only decisions.
+The adapter contract is not an approval mechanism. It does not override package-first rules, Job dependencies, allowed and forbidden areas, verification requirements, or primary/control-only decisions.
 
 ## Executor Liveness Contract
 

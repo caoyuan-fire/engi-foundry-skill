@@ -2,6 +2,8 @@
 
 EngiFoundry separates execution mechanism from isolation and quality discipline.
 
+Execution has three dimensions.
+
 ## Three Dimensions
 
 ```text
@@ -10,7 +12,7 @@ isolation  = how separated the execution/review context is
 discipline = quality preset
 ```
 
-`quick` and `strict` are not complete execution modes. They are discipline presets.
+`quick`, `standard`, and `strict` are discipline presets, not executor identities.
 
 ## Executors
 

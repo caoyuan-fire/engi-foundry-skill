@@ -233,7 +233,7 @@ skills/engifoundry/
 
 不要在同一个 host home 中同时安装 plugin 包和 skills-only 入口；两者并存可能暴露重复的 `$engifoundry-gate` 和 `$engifoundry` 条目。
 
-详细安装和发布规则见 [docs/publication.md](../docs/publication.md) 和 [docs/platform-metadata.md](../docs/platform-metadata.md)。
+运行时协议细节位于 `skills/engifoundry/references/`。本仓库遵循官方的自包含 skill 目录模型。
 
 ## 更新
 
@@ -247,7 +247,6 @@ skills/engifoundry/
 ## 包含内容
 
 ```text
-docs/                         正式规范和维护者文档
 skills/engifoundry-gate/       轻量 autoload gate
 skills/engifoundry/            主 skill、references、scripts、metadata
 .codex-plugin/                 Codex plugin manifest
@@ -260,16 +259,6 @@ tests/                         仓库级验证
 zh/                            中文 README
 ```
 
-建议从这些文档开始：
-
-- [Configuration](../docs/configuration.md)
-- [Artifact protocol](../docs/artifact-protocol.md)
-- [Execution policy](../docs/execution-policy.md)
-- [Package format](../docs/package-format.md)
-- [Job format](../docs/job-format.md)
-- [Role protocol](../docs/role-protocol.md)
-- [Publication](../docs/publication.md)
-
 ## 开发
 
 运行仓库测试：
@@ -278,7 +267,7 @@ zh/                            中文 README
 python3 -m unittest discover -s tests
 ```
 
-根 README 应保持为面向人类的入口文档。详细工作流规则属于 `docs/`，agent-facing 操作细节属于 `skills/engifoundry/references/`。
+根 README 应保持为面向人类的入口文档。运行时工作流规则属于自包含 skill 目录 `skills/engifoundry/references/`。
 
 ## License
 
