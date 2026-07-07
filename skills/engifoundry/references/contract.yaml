@@ -11,10 +11,32 @@ loadOrder:
   - operatingModel
   - invariants
   - namespaces
+  - workflow
 parts:
   operatingModel: references/contract-operating-model.yaml
   invariants: references/contract-invariants.yaml
   namespaces: references/contract-namespaces.yaml
+  workflow: references/workflow.yaml
+ruleMeta:
+  importanceLevels:
+    must:
+      meaning: "Non-bypassable gate. Failure blocks progression or forces an explicit blocked, discarded, draft-if-user-requested, or concrete user-pause state."
+      completionImpact: "Cannot report success, readiness, completion, or approval if unmet."
+    classic:
+      meaning: "Default required workflow rule. Evaluate and follow unless a higher-priority rule, package contract, or explicit user constraint changes the path."
+      completionImpact: "Deviation requires recorded rationale, evidence, and residual risk."
+    weak:
+      meaning: "Guidance or preference. Follow when compatible with the task and visible context."
+      completionImpact: "Deviation should be mentioned when it affects risk, quality, or handoff."
+    optional:
+      meaning: "Use only when relevant or available."
+      completionImpact: "Missing optional evidence is not a blocker by itself and must not be used as success evidence."
+derivedContracts:
+  workflow:
+    path: references/workflow.yaml
+    kind: engifoundry-workflow-contract
+    status: required
+    relation: "Derived from contract-operating-model.yaml, contract-invariants.yaml, contract-namespaces.yaml, and mode-specific Markdown detail references."
 authoritativeSources:
   operatingModel: references/operating-model.md
   invariants: references/contracts.md

@@ -150,6 +150,7 @@ class GovernanceDocsTests(unittest.TestCase):
             "contract-namespaces.yaml",
             "contract-operating-model.yaml",
             "contract.yaml",
+            "workflow.yaml",
             "contracts.md",
             "engineering-discipline.md",
             "execution-config.md",
@@ -193,7 +194,7 @@ class GovernanceDocsTests(unittest.TestCase):
         self.assertEqual(contract["kind"], "engifoundry-skill-contract")
         self.assertEqual(
             contract["loadOrder"],
-            ["operatingModel", "invariants", "namespaces"],
+            ["operatingModel", "invariants", "namespaces", "workflow"],
         )
         self.assertEqual(
             contract["parts"],
@@ -201,7 +202,20 @@ class GovernanceDocsTests(unittest.TestCase):
                 "operatingModel": "references/contract-operating-model.yaml",
                 "invariants": "references/contract-invariants.yaml",
                 "namespaces": "references/contract-namespaces.yaml",
+                "workflow": "references/workflow.yaml",
             },
+        )
+        self.assertEqual(
+            set(contract["ruleMeta"]["importanceLevels"].keys()),
+            {"must", "classic", "weak", "optional"},
+        )
+        self.assertEqual(
+            contract["ruleMeta"]["importanceLevels"]["must"]["completionImpact"],
+            "Cannot report success, readiness, completion, or approval if unmet.",
+        )
+        self.assertEqual(
+            contract["derivedContracts"]["workflow"]["path"],
+            "references/workflow.yaml",
         )
         self.assertEqual(
             contract["authoritativeSources"],
@@ -217,12 +231,17 @@ class GovernanceDocsTests(unittest.TestCase):
             ("contract-operating-model", "skills/engifoundry/references/contract-operating-model.yaml"),
             ("contract-invariants", "skills/engifoundry/references/contract-invariants.yaml"),
             ("contract-namespaces", "skills/engifoundry/references/contract-namespaces.yaml"),
+            ("workflow-contract", "skills/engifoundry/references/workflow.yaml"),
         ]:
             with self.subTest(module=module_name):
                 self.assertEqual(manifest["modules"][module_name]["localPath"], local_path)
                 self.assertTrue(manifest["modules"][module_name]["required"])
         self.assertIn(
             "Read `references/contract.yaml` before mode-specific references",
+            read("skills/engifoundry/SKILL.md"),
+        )
+        self.assertIn(
+            "`references/workflow.yaml` defines the ordered workflow and gate levels",
             read("skills/engifoundry/SKILL.md"),
         )
 
@@ -323,6 +342,78 @@ class GovernanceDocsTests(unittest.TestCase):
         self.assertEqual(
             namespaces["runtimeReferenceBoundary"],
             "Do not point runtime rules outside skills/engifoundry/.",
+        )
+
+    def test_workflow_yaml_declares_ordered_gates_and_ready_barriers(self):
+        workflow = read_yaml("skills/engifoundry/references/workflow.yaml")
+        self.assertEqual(workflow["schemaVersion"], 1)
+        self.assertEqual(workflow["kind"], "engifoundry-workflow-contract")
+        self.assertEqual(set(workflow["gateLevels"].keys()), {"must", "classic", "weak", "optional"})
+        self.assertEqual(workflow["workflow"]["first"], "classify-request")
+
+        steps = workflow["steps"]
+        expected_chain = [
+            ("classify-request", "establish-authority"),
+            ("establish-authority", "locate-roots"),
+            ("locate-roots", "read-execution-config"),
+            ("read-execution-config", "route-by-mode"),
+        ]
+        for step_id, next_id in expected_chain:
+            with self.subTest(step=step_id):
+                self.assertEqual(steps[step_id]["gateLevel"], "must")
+                self.assertEqual(steps[step_id]["next"], next_id)
+
+        package_steps = workflow["modeFlows"]["package-planning"]["steps"]
+        self.assertEqual(workflow["modeFlows"]["package-planning"]["first"], "write-contracts")
+        self.assertEqual(package_steps["write-contracts"]["next"], "preserve-executor-path")
+        self.assertEqual(package_steps["preserve-executor-path"]["gateLevel"], "must")
+        self.assertEqual(package_steps["preserve-executor-path"]["next"], "evaluate-alignment-gate")
+        self.assertEqual(package_steps["evaluate-alignment-gate"]["gateLevel"], "must")
+        self.assertEqual(
+            package_steps["evaluate-alignment-gate"]["next"],
+            {"ifRequired": "independent-alignment", "ifNotRequired": "ready-candidate-check"},
+        )
+        self.assertEqual(package_steps["independent-alignment"]["gateLevel"], "must")
+        self.assertEqual(
+            package_steps["independent-alignment"]["forbiddenEvidence"],
+            ["primary/control self-review as pass evidence"],
+        )
+        self.assertEqual(package_steps["ready-candidate-check"]["gateLevel"], "must")
+        self.assertIn(
+            "planning.status=ready only after all must gates pass",
+            package_steps["ready-candidate-check"]["requires"],
+        )
+        self.assertEqual(package_steps["set-terminal-planning-state"]["gateLevel"], "must")
+
+    def test_workflow_yaml_blocks_connectionlibrary_planning_gate_failure_mode(self):
+        workflow = read_yaml("skills/engifoundry/references/workflow.yaml")
+        package_steps = workflow["modeFlows"]["package-planning"]["steps"]
+        evaluate = package_steps["evaluate-alignment-gate"]
+        self.assertIn("AIDL or interface contracts", evaluate["triggers"])
+        self.assertIn("public API surface", evaluate["triggers"])
+        self.assertIn("cross-module behavior", evaluate["triggers"])
+        self.assertIn("target-device evidence", evaluate["triggers"])
+
+        preserve = package_steps["preserve-executor-path"]
+        self.assertIn(
+            "If execution.config.json names a usable executor, do not silently downgrade to direct.",
+            preserve["requires"],
+        )
+        self.assertIn(
+            "If package work needs bounded or isolated execution, preserve or record executor-agent path.",
+            preserve["requires"],
+        )
+        self.assertEqual(preserve["failureOutcome"], "blocked")
+
+        independent = package_steps["independent-alignment"]
+        self.assertIn("reviewer role must not be primary/control self-review", independent["requires"])
+        self.assertIn("reviewed files and pass/block decision must be recorded", independent["requires"])
+        self.assertEqual(independent["failureOutcome"], "blocked")
+
+        ready = package_steps["ready-candidate-check"]
+        self.assertIn(
+            "ignored package-root machine contract fields are summarized in durable readiness evidence",
+            ready["requires"],
         )
 
     def test_package_planning_ready_gate_is_preserved(self):

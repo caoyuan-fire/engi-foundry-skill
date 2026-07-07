@@ -2,7 +2,7 @@
   "name": "engifoundry",
   "pluginName": "engifoundry-bundle",
   "displayName": "EngiFoundry",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "status": "public-layout-draft",
   "skillPath": "skills/engifoundry",
   "gateSkillPath": "skills/engifoundry-gate",
@@ -71,6 +71,11 @@
     "contract-namespaces": {
       "requiredFor": ["all"],
       "localPath": "skills/engifoundry/references/contract-namespaces.yaml",
+      "required": true
+    },
+    "workflow-contract": {
+      "requiredFor": ["all"],
+      "localPath": "skills/engifoundry/references/workflow.yaml",
       "required": true
     },
     "operating-model": {

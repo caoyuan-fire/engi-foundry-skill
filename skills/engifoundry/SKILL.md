@@ -21,6 +21,8 @@ Read `references/contract-operating-model.yaml` before mode-specific references.
 
 `references/contract-namespaces.yaml` maps workflow modes to implementation references. Use it after classification to load only the required detail.
 
+`references/workflow.yaml` defines the ordered workflow and gate levels. Follow its `must` gates before reporting readiness, completion, or approval.
+
 Markdown references remain the detail layer for nuance, examples, exceptions, and implementation guidance.
 
 ## Required First Step
