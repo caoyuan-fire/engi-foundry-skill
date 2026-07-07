@@ -2,6 +2,8 @@ import json
 import unittest
 from pathlib import Path
 
+import yaml
+
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -12,6 +14,10 @@ def read(relative_path):
 
 def exists(relative_path):
     return (ROOT / relative_path).exists()
+
+
+def read_yaml(relative_path):
+    return yaml.safe_load(read(relative_path))
 
 
 class GovernanceDocsTests(unittest.TestCase):
@@ -85,9 +91,9 @@ class GovernanceDocsTests(unittest.TestCase):
         self.assertNotIn("docs/", namespaces)
         self.assert_contains_all("skills/engifoundry/SKILL.md", [
             "README is the human entry point; this skill directory is the machine entry point",
-            "Read `references/operating-model.md` before mode-specific references",
-            "`references/contracts.md` defines non-negotiable invariants",
-            "`references/namespaces.md` maps workflow modes to implementation references",
+            "Read `references/contract.yaml` before mode-specific references",
+            "`references/contract-invariants.yaml` defines non-negotiable invariants",
+            "`references/contract-namespaces.yaml` maps workflow modes to implementation references",
         ])
 
     def test_public_readmes_do_not_link_to_removed_docs_layer(self):
@@ -140,6 +146,10 @@ class GovernanceDocsTests(unittest.TestCase):
         required_references = [
             "adapter-contract.md",
             "artifact-root.md",
+            "contract-invariants.yaml",
+            "contract-namespaces.yaml",
+            "contract-operating-model.yaml",
+            "contract.yaml",
             "contracts.md",
             "engineering-discipline.md",
             "execution-config.md",
@@ -177,6 +187,144 @@ class GovernanceDocsTests(unittest.TestCase):
                     f"{path.name} is too broad; split it further",
                 )
 
+    def test_runtime_contract_yaml_indexes_equivalent_contract_parts(self):
+        contract = read_yaml("skills/engifoundry/references/contract.yaml")
+        self.assertEqual(contract["schemaVersion"], 1)
+        self.assertEqual(contract["kind"], "engifoundry-skill-contract")
+        self.assertEqual(
+            contract["loadOrder"],
+            ["operatingModel", "invariants", "namespaces"],
+        )
+        self.assertEqual(
+            contract["parts"],
+            {
+                "operatingModel": "references/contract-operating-model.yaml",
+                "invariants": "references/contract-invariants.yaml",
+                "namespaces": "references/contract-namespaces.yaml",
+            },
+        )
+        self.assertEqual(
+            contract["authoritativeSources"],
+            {
+                "operatingModel": "references/operating-model.md",
+                "invariants": "references/contracts.md",
+                "namespaces": "references/namespaces.md",
+            },
+        )
+        manifest = json.loads(read("engifoundry.manifest.json"))
+        for module_name, local_path in [
+            ("contract-index", "skills/engifoundry/references/contract.yaml"),
+            ("contract-operating-model", "skills/engifoundry/references/contract-operating-model.yaml"),
+            ("contract-invariants", "skills/engifoundry/references/contract-invariants.yaml"),
+            ("contract-namespaces", "skills/engifoundry/references/contract-namespaces.yaml"),
+        ]:
+            with self.subTest(module=module_name):
+                self.assertEqual(manifest["modules"][module_name]["localPath"], local_path)
+                self.assertTrue(manifest["modules"][module_name]["required"])
+        self.assertIn(
+            "Read `references/contract.yaml` before mode-specific references",
+            read("skills/engifoundry/SKILL.md"),
+        )
+
+    def test_operating_model_contract_yaml_mirrors_markdown_rules(self):
+        operating = read_yaml("skills/engifoundry/references/contract-operating-model.yaml")
+        modes = operating["workflow"]["modes"]
+        self.assertEqual(
+            list(modes.keys()),
+            [
+                "ad-hoc",
+                "package-planning",
+                "package-alignment",
+                "job-execution",
+                "review-only",
+                "package-revision",
+                "closeout",
+                "audit",
+            ],
+        )
+        self.assertEqual(
+            operating["controlLoop"],
+            [
+                "classify the request into one workflow mode",
+                "establish authority and role before primary-only or bounded work",
+                "locate or initialize roots when durable work is needed",
+                "select the mode target state",
+                "execute until the target state, an explicit user pause, or a concrete blocker",
+                "verify and record the evidence required by the selected mode",
+                "report only a terminal state",
+            ],
+        )
+        self.assertEqual(operating["authority"]["default"], "primary/control")
+        self.assertFalse(modes["ad-hoc"]["packageGovernance"])
+        self.assertTrue(modes["package-planning"]["packageGovernance"])
+        self.assertIn("planning.status=ready", modes["package-planning"]["terminalStates"])
+        self.assertIn("planning.status=blocked", modes["package-planning"]["terminalStates"])
+        self.assertIn("planning.status=discarded", modes["package-planning"]["terminalStates"])
+        self.assertIn("user explicitly requested draft output", modes["package-planning"]["terminalStates"])
+        self.assertEqual(operating["durableRoots"]["artifactRootDefault"], ".engifoundry/")
+        self.assertEqual(operating["durableRoots"]["packageRootDefault"], ".engifoundry-packages/")
+        self.assertTrue(operating["durableRoots"]["initializeDefaultsBeforeFirstDurableReadOrWrite"])
+        self.assertTrue(operating["evidence"]["completionRequiresFreshVerificationOrNonRunnableRecord"])
+
+    def test_invariants_contract_yaml_mirrors_markdown_rules(self):
+        invariants = read_yaml("skills/engifoundry/references/contract-invariants.yaml")
+        rules = invariants["invariants"]
+        self.assertEqual(rules["controlSource"]["machineControl"], "json")
+        self.assertEqual(rules["controlSource"]["humanNarrative"], "markdown")
+        self.assertEqual(rules["controlSource"]["summaryMd"], "human-only")
+        self.assertEqual(rules["roleAuthority"]["defaultAuthority"], "primary/control")
+        self.assertFalse(rules["roleAuthority"]["adaptersGrantPrimaryControl"])
+        self.assertIn("approve Job completion", rules["roleAuthority"]["boundedSessionsMustNot"])
+        self.assertTrue(rules["packageFirstConflict"]["appliesAfterPackageFlow"])
+        self.assertIn("skipped verification", rules["packageFirstConflict"]["conflictExamples"])
+        self.assertEqual(rules["packagePlanning"]["target"], "planning.status=ready or formal blocker")
+        self.assertFalse(rules["packagePlanning"]["draftIsCompletionState"])
+        self.assertTrue(rules["packagePlanning"]["primaryControlTargetsReadyInSameRequestForCreateCompilePrepare"])
+        self.assertIn("concrete blocker prevents readiness", rules["packagePlanning"]["doNotStopAtDraftUnless"])
+        self.assertIn("user explicitly asks for a draft", rules["packagePlanning"]["doNotStopAtDraftUnless"])
+        self.assertEqual(rules["rootBoundaries"]["artifactRootPurpose"], "durable work products only")
+        self.assertEqual(rules["rootBoundaries"]["packageRootPurpose"], "execution inputs")
+        self.assertTrue(rules["rootBoundaries"]["packageRootGitVisibilityDeterminedByGit"])
+        self.assertFalse(rules["rootBoundaries"]["gitIgnoreStateInProjectConfig"])
+        self.assertFalse(rules["rootBoundaries"]["roadmapStateInProjectConfig"])
+        self.assertEqual(rules["executorAndAdapterAuthority"]["defaultExecutor"], "direct")
+        self.assertTrue(rules["executorAndAdapterAuthority"]["preferArtifactRootExecutionConfigAfterLocatingArtifactRoot"])
+        self.assertFalse(rules["executorAndAdapterAuthority"]["inferCapabilityFromProductNames"])
+        self.assertTrue(rules["verification"]["completionRequiresFreshEvidence"])
+        self.assertFalse(rules["verification"]["executorCompletionCompletesJob"])
+
+    def test_namespaces_contract_yaml_mirrors_markdown_routing(self):
+        namespaces = read_yaml("skills/engifoundry/references/contract-namespaces.yaml")
+        routing = namespaces["modeRouting"]
+        self.assertEqual(
+            routing["ad-hoc"]["references"],
+            [
+                "references/intent-routing.md",
+                "references/engineering-discipline.md",
+            ],
+        )
+        self.assertEqual(
+            routing["ad-hoc"]["conditionalReferences"],
+            [{"when": "durable records are needed", "reference": "references/artifact-root.md"}],
+        )
+        self.assertIn("references/package-planning.md", routing["package-planning"]["references"])
+        self.assertIn("references/job-format.md", routing["job-execution"]["references"])
+        self.assertIn("references/handoff-and-checkpoint.md", routing["closeout"]["references"])
+        stable = namespaces["stableDocumentNamespaces"]
+        for reference_name in [
+            "references/operating-model.md",
+            "references/contracts.md",
+            "references/namespaces.md",
+            "references/package-format.md",
+            "references/job-format.md",
+            "references/publication-and-platforms.md",
+        ]:
+            self.assertIn(reference_name, stable)
+        self.assertEqual(
+            namespaces["runtimeReferenceBoundary"],
+            "Do not point runtime rules outside skills/engifoundry/.",
+        )
+
     def test_package_planning_ready_gate_is_preserved(self):
         self.assert_contains_all("skills/engifoundry/references/package-planning.md", [
             "draft is a transient writing state",
@@ -194,6 +342,8 @@ class GovernanceDocsTests(unittest.TestCase):
 
     def test_package_and_job_format_constraints_are_preserved(self):
         self.assert_contains_all("skills/engifoundry/references/package-format.md", [
+            "Contract anchor: `references/contract.yaml` indexes this file as the package-control detail layer",
+            "this file keeps package-specific layout, identifiers, status values, and reader acknowledgement rules",
             "Markdown explains. JSON controls.",
             "Package governance only applies after work enters a package flow",
             "`summary.md` is human-only",
@@ -208,6 +358,8 @@ class GovernanceDocsTests(unittest.TestCase):
             "New package allocation must continue from the highest allocated `PAK-*` id",
         ])
         self.assert_contains_all("skills/engifoundry/references/job-format.md", [
+            "Contract anchor: `references/contract.yaml` indexes this file as the Job-control detail layer",
+            "this file keeps Job-specific control fields, handback shape, completion gate, and durable output records",
             "`type`: `delegable | primary-control-only | review-only | blocked`",
             "`stopConditions`",
             "`requiredReturnFormat`",
@@ -457,11 +609,16 @@ class GovernanceDocsTests(unittest.TestCase):
             "Package-only governance must not be applied",
         ]
         self.assert_contains_all("skills/engifoundry/SKILL.md", phrases + [
-            "If the user asks to start implementing a broad, risky, multi-step, cross-module, handoff-oriented, or ambiguous feature and no package exists",
-            "do not ask the user to manually compile a package first and do not start direct TDD implementation",
-            "Treat package planning as the next automatic `primary/control` step",
-            "This is not a default user approval pause",
+            "automatic package planning contract in `references/contract-operating-model.yaml`",
         ])
+        operating = read_yaml("skills/engifoundry/references/contract-operating-model.yaml")
+        self.assertEqual(
+            operating["automaticPackagePlanning"]["trigger"],
+            "broad, risky, multi-step, cross-module, handoff-oriented, or ambiguous feature implementation request with no package",
+        )
+        self.assertFalse(operating["automaticPackagePlanning"]["manualPackagePrerequisiteQuestion"])
+        self.assertFalse(operating["automaticPackagePlanning"]["directTddBeforePackagePathResolved"])
+        self.assertFalse(operating["automaticPackagePlanning"]["defaultApprovalPause"])
         self.assert_contains_all("skills/engifoundry/references/intent-routing.md", phrases + [
             "When the user asks to start implementing a feature and no package exists",
             "For bounded low-risk implementation requests with clear scope and acceptance criteria",

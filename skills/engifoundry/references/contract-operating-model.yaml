@@ -1,0 +1,112 @@
+schemaVersion: 1
+kind: engifoundry-operating-model-contract
+source: references/operating-model.md
+controlLoop:
+  - "classify the request into one workflow mode"
+  - "establish authority and role before primary-only or bounded work"
+  - "locate or initialize roots when durable work is needed"
+  - "select the mode target state"
+  - "execute until the target state, an explicit user pause, or a concrete blocker"
+  - "verify and record the evidence required by the selected mode"
+  - "report only a terminal state"
+progressRule:
+  intermediateArtifactIsCompletion: false
+  examples:
+    - draft file
+    - partial record
+    - executor report
+    - unchecked review
+workflow:
+  selectionRule: "Use the least ceremony compatible with risk."
+  absenceOfPackageDoesNotMakeSubstantialWorkAdHoc: true
+  packageOnlyGovernanceAppliesToAdHoc: false
+  modes:
+    ad-hoc:
+      description: "Bounded low-risk task without package ceremony."
+      packageGovernance: false
+      terminalStates:
+        - "requested work completed with verification evidence"
+        - "non-runnable verification record"
+        - "concrete blocker"
+    package-planning:
+      description: "Create or revise a structured task package."
+      packageGovernance: true
+      terminalStates:
+        - "planning.status=ready"
+        - "planning.status=blocked"
+        - "planning.status=discarded"
+        - "user explicitly requested draft output"
+      draftIsTransient: true
+    package-alignment:
+      description: "Review whether package planning can be marked ready."
+      packageGovernance: true
+      terminalStates:
+        - "pass decision"
+        - "block decision"
+        - "concrete blocker preventing independent alignment"
+    job-execution:
+      description: "Execute one or more package Jobs."
+      packageGovernance: true
+      terminalStates:
+        - "Job returned for review with required records and verification"
+        - "Job blocked"
+        - "package blocked"
+        - "explicit bounded handoff"
+    review-only:
+      description: "Review a package, Job result, diff, or implementation."
+      packageGovernance: true
+      terminalStates:
+        - "pass"
+        - "needs-rework"
+        - "blocked review decision tied to evidence"
+    package-revision:
+      description: "Update package rules, Job contracts, policies, or records."
+      packageGovernance: true
+      terminalStates:
+        - "package rules updated and recorded"
+        - "concrete blocker"
+    closeout:
+      description: "Final acceptance, handoff, or delivery record."
+      packageGovernance: true
+      terminalStates:
+        - "final acceptance, remaining risk, verification status, and handoff notes recorded"
+        - "concrete blocker"
+    audit:
+      description: "Cost, process, quality, or workflow retrospective."
+      packageGovernance: false
+      terminalStates:
+        - "audit findings and evidence recorded"
+        - "concrete blocker"
+authority:
+  default: primary/control
+  resumeAsPrimaryWhenControlOwnershipInferable: true
+  askWhenRoleUncertain: true
+  boundedExecutorReviewerAutoDrive: false
+  primaryOnlyActionsRequirePrimaryControl: true
+automaticPackagePlanning:
+  trigger: "broad, risky, multi-step, cross-module, handoff-oriented, or ambiguous feature implementation request with no package"
+  manualPackagePrerequisiteQuestion: false
+  directTddBeforePackagePathResolved: false
+  clarifyOnlyUnsafeMissingInformation: true
+  target: planning.status=ready
+  defaultApprovalPause: false
+  continueAfterReadyUnless:
+    - "user explicitly requested an approval gate"
+    - "package acceptance criteria require human approval before implementation"
+    - "concrete blocker remains"
+durableRoots:
+  readProjectConfigurationWhen:
+    - "locating artifact or package roots"
+    - "resuming package flow"
+    - "writing durable records"
+    - "aligning a new session to project workflow state"
+  initializeDefaultsBeforeFirstDurableReadOrWrite: true
+  artifactRootDefault: ".engifoundry/"
+  packageRootDefault: ".engifoundry-packages/"
+evidence:
+  completionRequiresFreshVerificationOrNonRunnableRecord: true
+  failedVerificationIsFailedResult: true
+  nonRunnableRecordRequires:
+    - reason
+    - alternative evidence
+    - residual risk

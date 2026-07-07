@@ -2,7 +2,7 @@
   "name": "engifoundry",
   "pluginName": "engifoundry-bundle",
   "displayName": "EngiFoundry",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "status": "public-layout-draft",
   "skillPath": "skills/engifoundry",
   "gateSkillPath": "skills/engifoundry-gate",
@@ -53,6 +53,26 @@
     }
   },
   "modules": {
+    "contract-index": {
+      "requiredFor": ["all"],
+      "localPath": "skills/engifoundry/references/contract.yaml",
+      "required": true
+    },
+    "contract-operating-model": {
+      "requiredFor": ["all"],
+      "localPath": "skills/engifoundry/references/contract-operating-model.yaml",
+      "required": true
+    },
+    "contract-invariants": {
+      "requiredFor": ["all"],
+      "localPath": "skills/engifoundry/references/contract-invariants.yaml",
+      "required": true
+    },
+    "contract-namespaces": {
+      "requiredFor": ["all"],
+      "localPath": "skills/engifoundry/references/contract-namespaces.yaml",
+      "required": true
+    },
     "operating-model": {
       "requiredFor": ["all"],
       "localPath": "skills/engifoundry/references/operating-model.md",

@@ -1,0 +1,89 @@
+schemaVersion: 1
+kind: engifoundry-namespaces-contract
+source: references/namespaces.md
+loadingRule: "Load the smallest set of implementation references needed for the selected mode."
+modeRouting:
+  ad-hoc:
+    references:
+      - references/intent-routing.md
+      - references/engineering-discipline.md
+    conditionalReferences:
+      - when: "durable records are needed"
+        reference: references/artifact-root.md
+  package-planning:
+    references:
+      - references/package-planning.md
+      - references/package-format.md
+      - references/phase-roadmap.md
+      - references/artifact-root.md
+      - references/role-protocol.md
+      - references/execution-config.md
+      - references/execution-policy.md
+      - references/engineering-discipline.md
+  package-alignment:
+    references:
+      - references/package-planning.md
+      - references/role-protocol.md
+      - references/adapter-contract.md
+      - references/execution-config.md
+      - references/execution-policy.md
+      - references/engineering-discipline.md
+  job-execution:
+    references:
+      - references/package-format.md
+      - references/job-format.md
+      - references/role-protocol.md
+      - references/execution-policy.md
+      - references/adapter-contract.md
+      - references/engineering-discipline.md
+  review-only:
+    references:
+      - references/role-protocol.md
+      - references/engineering-discipline.md
+    conditionalReferences:
+      - when: "reviewing a package"
+        reference: references/package-format.md
+      - when: "reviewing a Job"
+        reference: references/job-format.md
+  package-revision:
+    references:
+      - references/package-format.md
+      - references/role-protocol.md
+    conditionalReferences:
+      - when: "revising a specific policy"
+        reference: "specific policy reference being revised"
+  closeout:
+    references:
+      - references/handoff-and-checkpoint.md
+      - references/package-format.md
+      - references/artifact-root.md
+      - references/engineering-discipline.md
+  audit:
+    references:
+      - references/engineering-discipline.md
+      - references/artifact-root.md
+    conditionalReferences:
+      - when: "reviewing a target reference"
+        reference: "target reference under review"
+stableDocumentNamespaces:
+  references/contract.yaml: "contract layer index and load order"
+  references/contract-operating-model.yaml: "structured runtime control loop, workflow modes, authority, and mode exit contract"
+  references/contract-invariants.yaml: "structured non-negotiable runtime invariants"
+  references/contract-namespaces.yaml: "structured workflow mode to reference routing"
+  references/operating-model.md: "runtime control loop, workflow modes, authority establishment, and mode exit contract"
+  references/contracts.md: "non-negotiable runtime invariants that apply before mode-specific implementation detail"
+  references/namespaces.md: "workflow mode to reference mapping and stable document namespace index"
+  references/intent-routing.md: "detailed mode selection and risk routing"
+  references/package-planning.md: "task package creation, alignment, ready/blocked progression, and planning exit behavior"
+  references/package-format.md: "package summary, package config, package status values, and package control format"
+  references/phase-roadmap.md: "phase ids, phase status, roadmap location, and phase registry format"
+  references/job-format.md: "Job file structure, execution record, review record, verification record, and handback shape"
+  references/artifact-root.md: "artifact root, package root, records location, directory function table, initialization, and Git policy"
+  references/execution-config.md: "execution config, executor invocation profiles, and executor bootstrap"
+  references/execution-policy.md: "executor selection, isolation dimensions, discipline presets, liveness, and output cost control"
+  references/role-protocol.md: "primary/control, executor, reviewer, audit-control, unknown role, and package-first conflict rules"
+  references/adapter-contract.md: "adapter capability facts, executor contract gate, liveness, output control, and bounded execution mechanisms"
+  references/engineering-discipline.md: "TDD, systematic debugging, review, bounded rework, and verification before completion"
+  references/module-resolution.md: "optional module resolution and cache policy"
+  references/publication-and-platforms.md: "publication contract, platform metadata, installation modes, and plugin manifests"
+runtimeReferenceBoundary: "Do not point runtime rules outside skills/engifoundry/."

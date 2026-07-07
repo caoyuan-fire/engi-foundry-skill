@@ -17,6 +17,10 @@ The runtime interface should load the smallest set of implementation references 
 
 ## Stable Document Namespaces
 
+- `references/contract.yaml`: contract layer index and load order.
+- `references/contract-operating-model.yaml`: structured runtime control loop, workflow modes, authority, and mode exit contract.
+- `references/contract-invariants.yaml`: structured non-negotiable runtime invariants.
+- `references/contract-namespaces.yaml`: structured workflow mode to reference routing.
 - `references/operating-model.md`: runtime control loop, workflow modes, authority establishment, and mode exit contract.
 - `references/contracts.md`: non-negotiable runtime invariants that apply before mode-specific implementation detail.
 - `references/namespaces.md`: workflow mode to reference mapping and stable document namespace index.

@@ -2,6 +2,8 @@
 
 Each EngiFoundry Job has human-readable intent, machine-readable control, and durable output records.
 
+Contract anchor: `references/contract.yaml` indexes this file as the Job-control detail layer. The high-level completion invariant lives in `references/contract-invariants.yaml`; this file keeps Job-specific control fields, handback shape, completion gate, and durable output records near the Job format they constrain.
+
 ## Control Input Layout
 
 ```text

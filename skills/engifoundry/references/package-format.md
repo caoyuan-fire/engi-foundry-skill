@@ -14,6 +14,8 @@ Execution records, reviews, verification evidence, and closeout notes are durabl
 
 Phase and roadmap rules live in `phase-roadmap.md`. Job rules live in `job-format.md`. Package planning and alignment rules live in `package-planning.md`.
 
+Contract anchor: `references/contract.yaml` indexes this file as the package-control detail layer. The high-level control-source and root-boundary rules live in `references/contract-invariants.yaml`; this file keeps package-specific layout, identifiers, status values, and reader acknowledgement rules near the package format they constrain.
+
 ## Package Layout
 
 ```text
@@ -35,18 +37,13 @@ The full package reference is the phase id plus the package id, for example `PHA
 
 Legacy packages at `<package-root>/<package-id>/jobs/JOB-001/` may be read as `PHASE-001/<package-id>/jobs/JOB-001/` for compatibility, but new packages should use the phase/package layout.
 
-## Package Rules
+## Package Identity and Allocation
 
-- A package is both human-readable and machine-readable.
-- A package is execution input by default and lives under the package root, not the artifact root.
-- A phase can contain one or more packages. A package usually contains multiple Jobs.
-- `packageId` must use `PAK-001` sequence format within its phase.
-- Package id allocation uses the highest allocated `PAK-*` id in the phase, regardless of package status.
-- Markdown files carry human meaning and review context.
-- JSON files carry machine-readable control data.
-- JSON must not duplicate long Markdown narratives.
-- Markdown must not be treated as the authoritative machine-control source.
-- Package governance only applies after work enters a package flow; bounded low-risk `ad-hoc` work does not need package artifacts.
+A phase can contain one or more packages. A package usually contains multiple Jobs.
+
+`packageId` must use `PAK-001` sequence format within its phase.
+
+Package id allocation uses the highest allocated `PAK-*` id in the phase, regardless of package status.
 
 Package identifiers are allocated monotonically within a phase. Discarded, blocked, closed, or otherwise inactive packages keep their allocated ids and must not be reused or skipped over when allocating the next package id. If the latest allocated package in a phase is `PAK-003` and it is discarded, the next new package is `PAK-004`.
 
