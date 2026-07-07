@@ -122,6 +122,8 @@ Allowed values:
 
 `outputContract` carries detailed formatting and verbosity constraints. `requiredReturnFormat` is the named handback shape, `requiredOutputs` is the durable file checklist, and `outputContract` defines limits such as maximum length, evidence-index requirements, and raw stream handling.
 
+Delegated executor and reviewer prompts must require minimal-noise final handback. `outputContract` should prohibit thinking, reasoning traces, raw tool streams, verbose command logs, and long logs as final output, and should direct the executor to write durable records and verification files as the target outputs.
+
 Normal executor handback should be compact. It should include enough evidence paths and known gaps for primary/control review without copying raw command logs, full file contents, or verbose process streams.
 
 Required outputs are durable records and should be written under `<artifact-root>/records/packages/<phase-id>/<package-id>/jobs/<job-id>/` unless the package contract explicitly records another artifact-root path.

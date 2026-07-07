@@ -247,6 +247,17 @@ modeFlows:
           - "review relevant roadmap, summary, package config, and Job configs"
           - "reviewer identity and role are recorded"
           - "pass/block decision is tied to evidence"
+        next: prepare-review-output-contract
+      prepare-review-output-contract:
+        gateLevel: must
+        ruleRefs:
+          - references/execution-policy.md#executor-output-cost-control
+          - references/adapter-contract.md#executor-output-cost-control
+        requires:
+          - "reviewer prompt must request minimal-noise output"
+          - "reviewer must not emit thinking, reasoning trace, raw tool stream, or long logs as final output"
+          - "reviewer final handback must contain only the review decision, evidence paths, findings, required revisions, known gaps, and control-needed status"
+          - "durable review records are the target outputs"
         next: return-alignment-decision
       return-alignment-decision:
         gateLevel: must
@@ -264,6 +275,19 @@ modeFlows:
         requires:
           - "acknowledge package and Job contract before execution"
           - "planning.status=ready before starting execution"
+        next: prepare-executor-output-contract
+      prepare-executor-output-contract:
+        gateLevel: must
+        ruleRefs:
+          - references/execution-policy.md#executor-output-cost-control
+          - references/job-format.md#delegability-and-stop-conditions
+          - references/adapter-contract.md#executor-output-cost-control
+        requires:
+          - "executor prompt must request minimal-noise output"
+          - "executor must not emit thinking, reasoning trace, raw tool stream, or long logs as final output"
+          - "executor final handback must follow job.config.json outputContract"
+          - "executor final handback must contain only status, changed files, durable record paths, verification result, known gaps, and control-needed status"
+          - "durable records and verification files are the target outputs"
         next: execute-job-contract
       execute-job-contract:
         gateLevel: must

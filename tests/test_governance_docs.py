@@ -416,6 +416,39 @@ class GovernanceDocsTests(unittest.TestCase):
             ready["requires"],
         )
 
+    def test_workflow_yaml_requires_low_noise_executor_handoff(self):
+        workflow = read_yaml("skills/engifoundry/references/workflow.yaml")
+
+        job_steps = workflow["modeFlows"]["job-execution"]["steps"]
+        self.assertEqual(job_steps["reader-acknowledgement"]["next"], "prepare-executor-output-contract")
+        output_contract = job_steps["prepare-executor-output-contract"]
+        self.assertEqual(output_contract["gateLevel"], "must")
+        self.assertIn("executor prompt must request minimal-noise output", output_contract["requires"])
+        self.assertIn(
+            "executor must not emit thinking, reasoning trace, raw tool stream, or long logs as final output",
+            output_contract["requires"],
+        )
+        self.assertIn(
+            "executor final handback must follow job.config.json outputContract",
+            output_contract["requires"],
+        )
+        self.assertIn(
+            "durable records and verification files are the target outputs",
+            output_contract["requires"],
+        )
+        self.assertEqual(output_contract["next"], "execute-job-contract")
+
+        alignment_steps = workflow["modeFlows"]["package-alignment"]["steps"]
+        self.assertEqual(alignment_steps["review-package"]["next"], "prepare-review-output-contract")
+        review_output_contract = alignment_steps["prepare-review-output-contract"]
+        self.assertEqual(review_output_contract["gateLevel"], "must")
+        self.assertIn("reviewer prompt must request minimal-noise output", review_output_contract["requires"])
+        self.assertIn(
+            "reviewer must not emit thinking, reasoning trace, raw tool stream, or long logs as final output",
+            review_output_contract["requires"],
+        )
+        self.assertEqual(review_output_contract["next"], "return-alignment-decision")
+
     def test_package_planning_ready_gate_is_preserved(self):
         self.assert_contains_all("skills/engifoundry/references/package-planning.md", [
             "draft is a transient writing state",

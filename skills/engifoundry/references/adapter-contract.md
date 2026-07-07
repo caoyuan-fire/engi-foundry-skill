@@ -98,6 +98,8 @@ An adapter should describe durable, non-sensitive output-control behavior:
 
 If an adapter cannot suppress raw stream output, record that limitation in `knownLimitations` and prefer bounded executor prompts, targeted reads, and structured final handback.
 
+Regardless of adapter noise level, prompts sent to delegated executors or reviewers must request minimal-noise final output. The final handback should be limited to the target structured result and durable evidence paths. Thinking, reasoning traces, raw tool streams, verbose command logs, and long logs must not be requested or treated as the target output.
+
 quick: prefer direct execution or final-report-only executor handback.
 
 standard: prefer compact heartbeats and compact final handback.

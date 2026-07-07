@@ -141,6 +141,8 @@ Adapters and executor profiles may declare:
 
 Executor prompts should prefer targeted searches, concise evidence indexes, and bounded file reads over full file dumps. Final reports should be compact enough for review while preserving evidence paths and known gaps.
 
+Every delegated executor or reviewer prompt must request minimal-noise output. The requested final handback should contain only the target structured result: status, changed files when relevant, durable record paths, verification result, evidence paths, known gaps, recommendation, and whether primary/control is needed. Thinking, reasoning traces, raw tool streams, verbose command logs, and long logs must not be emitted as final output.
+
 Verbose command output, raw tool streams, and long logs are not durable records by default. If they are needed for failure analysis, summarize the relevant evidence in `record.md`, `verification.md`, or `review.md` instead of copying raw long logs.
 
 ## Job Override Rule
