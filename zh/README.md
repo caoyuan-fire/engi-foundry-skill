@@ -271,4 +271,4 @@ python3 -m unittest discover -s tests
 
 ## License
 
-本仓库当前没有 license 文件。在添加 license 之前，不要假定可以在仓库所有者授权范围之外重新分发或复用。
+本项目基于 Apache License, Version 2.0 授权。详情见 [LICENSE](../LICENSE)。

@@ -271,4 +271,4 @@ Keep root documentation readable for humans. Runtime workflow rules belong insid
 
 ## License
 
-This repository does not currently include a license file. Until a license is added, do not assume permission to redistribute or reuse it outside the terms granted by the repository owner.
+This project is licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for details.
