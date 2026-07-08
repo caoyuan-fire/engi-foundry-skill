@@ -66,7 +66,11 @@ Discarding a package does not roll back numbering. New package allocation must c
 - acceptance criteria;
 - closeout requirements.
 
-It may include a Job overview table, but the table is only a readable summary. It is not authoritative configuration.
+The Job overview table must include each Job's executor and whether agent execution is requested. Use explicit columns such as `Job`, `Type`, `Executor`, `Agent execution`, `Status`, and `Notes`.
+
+The human-readable executor column should mirror the effective `executor` from `package.config.json` defaults or the Job's `job.config.json` override. The agent-execution column should mirror the effective `agentExecution` marker, such as whether the Job is intended for direct/current-session work, bounded agent execution, external CLI execution, isolated reviewer handoff, or human handoff.
+
+It may include additional Job overview columns, but the table is only a readable summary. It is not authoritative configuration.
 
 `summary.md` should also state the package reading entrypoint, current state, and next expected action when another session, tool, or human may continue the work.
 
