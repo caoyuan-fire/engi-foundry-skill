@@ -259,16 +259,6 @@ tests/                         仓库级验证
 zh/                            中文 README
 ```
 
-## 开发
-
-运行仓库测试：
-
-```bash
-python3 -m unittest discover -s tests
-```
-
-根 README 应保持为面向人类的入口文档。运行时工作流规则属于自包含 skill 目录 `skills/engifoundry/references/`。
-
 ## 可选兼容
 
 EngiFoundry 可以对齐当前会话中已经启用的 Superpowers discipline 层。这是可选兼容，不是安装要求。

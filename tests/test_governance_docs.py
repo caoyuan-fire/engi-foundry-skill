@@ -734,10 +734,9 @@ class GovernanceDocsTests(unittest.TestCase):
             "## Installation",
             "## Updating",
             "## What's Inside",
-            "## Development",
+            "## Optional Compatibility",
             "## License",
             "Runtime protocol details live inside `skills/engifoundry/references/`",
-            "Keep root documentation readable for humans",
         ])
         self.assert_contains_all("zh/README.md", [
             "# EngiFoundry",
@@ -746,10 +745,9 @@ class GovernanceDocsTests(unittest.TestCase):
             "## 安装",
             "## 更新",
             "## 包含内容",
-            "## 开发",
+            "## 可选兼容",
             "## License",
             "运行时协议细节位于 `skills/engifoundry/references/`",
-            "根 README 应保持为面向人类的入口文档",
         ])
         self.assert_contains_all("skills/engifoundry/references/publication-and-platforms.md", [
             "Keep README as a human-facing project entry point, not a protocol specification",
@@ -766,9 +764,21 @@ class GovernanceDocsTests(unittest.TestCase):
             "Package Alignment Gate",
             "Executor Invocation Profiles",
             "```json",
+            "## Development",
+            "python3 -m unittest discover -s tests",
+            "Keep root documentation readable for humans",
         ]:
             with self.subTest(phrase=phrase):
                 self.assertNotIn(phrase, readme)
+
+        zh_readme = read("zh/README.md")
+        for phrase in [
+            "## 开发",
+            "python3 -m unittest discover -s tests",
+            "根 README 应保持为面向人类的入口文档",
+        ]:
+            with self.subTest(phrase=phrase):
+                self.assertNotIn(phrase, zh_readme)
 
     def test_ad_hoc_boundary_is_explicit_in_skill_and_intent_routing(self):
         phrases = [
