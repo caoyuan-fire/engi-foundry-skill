@@ -48,6 +48,8 @@ invariants:
       - "user explicitly asks for a draft"
     evaluateAlignmentBeforeReady: true
     primaryControlSelfReviewSufficientWhenAlignmentRequired: false
+    directControlContinuityUserApprovalCanSatisfyAlignment: true
+    blockedOutputMustAskUserToChoose: "prominently state blocker reason and ask which executor, reviewer, clean session, external CLI, or human reviewer path to use"
     reportCompleteWhileDraft: false
   rootBoundaries:
     artifactRootPurpose: "durable work products only"

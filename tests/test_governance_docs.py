@@ -308,6 +308,9 @@ class GovernanceDocsTests(unittest.TestCase):
         self.assertTrue(rules["packagePlanning"]["primaryControlTargetsReadyInSameRequestForCreateCompilePrepare"])
         self.assertIn("concrete blocker prevents readiness", rules["packagePlanning"]["doNotStopAtDraftUnless"])
         self.assertIn("user explicitly asks for a draft", rules["packagePlanning"]["doNotStopAtDraftUnless"])
+        self.assertTrue(rules["packagePlanning"]["directControlContinuityUserApprovalCanSatisfyAlignment"])
+        self.assertIn("blocker reason", rules["packagePlanning"]["blockedOutputMustAskUserToChoose"])
+        self.assertIn("executor", rules["packagePlanning"]["blockedOutputMustAskUserToChoose"])
         self.assertEqual(rules["rootBoundaries"]["artifactRootPurpose"], "durable work products only")
         self.assertEqual(rules["rootBoundaries"]["packageRootPurpose"], "execution inputs")
         self.assertTrue(rules["rootBoundaries"]["packageRootGitVisibilityDeterminedByGit"])
@@ -410,11 +413,23 @@ class GovernanceDocsTests(unittest.TestCase):
             "If package work needs bounded or isolated execution, preserve or record executor-agent path.",
             preserve["requires"],
         )
+        self.assertIn(
+            "If all package and Job execution policies are direct/current-session and project history shows direct-control continuity, do not invent a missing executor blocker.",
+            preserve["requires"],
+        )
         self.assertEqual(preserve["failureOutcome"], "blocked")
 
         independent = package_steps["independent-alignment"]
         self.assertIn("reviewer role must not be primary/control self-review", independent["requires"])
         self.assertIn("reviewed files and pass/block decision must be recorded", independent["requires"])
+        self.assertIn(
+            "direct-control continuity plus explicit user approval may satisfy alignment without independent executor handoff",
+            independent["requires"],
+        )
+        self.assertIn(
+            "blocked output must prominently state the blocker reason and ask the user which executor or reviewer path to use",
+            independent["requires"],
+        )
         self.assertEqual(independent["failureOutcome"], "blocked")
 
         ready = package_steps["ready-candidate-check"]
@@ -463,9 +478,13 @@ class GovernanceDocsTests(unittest.TestCase):
             "Do not report package planning as complete while leaving `planning.status=draft`",
             "Package alignment is required when any Job uses an executor other than `direct`",
             "primary/control self-review is not sufficient evidence",
+            "direct-control continuity",
+            "explicit user approval may satisfy package alignment",
+            "do not set `planning.status=blocked` only because no independent reviewer is configured",
             "automatically drive the required alignment work in the same request",
             "revise the package and rerun alignment",
             "set or keep `planning.status=blocked`",
+            "Blocked package planning output must prominently state the blocker reason and ask the user which executor, reviewer, clean session, external CLI, or human reviewer to use",
             "Alignment evidence is recorded as review evidence",
             "Alignment records are review records, not Jobs",
             "Package execution start must check `planning.status=ready`",
@@ -932,8 +951,12 @@ class GovernanceDocsTests(unittest.TestCase):
             "Do not add `alignmentStatus`, `alignmentRequired`, or `alignmentPassed`",
             "any Job uses an executor other than `direct`",
             "primary/control self-review is not sufficient evidence",
+            "direct-control continuity",
+            "explicit user approval may satisfy package alignment",
+            "do not set `planning.status=blocked` only because no independent reviewer is configured",
             "primary/control must automatically drive the required alignment work in the same turn",
             "must not write `planning.status=ready`",
+            "Blocked package planning output must prominently state the blocker reason and ask the user which executor, reviewer, clean session, external CLI, or human reviewer to use",
             "Stopping at `draft` is only acceptable when a concrete blocker prevents a ready package",
             "report package planning as complete",
             "Alignment evidence is recorded as review evidence",

@@ -40,6 +40,10 @@ Before setting or reporting `planning.status=ready`, evaluate whether Package Al
 
 When Package Alignment Gate is required, primary/control self-review is not sufficient evidence.
 
+For direct-control continuity, explicit user approval may satisfy package alignment when all package and Job execution remains direct/current-session and no isolated, external, human, reviewer, or later-session handoff is used.
+
+When package planning is blocked, the user-facing output must prominently state the blocker reason and ask which executor, reviewer, clean session, external CLI, or human reviewer path to use.
+
 Do not report package planning as complete while leaving `planning.status=draft`.
 
 ## Root Boundaries

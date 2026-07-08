@@ -55,7 +55,13 @@ Package alignment is a hard gate for reporting package planning as ready when an
 
 Package alignment is required when any Job uses an executor other than `direct`.
 
-If Package Alignment Gate is required, primary/control self-review is not sufficient evidence. The package must receive an independent alignment review from the configured executor, reviewer, clean session, external CLI, or human reviewer before planning may be marked ready.
+If Package Alignment Gate is required, primary/control self-review is not sufficient evidence. The package must receive an independent alignment review from the configured executor, reviewer, clean session, external CLI, or human reviewer before planning may be marked ready, except for the direct-control continuity case below.
+
+Direct-control continuity applies when project history shows the same project has been planned and executed by `primary/control` with `direct` or `current-session` execution, the current `execution.config.json` names `direct` or `current-session` as the usable default, the package and every Job use `direct` or `current-session` execution without isolated execution, reviewer handoff, external CLI execution, human handoff, or later-session handoff, and the current user prompt explicitly approves continuing the package in that same direct-control pattern.
+
+In direct-control continuity, explicit user approval may satisfy package alignment without independent executor handoff. Record the continuity facts, the triggering alignment factors, the user approval text or summary, and the primary/control decision as alignment evidence before setting `planning.status=ready`. This is user-approved direct-control alignment, not primary/control self-review.
+
+When direct-control continuity is present but explicit user approval is missing, do not set `planning.status=blocked` only because no independent reviewer is configured. Pause or ask for user approval of direct/current-session execution, unless a separate concrete blocker exists.
 
 For an explicit package compilation request, primary/control must automatically drive the required alignment work in the same request when a usable reviewer, clean session, external CLI, or configured executor is available.
 
@@ -65,13 +71,15 @@ If alignment finds blocking issues, primary/control must revise the package and 
 
 ## Alignment Unavailable
 
-If no usable independent reviewer, clean session, external CLI, configured executor, or human reviewer is available, set or keep `planning.status=blocked` and record why alignment cannot be completed.
+If no usable independent reviewer, clean session, external CLI, configured executor, or human reviewer is available, and direct-control continuity with explicit user approval does not apply, set or keep `planning.status=blocked` and record why alignment cannot be completed.
 
 Unavailable alignment reviewer capability is a blocker, not successful package compilation.
 
-Do not write `planning.status=ready`, report the package as ready, report package planning as complete, or describe the package as compiled when Package Alignment Gate is required and no independent alignment review has passed.
+Blocked package planning output must prominently state the blocker reason and ask the user which executor, reviewer, clean session, external CLI, or human reviewer to use. The user-facing message should make the block impossible to miss, name the missing capability or unresolved decision, and ask how to choose executor or reviewer path before continuing.
 
-When Package Alignment Gate is required and no independent alignment review has passed, primary/control must not write `planning.status=ready`, report the package as ready, report package planning as complete, or describe the package as compiled.
+Do not write `planning.status=ready`, report the package as ready, report package planning as complete, or describe the package as compiled when Package Alignment Gate is required and neither independent alignment review nor direct-control continuity with explicit user approval has passed.
+
+When Package Alignment Gate is required and neither independent alignment review nor direct-control continuity with explicit user approval has passed, primary/control must not write `planning.status=ready`, report the package as ready, report package planning as complete, or describe the package as compiled.
 
 ## Allowed Draft Stop
 

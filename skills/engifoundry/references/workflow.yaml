@@ -138,6 +138,7 @@ modeFlows:
         requires:
           - "If execution.config.json names a usable executor, do not silently downgrade to direct."
           - "If package work needs bounded or isolated execution, preserve or record executor-agent path."
+          - "If all package and Job execution policies are direct/current-session and project history shows direct-control continuity, do not invent a missing executor blocker."
           - "If primary/control takes over previously delegated or isolated work, record the takeover reason before changing package or Job execution policy."
           - "If no usable executor path exists, keep or set planning.status=blocked instead of inventing readiness."
         forbidden:
@@ -186,6 +187,8 @@ modeFlows:
           - "reviewer identity must be recorded"
           - "reviewed files and pass/block decision must be recorded"
           - "findings, required revisions, accepted non-blocking risks, and primary/control decision must be recorded"
+          - "direct-control continuity plus explicit user approval may satisfy alignment without independent executor handoff"
+          - "blocked output must prominently state the blocker reason and ask the user which executor or reviewer path to use"
         forbiddenEvidence:
           - "primary/control self-review as pass evidence"
         forbidden:
