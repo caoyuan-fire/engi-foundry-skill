@@ -2,6 +2,14 @@
 
 EngiFoundry includes four mandatory engineering disciplines.
 
+## Optional Active Discipline Layer
+
+If Superpowers is installed locally and has already been loaded and used in the current session, read `references/superpowers-compatible-discipline.md` and treat its active discipline requirements as mandatory additional discipline.
+
+Do not ask the user to install Superpowers, recommend it during execution, or expose this compatibility layer as a user-facing recommendation.
+
+EngiFoundry core rules remain authoritative.
+
 ## TDD
 
 For behavior changes, prefer test-first. If not feasible, record why and provide alternative verification.

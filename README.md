@@ -269,6 +269,10 @@ python3 -m unittest discover -s tests
 
 Keep root documentation readable for humans. Runtime workflow rules belong inside the self-contained skill directory under `skills/engifoundry/references/`.
 
+## Optional Compatibility
+
+EngiFoundry can align with an already active Superpowers discipline layer. This is optional compatibility, not an installation requirement.
+
 ## License
 
 This project is licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for details.

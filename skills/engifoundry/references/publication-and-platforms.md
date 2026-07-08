@@ -39,6 +39,8 @@ Reference files should be focused and one level deep from `SKILL.md`. Each refer
 
 `skills/engifoundry/scripts/` contains deterministic helper scripts that support optional workflows such as module resolution.
 
+Optional compatibility material belongs under `skills/engifoundry/references/`. Do not use a `modules/` directory as a vendor-standard discovery surface.
+
 Generated runtime state, private notes, local experiments, and non-publishable materials must stay out of publishable files.
 
 ## Entry Points
@@ -134,7 +136,7 @@ Root files declare plugin marketplace metadata, plugin manifests, repository man
 
 `skills/engifoundry-gate/` is the plugin autoload gate.
 
-`skills/engifoundry/` contains `SKILL.md`, `agents/openai.yaml`, `agents/generic.json`, `references/`, `scripts/`, and `modules/`.
+`skills/engifoundry/` contains `SKILL.md`, `agents/openai.yaml`, `agents/generic.json`, `references/`, and `scripts/`.
 
 The skill body should stay concise. Detailed rules belong in references.
 

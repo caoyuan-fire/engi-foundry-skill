@@ -19,7 +19,7 @@
     "full": {
       "recommended": true,
       "preferred": "plugin",
-      "description": "Install both EngiFoundry skill folders, including the autoload gate, main SKILL.md, references, modules, and agent metadata."
+      "description": "Install both EngiFoundry skill folders, including the autoload gate, main SKILL.md, references, scripts, and agent metadata."
     },
     "plugin": {
       "recommended": true,
@@ -165,7 +165,7 @@
     },
     "superpowers-compatible-discipline": {
       "requiredFor": ["optional-enhancement"],
-      "localPath": "skills/engifoundry/modules/superpowers-compatible-discipline.md",
+      "localPath": "skills/engifoundry/references/superpowers-compatible-discipline.md",
       "required": false
     }
   },

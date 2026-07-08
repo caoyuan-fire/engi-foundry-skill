@@ -14,6 +14,8 @@ Manifest modules declare:
 - `requiredFor`;
 - `required`.
 
+Additional reference files are ordinary skill resources, not vendor-standard module directories.
+
 Full install is recommended. Kernel-only install is allowed when missing modules can be resolved from the declared remote source.
 
 ## Resolution Order

@@ -36,6 +36,7 @@ The runtime interface should load the smallest set of implementation references 
 - `references/role-protocol.md`: `primary/control`, executor, reviewer, audit-control, unknown role, and package-first conflict rules.
 - `references/adapter-contract.md`: adapter capability facts, executor contract gate, liveness, output control, and bounded execution mechanisms.
 - `references/engineering-discipline.md`: TDD, systematic debugging, review, bounded rework, and verification before completion.
+- `references/superpowers-compatible-discipline.md`: optional compatibility boundary for an already active Superpowers discipline layer.
 - `references/module-resolution.md`: optional module resolution and cache policy.
 - `references/publication-and-platforms.md`: publication contract, platform metadata, installation modes, and plugin manifests.
 

@@ -57,6 +57,7 @@ class GovernanceDocsTests(unittest.TestCase):
         for manifest in [codex, claude, kimi, github_copilot, cursor, factory_droid]:
             self.assertEqual(manifest["name"], "engifoundry-bundle")
             self.assertEqual(manifest["version"], repository_manifest["version"])
+            self.assertEqual(manifest["license"], "Apache-2.0")
             self.assertEqual(manifest["skills"], "./skills/")
 
         for manifest in [codex, claude, kimi, github_copilot]:
@@ -86,6 +87,11 @@ class GovernanceDocsTests(unittest.TestCase):
                     f"{module_name} localPath must stay inside the self-contained skill directory",
                 )
                 self.assertTrue(exists(local_path), f"{module_name} localPath does not exist")
+
+        self.assertFalse(
+            exists("skills/engifoundry/modules"),
+            "modules/ is not a standard skill discovery directory; optional discipline material belongs in references/",
+        )
 
         namespaces = read("skills/engifoundry/references/namespaces.md")
         self.assertNotIn("docs/", namespaces)
@@ -165,6 +171,7 @@ class GovernanceDocsTests(unittest.TestCase):
             "package-planning.md",
             "phase-roadmap.md",
             "publication-and-platforms.md",
+            "superpowers-compatible-discipline.md",
             "role-protocol.md",
         ]
         for name in required_references:
@@ -551,6 +558,7 @@ class GovernanceDocsTests(unittest.TestCase):
             "Full installation remains recommended",
             "Kernel-only installation is for lightweight local sharing",
             "The source of truth is `engifoundry.manifest.json`",
+            "Additional reference files are ordinary skill resources, not vendor-standard module directories",
             "Optional modules may be skipped only with an explicit note",
             "The module cache must not be inside a user's EngiFoundry artifact root",
             "Do not download without explicit user confirmation",
@@ -568,6 +576,41 @@ class GovernanceDocsTests(unittest.TestCase):
             "does not force package governance",
             "Do not add platform-specific metadata files unless the platform has a stable schema",
             "Plugin installation and skills-only installation are mutually exclusive within one host home",
+        ])
+
+    def test_superpowers_compatibility_reference_stays_optional_and_non_promotional(self):
+        self.assertFalse(exists("skills/engifoundry/modules"))
+        self.assertTrue(exists("skills/engifoundry/references/superpowers-compatible-discipline.md"))
+
+        manifest = json.loads(read("engifoundry.manifest.json"))
+        superpowers_module = manifest["modules"]["superpowers-compatible-discipline"]
+        self.assertEqual(
+            superpowers_module["localPath"],
+            "skills/engifoundry/references/superpowers-compatible-discipline.md",
+        )
+        self.assertFalse(superpowers_module["required"])
+        self.assertEqual(superpowers_module["requiredFor"], ["optional-enhancement"])
+
+        reference = read("skills/engifoundry/references/superpowers-compatible-discipline.md")
+        for phrase in [
+            "optional compatibility reference",
+            "Do not ask the user to install Superpowers",
+            "Do not recommend Superpowers to the user during execution",
+            "Do not expose this reference as a user-facing recommendation",
+            "If Superpowers is installed locally and has already been loaded and used in the current session",
+            "treat the active Superpowers discipline as mandatory additional discipline",
+            "EngiFoundry core rules remain authoritative",
+        ]:
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, reference)
+
+        self.assert_contains_all("README.md", [
+            "## Optional Compatibility",
+            "EngiFoundry can align with an already active Superpowers discipline layer",
+        ])
+        self.assert_contains_all("zh/README.md", [
+            "## 可选兼容",
+            "EngiFoundry 可以对齐当前会话中已经启用的 Superpowers discipline 层",
         ])
 
     def test_role_and_engineering_discipline_constraints_are_preserved(self):

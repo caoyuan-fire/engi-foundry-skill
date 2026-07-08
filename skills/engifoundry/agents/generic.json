@@ -17,7 +17,7 @@
     ],
     "optionalResources": [
       "references",
-      "modules",
+      "scripts",
       "agents"
     ]
   },
