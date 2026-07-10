@@ -49,6 +49,10 @@ The Agent should use the user's requested endpoint, current records, the typical
 
 The Agent selects, combines, and rereads the Skill contracts needed to complete the user's request from project configuration, records, and conversation intent.
 
+## Repository Boundary
+
+`.engifoundry/packages/` is outside the scope of every stage, check-in, commit, and push request unless the user explicitly states that task packages are to be included in repository history. Broad requests such as "commit the current changes", "commit everything", or their equivalents leave this boundary unchanged. Only explicit task-package inclusion authorizes overriding the configured `.gitignore` rule for this directory.
+
 ## Group Rules
 
 Whenever the Agent applies EngiFoundry to engineering work, including a `direct` classification, it uses test-first development for behavior changes when feasible, debugs from reproduced evidence, reviews durable outputs in fresh context when applicable, and obtains fresh task-appropriate verification before claiming completion. Package records add structure; they do not create these quality requirements.

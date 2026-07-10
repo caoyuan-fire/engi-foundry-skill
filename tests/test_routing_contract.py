@@ -71,6 +71,13 @@ class RoutingContractTests(unittest.TestCase):
         for rule in ("test-first", "reproduced evidence", "fresh context", "fresh task-appropriate verification"):
             self.assertIn(rule, content)
 
+    def test_package_repository_boundary_requires_explicit_inclusion(self):
+        content = ROUTER.read_text()
+        self.assertIn("`.engifoundry/packages/` is outside the scope", content)
+        self.assertIn('"commit the current changes"', content)
+        self.assertIn('"commit everything"', content)
+        self.assertIn("Only explicit task-package inclusion authorizes overriding", content)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -86,6 +86,11 @@ class InitScriptsTests(unittest.TestCase):
             self.assertEqual(lines[0], "node_modules/")
             self.assertEqual(lines.count(".engifoundry/packages/"), 1)
 
+    def test_workspace_requires_explicit_package_repository_inclusion(self):
+        content = WORKSPACE_TEMPLATE.read_text()
+        self.assertIn("excluded from repository history unless the user explicitly requests", content)
+        self.assertIn("remains effective for broad requests", content)
+
     def test_init_refuses_to_overwrite_existing_scaffold(self):
         with tempfile.TemporaryDirectory() as tmp:
             project = Path(tmp)

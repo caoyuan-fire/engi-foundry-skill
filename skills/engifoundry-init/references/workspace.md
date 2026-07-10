@@ -36,8 +36,10 @@ This file describes the EngiFoundry-owned structure in this project. It is copie
 | `.engifoundry/artifacts/verification/` | Test, lint, type-check, CI, and other verification evidence. |
 | `.engifoundry/artifacts/delivery/` | Accepted delivery, handoff, and closeout outputs. |
 | `.engifoundry/artifacts/legacy/` | Migration fallback for unchanged content that cannot be inherited reliably and legacy control JSON retained as evidence. |
-| `.engifoundry/packages/` | Task package inputs when package workflow is explicitly used. This path is ignored through `.gitignore`. |
+| `.engifoundry/packages/` | Task package inputs when package workflow is explicitly used. This path is excluded from repository history unless the user explicitly requests task-package inclusion. |
 
 ## Output Rule
 
 Write durable EngiFoundry outputs only to the matching `artifacts/` directory. Keep caches, temporary files, raw session logs, credentials, and secrets outside `.engifoundry/`.
+
+The `.gitignore` rule for `.engifoundry/packages/` remains effective for broad requests to stage, check in, commit, or push current or all changes. Only an explicit request to include task packages in repository history authorizes overriding that rule.
