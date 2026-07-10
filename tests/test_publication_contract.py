@@ -45,12 +45,9 @@ class PublicationContractTests(unittest.TestCase):
         self.assertIn("English documentation: [../README.md](../README.md)", chinese)
         self.assertIn("## Updating", english)
         self.assertIn("## 更新", chinese)
-        self.assertIn("## Initialization in 0.2.0", english)
-        self.assertIn("## 0.2.0 初始化", chinese)
         for content in (english, chinese):
             self.assertIn("codex plugin marketplace upgrade engi-foundry-skill", content)
             self.assertIn("codex plugin add engifoundry-bundle@engi-foundry-skill", content)
-            self.assertIn("$engifoundry modify config", content)
             self.assertIn("### Skills-Only", content)
         self.assertIn("complete `skills/`", english)
         self.assertIn("完整的 `skills/`", chinese)

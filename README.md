@@ -42,18 +42,6 @@ Audit | Review
 
 The typical packaged contract set is Orch, Exec, Verify, and Deliver. Direct work does not create a Package, but it still follows Router quality rules.
 
-## Initialization in 0.2.0
-
-EngiFoundry 0.2.0 is explicitly initialized per project. Installing the plugin makes the Entry available, but the EngiFoundry runtime remains inactive until initialization creates the exact project-root signal `./engifoundry.config.json`.
-
-Init first creates and validates the scaffold mechanically. It then keeps a controlled, localized, numbered interaction active until these project preferences are recorded:
-
-- the available Executors and their ordered fallback priority;
-- the automation mode, including approval points for Job Review and final PAK verification;
-- the action preference that decides how readily work should be packaged.
-
-Initialization is complete only after the scaffold and all preference records validate. Later preference changes use an explicit request such as `$engifoundry modify config`; they do not recreate the scaffold.
-
 ## Quickstart
 
 Install the plugin for your Agent host, open the project you want to manage, and initialize it explicitly:
@@ -77,7 +65,7 @@ engifoundry.config.json
   packages/
 ```
 
-For a project initialized by an older EngiFoundry release, explicitly request an EngiFoundry migration. Historical artifacts are moved without rewriting their contents, while active control JSON is rebuilt from inspected project facts. Init determines whether migration or a full re-initialization is appropriate.
+The initialization above is required for the current EngiFoundry Skill. If a project was initialized by an older EngiFoundry layout, identified by `.engifoundry.config.json` or `.engifoundry-packages/`, explicitly request an EngiFoundry migration instead. Historical artifacts are moved without rewriting their contents, while active control JSON is rebuilt from inspected project facts. Init determines whether migration or a full re-initialization is appropriate.
 
 ## Installation
 
