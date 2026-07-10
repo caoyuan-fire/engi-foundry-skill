@@ -35,6 +35,8 @@ class InitStateScriptsTests(unittest.TestCase):
     def test_init_completion_uses_separate_colored_success_line(self):
         content = INIT_SKILL.read_text()
         self.assertIn("emit a blank line followed by one standalone localized green/success callout", content)
+        self.assertIn('"🎉 Congratulations, EngiFoundry is ready to help you work better."', content)
+        self.assertIn("The `🎉` prefix is required in every language", content)
         self.assertIn("`[!TIP]` callout", content)
         self.assertIn("Never place this sentence inline with the summary", content)
 
