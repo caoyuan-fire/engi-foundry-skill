@@ -35,7 +35,7 @@ This file describes the EngiFoundry-owned structure in this project. It is copie
 | `.engifoundry/artifacts/reviews/` | Review findings and decisions. |
 | `.engifoundry/artifacts/verification/` | Test, lint, type-check, CI, and other verification evidence. |
 | `.engifoundry/artifacts/delivery/` | Accepted delivery, handoff, and closeout outputs. |
-| `.engifoundry/artifacts/legacy/` | Optional unchanged legacy outputs and source control JSON retained during migration. |
+| `.engifoundry/artifacts/legacy/` | Migration fallback for unchanged content that cannot be inherited reliably and legacy control JSON retained as evidence. |
 | `.engifoundry/packages/` | Task package inputs when package workflow is explicitly used. This path is ignored through `.gitignore`. |
 
 ## Output Rule

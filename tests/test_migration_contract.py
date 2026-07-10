@@ -36,6 +36,13 @@ class MigrationContractTests(unittest.TestCase):
         self.assertIn("does not edit, reformat, reinterpret, or summarize", content)
         self.assertIn(".engifoundry/artifacts/legacy/", WORKSPACE.read_text())
 
+    def test_inheritance_precedes_archival(self):
+        content = MIGRATION.read_text()
+        self.assertIn("Archival is a fallback, not the default", content)
+        self.assertIn("Convenience alone is not a reason to archive", content)
+        self.assertIn("matching active directory under `.engifoundry/artifacts/`", content)
+        self.assertIn("every archived item has a factual reason", content)
+
     def test_only_control_json_is_rebuilt(self):
         content = MIGRATION.read_text()
         for name in (

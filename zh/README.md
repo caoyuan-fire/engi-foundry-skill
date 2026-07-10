@@ -65,7 +65,7 @@ engifoundry.config.json
   packages/
 ```
 
-当前 EngiFoundry Skill 需要完成上述初始化。如果工程已经使用旧版目录结构初始化，可通过 `.engifoundry.config.json` 或 `.engifoundry-packages/` 识别，应改为显式请求 EngiFoundry 迁移。历史产出物只移动目录，不改写内容；活跃控制 JSON 则由 Agent 根据检索到的工程事实重建。Init 会判断应执行迁移还是完整重新初始化。
+当前 EngiFoundry Skill 需要完成上述初始化。如果工程已经使用旧版目录结构初始化，可通过 `.engifoundry.config.json` 或 `.engifoundry-packages/` 识别，应改为显式请求 EngiFoundry 迁移。历史产出物应优先原样继承到活跃结构，无法可靠继承时才归档；活跃控制 JSON 则由 Agent 根据检索到的工程事实重建。Init 会判断应执行迁移还是完整重新初始化。
 
 ## 安装
 

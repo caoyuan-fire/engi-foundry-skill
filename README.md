@@ -65,7 +65,7 @@ engifoundry.config.json
   packages/
 ```
 
-The initialization above is required for the current EngiFoundry Skill. If a project was initialized by an older EngiFoundry layout, identified by `.engifoundry.config.json` or `.engifoundry-packages/`, explicitly request an EngiFoundry migration instead. Historical artifacts are moved without rewriting their contents, while active control JSON is rebuilt from inspected project facts. Init determines whether migration or a full re-initialization is appropriate.
+The initialization above is required for the current EngiFoundry Skill. If a project was initialized by an older EngiFoundry layout, identified by `.engifoundry.config.json` or `.engifoundry-packages/`, explicitly request an EngiFoundry migration instead. Historical artifacts are inherited into the active structure without rewriting their contents whenever possible; archival is only a fallback. Active control JSON is rebuilt from inspected project facts. Init determines whether migration or a full re-initialization is appropriate.
 
 ## Installation
 

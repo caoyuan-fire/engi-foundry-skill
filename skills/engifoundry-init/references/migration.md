@@ -34,13 +34,17 @@ When preferences are recoverable without guessing, rebuild `executors.json` and 
 
 Full re-init changes only how current preferences are established. It does not permit loss or rewriting of legacy outputs.
 
+## Inheritance Priority
+
+Migration carries usable work forward into the active current structure whenever the destination and references can be established from inspected facts without changing historical content. Archival is a fallback, not the default. Use `.engifoundry/artifacts/legacy/` only for legacy control evidence or content that cannot be inherited reliably because its destination is ambiguous, its hierarchy is invalid, or its target conflicts. Convenience alone is not a reason to archive inheritable content.
+
 ## Migration
 
 1. Preserve recoverable sources outside their current paths until the new scaffold and rebuilt files pass validation. Never overwrite or merge a conflicting target.
 2. Create the current scaffold with the normal Init resources.
-3. Move legacy artifact content unchanged under `.engifoundry/artifacts/legacy/artifact-root/`, preserving relative paths.
+3. Move legacy non-control artifact content unchanged into its matching active directory under `.engifoundry/artifacts/`, preserving relative paths and rebuilding active references to the inherited locations. Only unresolved or conflicting subtrees go under `.engifoundry/artifacts/legacy/artifact-root/` with their source paths preserved.
 4. Preserve legacy control JSON unchanged under `.engifoundry/artifacts/legacy/control/`, preserving whether it came from the project, artifact root, or package root.
-5. When the package hierarchy can be reconstructed confidently, move its non-control content unchanged under `.engifoundry/packages/`, preserving Phase, PAK, Job, Markdown, and other relative paths. Otherwise keep the complete legacy package root under `.engifoundry/artifacts/legacy/package-root/` and leave current packages empty.
+5. When the package hierarchy can be reconstructed confidently, inherit its non-control content unchanged under `.engifoundry/packages/`, preserving Phase, PAK, Job, Markdown, and other relative paths. Otherwise keep the unresolved legacy package root under `.engifoundry/artifacts/legacy/package-root/` and leave current packages empty.
 6. Rebuild every active `phase.index.json`, `phase.config.json`, `package.config.json`, and `job.config.json` from the current contracts after inspecting the preserved JSON, Markdown, records, and repository state. Never copy a legacy control JSON into an active current path.
 7. Remove the legacy root entry only after the new scaffold, preferences, active package hierarchy, and retained legacy content are verified. Keep preserved source JSON as migration evidence.
 
@@ -48,6 +52,6 @@ Directory migration moves content; it does not edit, reformat, reinterpret, or s
 
 ## Validation
 
-Run scaffold `check` and require `initialization.json` to be `complete`. For every active migrated PAK, verify current Phase, PAK, and Job JSON exists, references the preserved non-control content correctly, and passes the current Orch structural check. Confirm the legacy root entry is gone and every retained source path has a destination before discarding temporary preservation data.
+Run scaffold `check` and require `initialization.json` to be `complete`. For every active migrated PAK, verify current Phase, PAK, and Job JSON exists, references inherited non-control content correctly, and passes the current Orch structural check. Confirm every inheritable artifact is present in the active structure, every archived item has a factual reason it could not be inherited, the legacy root entry is gone, and every retained source path has a destination before discarding temporary preservation data.
 
 If validation fails, keep the preserved sources and report the exact incomplete or conflicting paths. Do not describe a partial migration as complete.
