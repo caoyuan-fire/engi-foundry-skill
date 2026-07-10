@@ -37,6 +37,21 @@ class PublicationContractTests(unittest.TestCase):
             self.assertNotIn("skills/engifoundry/VERSION", content)
             self.assertNotIn("skills/engifoundry/references/", content)
 
+    def test_readmes_publish_installation_and_update_guidance(self):
+        english = (ROOT / "README.md").read_text()
+        chinese = (ROOT / "zh/README.md").read_text()
+
+        self.assertIn("中文说明见 [zh/README.md](zh/README.md)", english)
+        self.assertIn("English documentation: [../README.md](../README.md)", chinese)
+        self.assertIn("## Updating", english)
+        self.assertIn("## 更新", chinese)
+        for content in (english, chinese):
+            self.assertIn("codex plugin marketplace upgrade engi-foundry-skill", content)
+            self.assertIn("codex plugin add engifoundry-bundle@engi-foundry-skill", content)
+            self.assertIn("### Skills-Only", content)
+        self.assertIn("complete `skills/`", english)
+        self.assertIn("完整的 `skills/`", chinese)
+
     def test_session_hook_emits_entry_context(self):
         result = subprocess.run(
             ["bash", str(ROOT / "hooks" / "session-start")],
