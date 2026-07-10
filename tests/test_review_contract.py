@@ -15,6 +15,21 @@ class ReviewContractTests(unittest.TestCase):
         self.assertIn("same model is acceptable", content)
         self.assertIn("independent of `executorOrder`", content)
 
+    def test_reviewer_selection_is_capability_driven(self):
+        content = SKILL.read_text()
+        self.assertIn("## Reviewer Selection", content)
+        self.assertIn("inspect the complete primary subject and evidence", content)
+        self.assertIn("Prefer a host-native isolated subagent", content)
+        self.assertIn("prefer a mechanism independent from the producer", content)
+        self.assertIn("then the lower-overhead candidate", content)
+
+    def test_reviewer_fallback_does_not_enable_conclusion_shopping(self):
+        content = SKILL.read_text()
+        self.assertIn("Fallback is valid only for objective unavailability", content)
+        self.assertIn("`pass` and `rework-required` are conclusions", content)
+        self.assertIn("never repeat Review with another candidate to seek a preferred result", content)
+        self.assertIn("A new Review requires a changed subject", content)
+
     def test_review_is_rules_without_program_interface(self):
         self.assertFalse((SKILL.parent / "scripts").exists())
         content = SKILL.read_text()
