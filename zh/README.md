@@ -42,6 +42,18 @@ Audit | Review
 
 典型 Package 契约集合是 Orch、Exec、Verify、Deliver。Direct 工作不创建 Package，但仍遵守 Router 的工程质量底线。
 
+## 0.2.0 初始化
+
+EngiFoundry 0.2.0 需要在每个工程中显式初始化。安装插件只会让 Entry 可用；只有初始化在工程根目录创建精确入口信号 `./engifoundry.config.json` 后，EngiFoundry 运行时才会启用。
+
+Init 首先机械创建并校验脚手架，然后保持受控、本地化的编号问答，直到记录以下工程偏好：
+
+- 可用 Executor 及其有序回落优先级；
+- 自动化模式，包括 Job Review 与最终 PAK 验证的批准点；
+- 决定任务多大程度上优先编制 Package 的行动偏好。
+
+只有脚手架和全部偏好记录均校验通过，初始化才算完成。后续可通过 `$engifoundry modify config` 等显式请求修改偏好，不会重新创建脚手架。
+
 ## 快速开始
 
 为当前 Agent 宿主安装插件，打开需要管理的工程，然后显式初始化：
