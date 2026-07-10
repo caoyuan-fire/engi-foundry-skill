@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "initializationConfig": ".engifoundry/initialization.json",
+  "workspaceGuide": ".engifoundry/workspace.md",
+  "executorConfig": ".engifoundry/executors.json",
+  "workflowConfig": ".engifoundry/workflows.json",
+  "artifactRoot": ".engifoundry/artifacts",
+  "packageRoot": ".engifoundry/packages"
+}

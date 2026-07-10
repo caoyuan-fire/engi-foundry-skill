@@ -1,64 +1,24 @@
 ---
 name: engifoundry
-description: Platform-neutral engineering workflow skill for ad-hoc tasks and structured task packages. Use when a user wants EngiFoundry, structured engineering delivery, package planning, durable artifacts, Job-level execution, review policy, role handoff, verification, closeout, or an ad-hoc task under EngiFoundry rules.
+description: "MUST be loaded at the start of every session. Check only ./engifoundry.config.json at the project root: if it exists, load engifoundry-router; if absent, stay silent unless the user explicitly names EngiFoundry and asks to initialize it."
 ---
 
-# EngiFoundry
+# EngiFoundry Entry
 
-EngiFoundry is a platform-neutral engineering workflow skill.
+Inject this entry once at the start of every session. Apply its rules to every user turn.
 
-It routes engineering work into the lightest process compatible with risk, while preserving durable artifacts for planning, execution, review, verification, and closeout.
+1. At session start, check exactly `<project-root>/engifoundry.config.json` once. Do not search for it.
+2. If it exists, read `engifoundry-router/SKILL.md` in full before responding to the user.
+3. If it does not exist, remain uninitialized and load `engifoundry-init/SKILL.md` only when both conditions are true:
+   - The request contains `$engifoundry`, `engifoundry`, `engi`, or `foundry` as an explicit, case-insensitive identifier.
+   - The request semantically asks to initialize, scaffold, create, onboard, connect, migrate, or upgrade the project for EngiFoundry.
+4. Otherwise bypass EngiFoundry silently and handle the request normally.
+5. After Init completes, check exactly `<project-root>/engifoundry.config.json` once again. If it now exists, immediately read `engifoundry-router/SKILL.md` in full. Do not require a new session.
 
-## Machine Interface
+Reading only Router metadata or a summary is forbidden. The Router governs every user turn after it is loaded.
 
-README is the human entry point; this skill directory is the machine entry point.
+Initialization matching is semantic, not a fixed command. Initialization language without an explicit EngiFoundry identifier must never activate EngiFoundry.
 
-Read `references/contract.yaml` before mode-specific references. It is the structured index for the skill contract layer and points to the YAML contract parts.
+Never scan for configuration. Never recognize any other filename, location, or project signal. Do not validate configuration content or project records; Init and Node skills own those rules.
 
-Read `references/contract-operating-model.yaml` before mode-specific references. It defines the control loop, workflow modes, role establishment, and mode exit contract.
-
-`references/contract-invariants.yaml` defines non-negotiable invariants. Apply those invariants before mode-specific implementation detail.
-
-`references/contract-namespaces.yaml` maps workflow modes to implementation references. Use it after classification to load only the required detail.
-
-`references/workflow.yaml` defines the ordered workflow and gate levels. Follow its `must` gates before reporting readiness, completion, or approval.
-
-Markdown references remain the detail layer for nuance, examples, exceptions, and implementation guidance.
-
-## Required First Step
-
-Before acting, classify the current request using `references/contract-operating-model.yaml`, then load the detail references selected by `references/contract-namespaces.yaml`.
-
-Use the least ceremony compatible with risk. `ad-hoc` remains a first-class mode. Package-only governance must not be applied to bounded low-risk work that has not entered a package flow.
-
-For broad, risky, multi-step, cross-module, handoff-oriented, or ambiguous implementation requests with no package, follow the automatic package planning contract in `references/contract-operating-model.yaml`.
-
-Skill version is a maintenance label, not a hard execution requirement. Check at most once per session during the first EngiFoundry alignment, only when network access is available. Use `scripts/check_version.sh` or `scripts/check_version.ps1`; if no update is available, say nothing. If the check fails or network is unavailable, do not mention it unless the user explicitly asks. Version checks must not block normal EngiFoundry work.
-
-## Required References
-
-Read only the references needed by the classified mode:
-
-- Intent routing: `references/intent-routing.md`
-- Artifact root: `references/artifact-root.md`
-- Execution config: `references/execution-config.md`
-- Execution policy: `references/execution-policy.md`
-- Role protocol: `references/role-protocol.md`
-- Package format: `references/package-format.md`
-- Package planning: `references/package-planning.md`
-- Phase and roadmap: `references/phase-roadmap.md`
-- Job format: `references/job-format.md`
-- Handoff and checkpoint: `references/handoff-and-checkpoint.md`
-- Operating model: `references/operating-model.md`
-- Runtime contracts: `references/contracts.md`
-- Runtime namespaces: `references/namespaces.md`
-- Engineering discipline: `references/engineering-discipline.md`
-- Adapter contract: `references/adapter-contract.md`
-- Module resolution: `references/module-resolution.md`
-- Publication and platforms: `references/publication-and-platforms.md`
-
-## Non-Negotiable Rules
-
-Apply `references/contract-invariants.yaml` before mode-specific implementation detail.
-
-Resolve missing modules only through `references/module-resolution.md`; ask before downloading and keep caches outside artifact roots.
+Do nothing else. Never route, infer, govern, plan, execute, verify, deliver, or load Node skills from this entry.

@@ -1,12 +1,3 @@
 # Examples
 
-Examples will be added after the public package format stabilizes.
-
-Planned examples:
-
-- ad-hoc code review;
-- small bugfix with verification evidence;
-- medium package with three Jobs;
-- package handoff after a checkpoint;
-- bounded executor output without auto-drive;
-- strict review-only workflow.
+Examples are intentionally omitted while the runtime-v3 contracts are being finalized. Use the current Skill contracts under `skills/` as the source of truth; legacy examples do not describe the current project layout or state meanings.

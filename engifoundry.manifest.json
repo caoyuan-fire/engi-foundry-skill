@@ -2,10 +2,22 @@
   "name": "engifoundry",
   "pluginName": "engifoundry-bundle",
   "displayName": "EngiFoundry",
-  "version": "0.1.11",
-  "status": "public-layout-draft",
-  "skillPath": "skills/engifoundry",
-  "gateSkillPath": "skills/engifoundry-gate",
+  "version": "0.2.0",
+  "status": "runtime-v3-draft",
+  "skillRoot": "skills",
+  "entrySkill": "skills/engifoundry",
+  "routerSkill": "skills/engifoundry-router",
+  "nodeSkills": [
+    "skills/engifoundry-init",
+    "skills/engifoundry-orch",
+    "skills/engifoundry-exec",
+    "skills/engifoundry-verify",
+    "skills/engifoundry-deliver"
+  ],
+  "supportingSkills": [
+    "skills/engifoundry-audit",
+    "skills/engifoundry-review"
+  ],
   "pluginManifests": {
     "codex": ".codex-plugin/plugin.json",
     "claude": ".claude-plugin/plugin.json",
@@ -15,158 +27,14 @@
     "factoryDroid": ".factory-plugin/plugin.json"
   },
   "installModes": {
-    "preference": "plugin-first",
-    "full": {
-      "recommended": true,
-      "preferred": "plugin",
-      "description": "Install both EngiFoundry skill folders, including the autoload gate, main SKILL.md, references, scripts, and agent metadata."
-    },
     "plugin": {
       "recommended": true,
-      "codexManifest": ".codex-plugin/plugin.json",
-      "claudeManifest": ".claude-plugin/plugin.json",
-      "kimiManifest": ".kimi-plugin/plugin.json",
-      "githubCopilotManifest": ".github/plugin/plugin.json",
-      "cursorManifest": ".cursor-plugin/plugin.json",
-      "factoryDroidManifest": ".factory-plugin/plugin.json",
-      "description": "Preferred full installation when the host supports plugins. Repository-level skill installation prompts should install this plugin package when a compatible plugin manifest is present."
+      "description": "Install the plugin bundle so its session-start integration injects the EngiFoundry Entry."
     },
     "skillsOnly": {
       "supported": true,
       "exclusiveWith": ["plugin"],
-      "description": "Fallback installation for hosts without plugin support or explicit skills-only requests. Install both skills/engifoundry-gate and skills/engifoundry."
-    },
-    "kernelOnly": {
-      "supported": true,
-      "description": "Install only the kernel, manifest, and resolver. Missing modules are resolved from the declared GitHub source after explicit confirmation."
-    }
-  },
-  "scripts": {
-    "checkVersion": {
-      "posixPath": "skills/engifoundry/scripts/check_version.sh",
-      "powershellPath": "skills/engifoundry/scripts/check_version.ps1",
-      "description": "Low-noise optional version check for EngiFoundry skill updates."
-    },
-    "resolveModule": {
-      "path": "skills/engifoundry/scripts/resolve_module.py",
-      "description": "Resolve missing EngiFoundry modules from local paths, cache, or the declared GitHub remote source."
-    }
-  },
-  "modules": {
-    "contract-index": {
-      "requiredFor": ["all"],
-      "localPath": "skills/engifoundry/references/contract.yaml",
-      "required": true
-    },
-    "contract-operating-model": {
-      "requiredFor": ["all"],
-      "localPath": "skills/engifoundry/references/contract-operating-model.yaml",
-      "required": true
-    },
-    "contract-invariants": {
-      "requiredFor": ["all"],
-      "localPath": "skills/engifoundry/references/contract-invariants.yaml",
-      "required": true
-    },
-    "contract-namespaces": {
-      "requiredFor": ["all"],
-      "localPath": "skills/engifoundry/references/contract-namespaces.yaml",
-      "required": true
-    },
-    "workflow-contract": {
-      "requiredFor": ["all"],
-      "localPath": "skills/engifoundry/references/workflow.yaml",
-      "required": true
-    },
-    "operating-model": {
-      "requiredFor": ["all"],
-      "localPath": "skills/engifoundry/references/operating-model.md",
-      "required": true
-    },
-    "runtime-contracts": {
-      "requiredFor": ["all"],
-      "localPath": "skills/engifoundry/references/contracts.md",
-      "required": true
-    },
-    "runtime-namespaces": {
-      "requiredFor": ["all"],
-      "localPath": "skills/engifoundry/references/namespaces.md",
-      "required": true
-    },
-    "intent-routing": {
-      "requiredFor": ["all"],
-      "localPath": "skills/engifoundry/references/intent-routing.md",
-      "required": true
-    },
-    "package-planning": {
-      "requiredFor": ["package-planning", "package-alignment"],
-      "localPath": "skills/engifoundry/references/package-planning.md",
-      "required": true
-    },
-    "artifact-root": {
-      "requiredFor": ["package-planning", "job-execution", "review-only", "closeout", "audit"],
-      "localPath": "skills/engifoundry/references/artifact-root.md",
-      "required": true
-    },
-    "execution-config": {
-      "requiredFor": ["package-planning", "package-alignment", "job-execution"],
-      "localPath": "skills/engifoundry/references/execution-config.md",
-      "required": true
-    },
-    "execution-policy": {
-      "requiredFor": ["package-planning", "package-alignment", "job-execution"],
-      "localPath": "skills/engifoundry/references/execution-policy.md",
-      "required": true
-    },
-    "role-protocol": {
-      "requiredFor": ["package-planning", "job-execution", "review-only", "package-revision", "closeout"],
-      "localPath": "skills/engifoundry/references/role-protocol.md",
-      "required": true
-    },
-    "package-format": {
-      "requiredFor": ["package-planning", "job-execution", "review-only", "package-revision", "closeout"],
-      "localPath": "skills/engifoundry/references/package-format.md",
-      "required": true
-    },
-    "phase-roadmap": {
-      "requiredFor": ["package-planning", "job-execution", "package-revision", "closeout"],
-      "localPath": "skills/engifoundry/references/phase-roadmap.md",
-      "required": true
-    },
-    "job-format": {
-      "requiredFor": ["job-execution", "review-only", "closeout"],
-      "localPath": "skills/engifoundry/references/job-format.md",
-      "required": true
-    },
-    "handoff-and-checkpoint": {
-      "requiredFor": ["closeout", "handoff", "package-revision"],
-      "localPath": "skills/engifoundry/references/handoff-and-checkpoint.md",
-      "required": true
-    },
-    "engineering-discipline": {
-      "requiredFor": ["implementation", "bugfix", "refactor", "verification", "job-execution", "review-only", "audit", "ad-hoc-code-change"],
-      "localPath": "skills/engifoundry/references/engineering-discipline.md",
-      "required": true
-    },
-    "adapter-contract": {
-      "requiredFor": ["isolated-context", "executor", "external-reviewer"],
-      "localPath": "skills/engifoundry/references/adapter-contract.md",
-      "required": true
-    },
-    "module-resolution": {
-      "requiredFor": ["kernel-only", "missing-module", "dependency-resolution"],
-      "localPath": "skills/engifoundry/references/module-resolution.md",
-      "required": true
-    },
-    "publication-and-platforms": {
-      "requiredFor": ["publication", "platform-metadata", "installation"],
-      "localPath": "skills/engifoundry/references/publication-and-platforms.md",
-      "required": true
-    },
-    "superpowers-compatible-discipline": {
-      "requiredFor": ["optional-enhancement"],
-      "localPath": "skills/engifoundry/references/superpowers-compatible-discipline.md",
-      "required": false
+      "description": "Install the complete skills directory. Automatic session injection is not guaranteed; explicitly invoke EngiFoundry when the host does not autoload the Entry."
     }
   },
   "remoteSource": {

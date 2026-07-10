@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+plugin_root="${PLUGIN_ROOT:-${CLAUDE_PLUGIN_ROOT:-}}"
+if [[ -z "${plugin_root}" ]]; then
+  plugin_root="$(cd "$(dirname "$0")/.." && pwd)"
+fi
+
+entry="${plugin_root}/skills/engifoundry/SKILL.md"
+if [[ ! -r "${entry}" ]]; then
+  printf 'EngiFoundry entry not found: %s\n' "${entry}" >&2
+  exit 1
+fi
+
+escape_json() {
+  local value="$1"
+  value="${value//\\/\\\\}"
+  value="${value//\"/\\\"}"
+  value="${value//$'\n'/\\n}"
+  value="${value//$'\r'/\\r}"
+  value="${value//$'\t'/\\t}"
+  printf '%s' "${value}"
+}
+
+entry_content="$(cat "${entry}")"
+printf -v context '<ENGIFOUNDRY_ENTRY>\nThe EngiFoundry entry is already loaded for this session. Follow it now and do not load it again.\n\n%s\n</ENGIFOUNDRY_ENTRY>' "${entry_content}"
+escaped_context="$(escape_json "${context}")"
+
+if [[ -n "${CURSOR_PLUGIN_ROOT:-}" ]]; then
+  printf '{"additional_context":"%s"}\n' "${escaped_context}"
+elif [[ -n "${CLAUDE_PLUGIN_ROOT:-}" && -z "${COPILOT_CLI:-}" ]]; then
+  printf '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"%s"}}\n' "${escaped_context}"
+else
+  printf '{"additionalContext":"%s"}\n' "${escaped_context}"
+fi

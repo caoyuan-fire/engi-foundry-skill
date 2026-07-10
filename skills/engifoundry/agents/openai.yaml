@@ -1,4 +1,0 @@
-interface:
-  display_name: "EngiFoundry"
-  short_description: "Structured engineering workflow skill"
-  default_prompt: "Use $engifoundry to plan, execute, review, and close out an engineering task with durable artifacts."

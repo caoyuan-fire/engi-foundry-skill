@@ -1,6 +1,6 @@
 {
   "name": "engifoundry-bundle",
-  "version": "0.1.11",
+  "version": "0.2.0",
   "description": "Structured engineering workflow for planning, execution governance, durable artifacts, review, verification, and handoff.",
   "author": {
     "name": "EngiFoundry",
@@ -18,7 +18,7 @@
   ],
   "skills": "./skills/",
   "sessionStart": {
-    "skill": "engifoundry-gate"
+    "skill": "engifoundry"
   },
   "interface": {
     "displayName": "EngiFoundry Bundle",

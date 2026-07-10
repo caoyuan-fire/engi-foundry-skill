@@ -1,0 +1,58 @@
+---
+name: engifoundry-router
+description: Declare EngiFoundry Node Skill contracts, their project-state signals, records, responsibilities, and possible navigation destinations so the Agent can assemble the contracts needed for a request.
+---
+
+# EngiFoundry Router
+
+## Entry
+
+When `./engifoundry.config.json` exists, this Router must be loaded before runtime contract selection on every user turn. It remains in session context, and the Agent may reread it whenever useful. After a stage operation completes, the Agent may reread this Router against current records before selecting more contracts.
+
+Read the configured Initialization record before applying runtime contracts. An Init interaction already active in the current conversation continues under the Init Lock. Otherwise, when initialization is not `complete`, an explicit request to use EngiFoundry for other work receives the incomplete fact and cannot use runtime contracts; only an explicit request to continue or complete initialization makes the Agent read Init. A request that does not explicitly ask for EngiFoundry proceeds normally without EngiFoundry runtime contracts.
+
+## Node Contracts
+
+| Contract | Responsibility | Project-owned inputs | Recorded result facts | Possible next contracts |
+| --- | --- | --- | --- | --- |
+| `engifoundry-init` | Create, migrate, or modify the EngiFoundry scaffold and preferences. | Current or legacy scaffold, Initialization, Executor, and Workflow configs. | `complete` or `cancelled`. | Any runtime contract selected by the Agent after completion. |
+| `engifoundry-orch` | Create or revise Phase, PAK, and Job execution contracts. | Phase index, Roadmaps, PAK and Job contracts. | `direct`, `ready`, explicit draft, `discarded`, or factual `blocked`. | Agent direct action for a `direct` Audit classification; `engifoundry-exec` for a ready PAK. |
+| `engifoundry-exec` | Execute and Review ordered Job steps. | PAK and Job contracts, Executor and Workflow configs, Job results and Reviews. | `jobs-completed` or factual `blocked`. | `engifoundry-verify`; `engifoundry-orch` for contract revision. |
+| `engifoundry-verify` | Verify the completed PAK goal without accepting it. | PAK acceptance criteria, required artifacts, Job results and Reviews. | `verified-available`, `rework-required`, or factual `blocked`. | `engifoundry-deliver`; `engifoundry-exec` for implementation rework; `engifoundry-orch` for contract rework. |
+| `engifoundry-deliver` | Apply automation preferences to available verification and close delivery. | Verify evidence and Workflow config. | Delivery complete, approval pause, rejection, or factual `blocked`. | `engifoundry-exec` for rejected acceptance requiring implementation rework; `engifoundry-orch` when rejection changes the contract; terminal. |
+
+## State Signals
+
+| Recorded signal | Candidate contract |
+| --- | --- |
+| Initialization is incomplete or preferences are being changed. | `engifoundry-init` |
+| No applicable ready PAK exists, or contracts need revision. | `engifoundry-orch` |
+| A ready PAK has incomplete or rework Jobs. | `engifoundry-exec` |
+| A Job is `approval-pending`. | `engifoundry-exec` |
+| PAK execution is `jobs-completed`. | `engifoundry-verify` |
+| Current verification evidence is `verified-available`. | `engifoundry-deliver` |
+| Delivery is `acceptance-pending`. | `engifoundry-deliver` |
+| Current verification evidence identifies implementation rework. | `engifoundry-exec` |
+| Current verification evidence identifies contract rework. | `engifoundry-orch` |
+| Delivery acceptance is rejected for implementation reasons. | `engifoundry-exec` |
+| Delivery acceptance changes the contract. | `engifoundry-orch` |
+
+## Typical Sequence
+
+```text
+Orch, Exec, Verify, Deliver
+```
+
+This is the usual contract order for an end-to-end packaged goal, not control logic. State signals and destinations are declarations, not routing commands.
+
+The Agent should use the user's requested endpoint, current records, the typical sequence, and possible destinations to select a reasonably complete contract set for end-to-end completion rather than only the smallest immediate contract. Completed stages need not be selected again unless they are relevant rework destinations. An explicitly stage-bounded request remains bounded to that stage.
+
+The Agent selects, combines, and rereads the Skill contracts needed to complete the user's request from project configuration, records, and conversation intent.
+
+## Group Rules
+
+Whenever the Agent applies EngiFoundry to engineering work, including a `direct` classification, it uses test-first development for behavior changes when feasible, debugs from reproduced evidence, reviews durable outputs in fresh context when applicable, and obtains fresh task-appropriate verification before claiming completion. Package records add structure; they do not create these quality requirements.
+
+## Supporting Skills
+
+`engifoundry-audit` and `engifoundry-review` are reusable EngiFoundry rules rather than Nodes. Runtime contracts state when those rules apply and how the Agent continues from recorded facts. Agent direct action is a declared non-Node destination and does not create Package records.
