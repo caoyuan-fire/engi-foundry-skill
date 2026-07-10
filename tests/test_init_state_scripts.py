@@ -22,6 +22,22 @@ class InitStateScriptsTests(unittest.TestCase):
         self.assertIn("Run Executor setup `status`; at `idle`, run `begin` once", content)
         self.assertIn("Run Workflow setup `status`; at `idle`, run `begin` once", content)
 
+    def test_init_question_presentation_is_quiet_and_unambiguous(self):
+        content = INIT_SKILL.read_text()
+        self.assertIn("user-visible output contains only the current localized question", content)
+        self.assertIn("run validation and state actions silently", content)
+        self.assertIn("Never announce an intention, repeat the selected input", content)
+        self.assertIn("`2` for a single selection or `1,2` for multiple selections", content)
+        self.assertIn("$engifoundry modify config", content)
+        self.assertIn("what you want changed and how", content)
+        self.assertIn("`[!NOTE]` callout", content)
+
+    def test_init_completion_uses_separate_colored_success_line(self):
+        content = INIT_SKILL.read_text()
+        self.assertIn("emit a blank line followed by one standalone localized green/success callout", content)
+        self.assertIn("`[!TIP]` callout", content)
+        self.assertIn("Never place this sentence inline with the summary", content)
+
     def run_sh(self, script, *args, expected=0):
         result = subprocess.run(
             ["sh", str(SCRIPTS / script), *args],

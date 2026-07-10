@@ -17,13 +17,17 @@ While initialization is `in_progress`, or a later configuration setup is active,
 
 An unrelated request, topic change, refusal, malformed reply, or request to use EngiFoundry for other work does not suspend or end an active Init interaction. Treat it only as invalid input for the current prompt. Cancellation requires an explicit request: first initialization uses the state script, while a later configuration setup uses its matching setup script.
 
+## Presentation
+
+During the numbered question flow, user-visible output contains only the current localized question, its numbered options, and required explanatory or hint lines. After a reply, run validation and state actions silently, then show only the next question or completion output. Never announce an intention, repeat the selected input, mention the verifier or commands, or narrate state transitions. This silence rule ends when the active Init interaction exits.
+
 ## Flow
 
 1. Resolve the project root without scanning for EngiFoundry files.
 2. For first initialization, run scaffold `init`, then `check`; `status: ok` means only scaffold-ready. Migration follows its reference before entering this flow. For a later configuration change, do not run scaffold commands.
 3. For `currentStep`, show every numbered option in the user's language and use only verified `selectedIds`.
 4. After writing that section's preference config, run state `advance`; the script preserves the fixed order and completion facts.
-5. At `complete`, show an informational summary of `executorOrder`, `automationMode`, and `actionPreference`. End with one brief congratulatory sentence in the user's language equivalent to: "Congratulations, EngiFoundry is ready to help you work better." Then read the Router because `./engifoundry.config.json` now exists. Do not ask for confirmation or offer rollback; later changes use the applicable Init configuration rules.
+5. At `complete`, show an informational summary of `executorOrder`, `automationMode`, and `actionPreference`. Then emit a blank line followed by one standalone localized green/success callout equivalent to: "Congratulations, EngiFoundry is ready to help you work better." For Markdown output, use a `[!TIP]` callout. Never place this sentence inline with the summary. Then read the Router because `./engifoundry.config.json` now exists. Do not ask for confirmation or offer rollback; later changes use the applicable Init configuration rules.
 
 Do not overwrite an existing `./engifoundry.config.json` or `.engifoundry/`. On collision or failed validation, report the exact paths. Init validates structure and progress only; later Nodes own policy semantics.
 
@@ -31,7 +35,9 @@ Do not overwrite an existing `./engifoundry.config.json` or `.engifoundry/`. On 
 
 Run Executor setup `status`; at `idle`, run `begin` once. Set native-subagent capability to true only when the current host actually exposes it. The script discovers supported CLI commands, places current-session execution as late as possible, and returns the numbered candidates.
 
-For `phase: select`, localize every returned option and state that the user may select one or multiple options, separated by commas. State that input order defines fallback order, for example `4,1,2`. Pass the complete reply unchanged to `select`.
+For `phase: select`, localize every returned option and state that the user may select one or multiple options, separated by commas. Give examples for both forms: `2` for a single selection or `1,2` for multiple selections. State that multiple-selection input order defines fallback order. Pass the complete reply unchanged to `select`.
+
+On this first question only, add one localized blue/info callout equivalent to: "For advanced configuration, choose any one option now. After initialization completes, run `$engifoundry modify config` and describe what you want changed and how." For Markdown output, use a `[!NOTE]` callout.
 
 For `phase: prefer`, list the returned selected options in the user's input order. State that the chosen Executor moves to the front and the others retain that order. Pass the complete reply unchanged to `prefer`. A single selection skips this phase.
 
