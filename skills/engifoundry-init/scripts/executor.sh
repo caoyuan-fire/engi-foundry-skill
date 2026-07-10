@@ -125,6 +125,10 @@ count_lines() {
 }
 
 if [ "$action" = "begin" ]; then
+  if [ -s "$phase_file" ]; then
+    emit_state
+    exit 0
+  fi
   temporary="$data_root/.executor-setup.tmp.$$"
   rm -rf "$temporary"
   mkdir -p "$temporary"

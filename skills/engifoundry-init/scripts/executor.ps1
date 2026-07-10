@@ -76,6 +76,11 @@ function State-Output($State) {
 }
 
 if ($Action -eq "begin") {
+  $existing = Read-State
+  if ($null -ne $existing) {
+    Emit (State-Output $existing)
+    exit 0
+  }
   $candidates = [Collections.Generic.List[object]]::new()
   if ($NativeSubagent.IsPresent) {
     $candidates.Add([ordered]@{ optionId = $candidates.Count + 1; executorId = "native-subagent"; kind = "host-subagent" })

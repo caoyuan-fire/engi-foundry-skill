@@ -7,10 +7,21 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+INIT_SKILL = ROOT / "skills" / "engifoundry-init" / "SKILL.md"
 SCRIPTS = ROOT / "skills" / "engifoundry-init" / "scripts"
 
 
 class InitStateScriptsTests(unittest.TestCase):
+    def test_init_contract_keeps_each_turn_in_the_active_setup_phase(self):
+        content = INIT_SKILL.read_text()
+        self.assertIn("its current step and setup phase own the conversation", content)
+        self.assertIn("read initialization state, then the matching setup `status`", content)
+        self.assertIn("Start a setup only when its status is `idle`", content)
+        self.assertIn("does not suspend or end an active Init interaction", content)
+        self.assertIn("Treat it only as invalid input for the current prompt", content)
+        self.assertIn("Run Executor setup `status`; at `idle`, run `begin` once", content)
+        self.assertIn("Run Workflow setup `status`; at `idle`, run `begin` once", content)
+
     def run_sh(self, script, *args, expected=0):
         result = subprocess.run(
             ["sh", str(SCRIPTS / script), *args],

@@ -13,9 +13,9 @@ For an explicit migration or upgrade request, read [migration.md](references/mig
 
 ## Lock
 
-While initialization is `in_progress`, its `currentStep` owns the conversation. At every turn, read state through the platform script, pass the complete reply unchanged to the verifier, and repeat the localized prompt unless verification is valid. Do no unrelated work; never infer, translate, skip, reorder, or edit `initialization.json` directly. Exit only at `complete` or explicit scripted `cancelled`.
+While initialization is `in_progress`, or a later configuration setup is active, its current step and setup phase own the conversation. At every turn, read initialization state, then the matching setup `status`. Start a setup only when its status is `idle`. Pass the complete reply unchanged to the current `select` or `prefer` action, which invokes the verifier, and repeat the localized prompt unless verification is valid. Do no unrelated work; never infer, translate, skip, reorder, or edit `initialization.json` directly. First initialization exits only at `complete` or explicit scripted `cancelled`; a later configuration setup exits only after `commit` or its matching `cancel`.
 
-An unrelated request, topic change, refusal, malformed reply, or request to use EngiFoundry for other work does not suspend or end Init. Treat it only as invalid input for the current prompt. Cancellation requires an explicit request to cancel EngiFoundry initialization and must run the state script.
+An unrelated request, topic change, refusal, malformed reply, or request to use EngiFoundry for other work does not suspend or end an active Init interaction. Treat it only as invalid input for the current prompt. Cancellation requires an explicit request: first initialization uses the state script, while a later configuration setup uses its matching setup script.
 
 ## Flow
 
@@ -29,7 +29,7 @@ Do not overwrite an existing `./engifoundry.config.json` or `.engifoundry/`. On 
 
 ## Executor
 
-Run Executor setup `begin` once. Set native-subagent capability to true only when the current host actually exposes it. The script discovers supported CLI commands, places current-session execution as late as possible, and returns the numbered candidates.
+Run Executor setup `status`; at `idle`, run `begin` once. Set native-subagent capability to true only when the current host actually exposes it. The script discovers supported CLI commands, places current-session execution as late as possible, and returns the numbered candidates.
 
 For `phase: select`, localize every returned option and state that the user may select one or multiple options, separated by commas. State that input order defines fallback order, for example `4,1,2`. Pass the complete reply unchanged to `select`.
 
@@ -43,7 +43,7 @@ Never ask about CLI models during initialization. Model configuration is a hidde
 
 The delivery workflow is fixed: Package, Execute, Verify, Deliver. Workflow configuration changes package preference and pause points; no option may remove or reorder a required stage.
 
-Run Workflow setup `begin`. For `phase: automation`, localize all three returned options:
+Run Workflow setup `status`; at `idle`, run `begin` once. For `phase: automation`, localize all three returned options:
 
 1. `job-approval`: require approval of every Job Review result and the final PAK Verify result before continuing.
 2. `package-approval`: automatically advance through Job Review, then require approval of the final PAK Verify result before Deliver. Present this as recommended.

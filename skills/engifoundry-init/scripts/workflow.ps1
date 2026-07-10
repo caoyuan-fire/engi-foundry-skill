@@ -89,6 +89,11 @@ function State-Output($State) {
 }
 
 if ($Action -eq "begin") {
+  $existing = Read-State
+  if ($null -ne $existing) {
+    Emit (State-Output $existing)
+    exit 0
+  }
   $state = [ordered]@{ phase = "automation"; automationMode = $null; actionPreference = $null }
   Remove-Item -LiteralPath $SetupRoot -Recurse -Force -ErrorAction SilentlyContinue
   Write-State $state

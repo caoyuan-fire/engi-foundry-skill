@@ -57,6 +57,10 @@ class ExecutorScriptsTests(unittest.TestCase):
             self.assertEqual(state["phase"], "prefer")
             self.assertEqual(state["selectedExecutors"], ["direct", "native-subagent"])
 
+            repeated_begin = self.run_sh(project, "begin")
+            self.assertEqual(repeated_begin["phase"], "prefer")
+            self.assertEqual(repeated_begin["selectedExecutors"], ["direct", "native-subagent"])
+
             state = self.run_sh(project, "prefer", "--user-input", " 2 ")
             self.assertEqual(state["executorOrder"], ["native-subagent", "direct"])
 
@@ -254,6 +258,9 @@ class ExecutorScriptsTests(unittest.TestCase):
                 "-UserInput",
                 f'{ids["direct"]},{ids["native-subagent"]}',
             )
+            self.assertEqual(state["phase"], "prefer")
+            self.assertEqual(state["selectedExecutors"], ["direct", "native-subagent"])
+            state = run("begin")
             self.assertEqual(state["phase"], "prefer")
             self.assertEqual(state["selectedExecutors"], ["direct", "native-subagent"])
             state = run("prefer", "-UserInput", "2")

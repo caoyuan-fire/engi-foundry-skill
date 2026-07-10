@@ -57,6 +57,10 @@ class WorkflowScriptsTests(unittest.TestCase):
             )
             self.assertTrue(state["options"][1]["recommended"])
 
+            repeated_begin = self.run_sh(project, "begin")
+            self.assertEqual(repeated_begin["phase"], "action-preference")
+            self.assertEqual(repeated_begin["automationMode"], "package-approval")
+
     def test_each_mode_can_be_selected_and_committed(self):
         expected_modes = {
             "1": "job-approval",
@@ -159,6 +163,9 @@ class WorkflowScriptsTests(unittest.TestCase):
             self.assertEqual(state["options"][1]["automationMode"], "package-approval")
             state = run("select", "-UserInput", "2")
             self.assertEqual(state["phase"], "action-preference")
+            state = run("begin")
+            self.assertEqual(state["phase"], "action-preference")
+            self.assertEqual(state["automationMode"], "package-approval")
             state = run("select", "-UserInput", "3")
             self.assertEqual(state["actionPreference"], "direct-first")
             value = run("commit")
