@@ -30,7 +30,7 @@ Engineering rigor scales with the task. Heavyweight process is not the default.
 Entry
 Router
 Init | Orch | Exec | Verify | Deliver
-Audit | Review
+Audit | Review | Docs
 ```
 
 - Entry checks only `./engifoundry.config.json`.
@@ -38,6 +38,7 @@ Audit | Review
 - The Agent selects and reads the contracts needed to reach the user's requested endpoint.
 - Audit classifies new work as direct or packaged.
 - Review is a reusable rule set and always runs in a fresh Reviewer Agent context.
+- Docs produces detailed human-readable documents only when explicitly requested.
 - States describe current project facts; they are not workflow events.
 
 The typical packaged contract set is Orch, Exec, Verify, and Deliver. Direct work does not create a Package, but it still follows Router quality rules.
@@ -245,6 +246,7 @@ skills/engifoundry-verify/     Goal-level evidence and verification status
 skills/engifoundry-deliver/    User acceptance and delivery closeout
 skills/engifoundry-audit/      Direct-versus-packaged task assessment
 skills/engifoundry-review/     Fresh-context review rules
+skills/engifoundry-docs/       Detailed human-readable documents from project records
 hooks/                         Session-start Entry injection
 .codex-plugin/                 Codex plugin manifest
 .claude-plugin/                Claude plugin manifest and marketplace metadata

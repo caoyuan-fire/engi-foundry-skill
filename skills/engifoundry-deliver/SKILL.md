@@ -26,7 +26,9 @@ Every `rework-required` acceptance fact has an immutable rejection record attach
 
 ## Closeout
 
-Confirm every required artifact is referenced and every closeout requirement is satisfied. Create only delivery outputs required by the PAK. Satisfied acceptance and closeout facts are recorded in one immutable delivery record, attached as `execution.deliveryRef`, with `execution.status: completed`.
+Confirm every required artifact is referenced and every closeout requirement is satisfied. Create only delivery outputs required by the PAK. Satisfied acceptance and closeout facts are recorded in one immutable delivery JSON, attached as `execution.deliveryRef`, with `execution.status: completed`.
+
+Every completed PAK also has the matching human-readable `DELIVERY-<NNN>.md` defined by the reference contract. It summarizes PAK execution, current engineering state, evidence and artifacts, severity-labeled risks, and handoff facts. This summary is required even when no additional user-facing document was requested.
 
 A missing closeout item is work to finish, not acceptance failure. `blocked` describes only an objective closeout condition the Agent cannot resolve during delivery work; it has an immutable record attached as `execution.deliveryRef`.
 

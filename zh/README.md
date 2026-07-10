@@ -30,7 +30,7 @@ EngiFoundry 为 Agent 提供明确的工程契约，同时仍由 Agent 负责判
 Entry
 Router
 Init | Orch | Exec | Verify | Deliver
-Audit | Review
+Audit | Review | Docs
 ```
 
 - Entry 只检查 `./engifoundry.config.json`。
@@ -38,6 +38,7 @@ Audit | Review
 - Agent 根据用户目标选择并读取足够完整的契约集合。
 - Audit 判断新任务应直接执行还是编制 Package。
 - Review 是可复用规则集，必须在新的干净上下文 Reviewer Agent 中执行。
+- Docs 只在用户明确要求时提炼详细人读文档。
 - 状态描述当前工程事实，不是工作流事件。
 
 典型 Package 契约集合是 Orch、Exec、Verify、Deliver。Direct 工作不创建 Package，但仍遵守 Router 的工程质量底线。
@@ -245,6 +246,7 @@ skills/engifoundry-verify/     目标级证据与验证状态
 skills/engifoundry-deliver/    用户验收与交付收口
 skills/engifoundry-audit/      Direct 与 Package 任务判定
 skills/engifoundry-review/     干净上下文 Review 规则
+skills/engifoundry-docs/       从工程记录提炼详细人读文档
 hooks/                         会话开始时注入 Entry
 .codex-plugin/                 Codex 插件 manifest
 .claude-plugin/                Claude 插件 manifest 与 marketplace metadata

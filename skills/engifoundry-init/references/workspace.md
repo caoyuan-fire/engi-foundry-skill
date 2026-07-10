@@ -31,10 +31,10 @@ This file describes the EngiFoundry-owned structure in this project. It is copie
 | `.engifoundry/executors.json` | Available Executor facts and their configured selection order. |
 | `.engifoundry/workflows.json` | Fixed delivery workflow automation and approval policy. |
 | `.engifoundry/artifacts/plans/` | Durable planning and design outputs. |
-| `.engifoundry/artifacts/records/` | Durable execution and decision records. |
+| `.engifoundry/artifacts/records/` | Durable execution and decision records, including human-readable snapshots at actual pause points. |
 | `.engifoundry/artifacts/reviews/` | Review findings and decisions. |
 | `.engifoundry/artifacts/verification/` | Test, lint, type-check, CI, and other verification evidence. |
-| `.engifoundry/artifacts/delivery/` | Accepted delivery, handoff, and closeout outputs. |
+| `.engifoundry/artifacts/delivery/` | Accepted delivery records and required human-readable PAK execution summaries for handoff. |
 | `.engifoundry/artifacts/legacy/` | Migration fallback for unchanged content that cannot be inherited reliably and legacy control JSON retained as evidence. |
 | `.engifoundry/packages/` | Task package inputs when package workflow is explicitly used. This path is excluded from repository history unless the user explicitly requests task-package inclusion. |
 

@@ -53,10 +53,14 @@ The Agent selects, combines, and rereads the Skill contracts needed to complete 
 
 `.engifoundry/packages/` is outside the scope of every stage, check-in, commit, and push request unless the user explicitly states that task packages are to be included in repository history. Broad requests such as "commit the current changes", "commit everything", or their equivalents leave this boundary unchanged. Only explicit task-package inclusion authorizes overriding the configured `.gitignore` rule for this directory.
 
+## Pause Records
+
+When packaged work pauses before completion because user or external input is required, the Agent writes one concise human-readable `<artifact-root>/records/<phase-id>/<package-id>/PAUSE-<NNN>.md` before ending the turn. Allocate the identifier monotonically and keep each file immutable. Its content matches the pause fact: an execution summary, current engineering state, or human acceptance checklist as applicable. Include the reason, relevant evidence, required input, and next entry point without duplicating machine records. Automatic continuation and completed delivery are not pause points.
+
 ## Group Rules
 
 Whenever the Agent applies EngiFoundry to engineering work, including a `direct` classification, it uses test-first development for behavior changes when feasible, debugs from reproduced evidence, reviews durable outputs in fresh context when applicable, and obtains fresh task-appropriate verification before claiming completion. Package records add structure; they do not create these quality requirements.
 
 ## Supporting Skills
 
-`engifoundry-audit` and `engifoundry-review` are reusable EngiFoundry rules rather than Nodes. Runtime contracts state when those rules apply and how the Agent continues from recorded facts. Agent direct action is a declared non-Node destination and does not create Package records.
+`engifoundry-audit`, `engifoundry-review`, and `engifoundry-docs` are reusable EngiFoundry rules rather than Nodes. Docs applies only when the user explicitly requests a detailed human-readable document from project records. Runtime contracts state when supporting rules apply and how the Agent continues from recorded facts. Agent direct action is a declared non-Node destination and does not create Package records.

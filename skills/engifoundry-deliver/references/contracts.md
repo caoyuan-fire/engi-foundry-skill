@@ -12,13 +12,14 @@
 
 Implementation rejection also means affected Jobs and Package execution are `rework-required`. Contract rejection means Package planning is `rework-required`.
 
-## Record Location
+## Record Locations
 
 ```text
 <artifact-root>/delivery/<phase-id>/<package-id>/DELIVERY-001.json
+<artifact-root>/delivery/<phase-id>/<package-id>/DELIVERY-001.md
 ```
 
-Allocate `DELIVERY-*` monotonically. Never overwrite or renumber an earlier acceptance attempt.
+Allocate `DELIVERY-*` monotonically. Never overwrite or renumber an earlier acceptance attempt. The Markdown companion is required only for a completed delivery and shares its JSON identifier.
 
 ## Completed Delivery
 
@@ -29,6 +30,7 @@ Allocate `DELIVERY-*` monotonically. Never overwrite or renumber an earlier acce
   "packageId": "PAK-001",
   "deliveryId": "DELIVERY-001",
   "result": "completed",
+  "summaryRef": ".engifoundry/artifacts/delivery/PHASE-001/PAK-001/DELIVERY-001.md",
   "verificationRef": ".engifoundry/artifacts/verification/PHASE-001/PAK-001/VERIFY-001.json",
   "acceptance": {
     "mode": "package-approval",
@@ -46,6 +48,18 @@ Allocate `DELIVERY-*` monotonically. Never overwrite or renumber an earlier acce
 ```
 
 Acceptance decision is `auto-accepted` or `user-approved`. `artifacts` contains references only. `closeout` maps every PAK closeout requirement exactly once to concise evidence.
+
+## Human Summary
+
+`DELIVERY-<NNN>.md` is the PAK's durable human handoff. Prefer readable narrative and content-appropriate tables or lists. It contains:
+
+- PAK identity, goal, and final result;
+- concise execution summary and current engineering state;
+- verification and delivered artifact references;
+- remaining risks labeled `critical`, `high`, `medium`, or `low`, including impact and evidence, or an explicit statement that no remaining risk was identified;
+- handoff status, open actions, and the next entry point when one exists.
+
+Reflect current records without reproducing JSON, command transcripts, or per-Job history. The JSON remains authoritative for control state.
 
 ## Rejected Acceptance
 

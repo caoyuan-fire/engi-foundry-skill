@@ -78,6 +78,18 @@ class RoutingContractTests(unittest.TestCase):
         self.assertIn('"commit everything"', content)
         self.assertIn("Only explicit task-package inclusion authorizes overriding", content)
 
+    def test_pause_points_have_human_readable_records(self):
+        content = ROUTER.read_text()
+        self.assertIn("## Pause Records", content)
+        self.assertIn("PAUSE-<NNN>.md", content)
+        self.assertIn("execution summary, current engineering state, or human acceptance checklist", content)
+        self.assertIn("Automatic continuation and completed delivery are not pause points", content)
+
+    def test_router_lists_docs_as_supporting_skill(self):
+        content = ROUTER.read_text()
+        self.assertIn("`engifoundry-docs`", content)
+        self.assertIn("explicitly requests a detailed human-readable document", content)
+
 
 if __name__ == "__main__":
     unittest.main()

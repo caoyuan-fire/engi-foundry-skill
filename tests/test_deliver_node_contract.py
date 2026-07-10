@@ -35,6 +35,16 @@ class DeliverNodeContractTests(unittest.TestCase):
         for forbidden in ("raw conversation", "routine progress", "long logs"):
             self.assertIn(forbidden, contract)
 
+    def test_completed_delivery_has_human_handoff_summary(self):
+        skill = SKILL.read_text()
+        contract = CONTRACT.read_text()
+        self.assertIn("matching human-readable `DELIVERY-<NNN>.md`", skill)
+        self.assertIn("## Human Summary", contract)
+        self.assertIn('"summaryRef"', contract)
+        self.assertIn("current engineering state", contract)
+        self.assertIn("labeled `critical`, `high`, `medium`, or `low`", contract)
+        self.assertIn("handoff status, open actions, and the next entry point", contract)
+
 
 if __name__ == "__main__":
     unittest.main()

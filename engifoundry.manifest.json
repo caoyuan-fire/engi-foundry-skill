@@ -16,7 +16,8 @@
   ],
   "supportingSkills": [
     "skills/engifoundry-audit",
-    "skills/engifoundry-review"
+    "skills/engifoundry-review",
+    "skills/engifoundry-docs"
   ],
   "pluginManifests": {
     "codex": ".codex-plugin/plugin.json",
