@@ -83,7 +83,7 @@ Codex-compatible installations use this repository as a Git marketplace.
 Register the marketplace:
 
 ```bash
-codex plugin marketplace add https://github.com/caoyuan-fire/engi-foundry-skill
+codex plugin marketplace add caoyuan-fire/engi-foundry-skill
 ```
 
 Install the plugin:

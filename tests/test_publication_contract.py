@@ -6,9 +6,16 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "engifoundry.manifest.json"
+ENTRY_UI = ROOT / "skills" / "engifoundry" / "agents" / "openai.yaml"
 
 
 class PublicationContractTests(unittest.TestCase):
+    def test_main_entry_has_human_readable_codex_ui_metadata(self):
+        content = ENTRY_UI.read_text()
+        self.assertIn('display_name: "EngiFoundry"', content)
+        self.assertIn('short_description: "Start and route structured engineering work"', content)
+        self.assertIn("$engifoundry", content)
+
     def test_runtime_manifest_points_only_to_current_skills(self):
         value = json.loads(MANIFEST.read_text())
         paths = [value["entrySkill"], value["routerSkill"]]
@@ -48,6 +55,11 @@ class PublicationContractTests(unittest.TestCase):
         for content in (english, chinese):
             self.assertIn("codex plugin marketplace upgrade engi-foundry-skill", content)
             self.assertIn("codex plugin add engifoundry-bundle@engi-foundry-skill", content)
+            self.assertIn("codex plugin marketplace add caoyuan-fire/engi-foundry-skill", content)
+            self.assertNotIn(
+                "codex plugin marketplace add https://github.com/caoyuan-fire/engi-foundry-skill",
+                content,
+            )
             self.assertIn("### Skills-Only", content)
         self.assertIn("complete `skills/`", english)
         self.assertIn("完整的 `skills/`", chinese)

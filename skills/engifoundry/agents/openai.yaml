@@ -1,0 +1,4 @@
+interface:
+  display_name: "EngiFoundry"
+  short_description: "Start and route structured engineering work"
+  default_prompt: "Use $engifoundry to initialize or continue structured engineering work in this project."
