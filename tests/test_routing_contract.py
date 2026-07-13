@@ -71,6 +71,15 @@ class RoutingContractTests(unittest.TestCase):
         for rule in ("test-first", "reproduced evidence", "fresh context", "fresh task-appropriate verification"):
             self.assertIn(rule, content)
 
+    def test_group_rules_allow_optional_superpowers_discipline_enhancement(self):
+        content = ROUTER.read_text()
+        self.assertIn("locally installed Superpowers discipline Skills", content)
+        self.assertIn("discoverable in the current host's available Skills list", content)
+        self.assertIn("optional discipline enhancers", content)
+        self.assertIn("pass their applicable instructions through to the selected Executor", content)
+        self.assertIn("strengthen but never replace or relax the four rules", content)
+        self.assertIn("their absence changes nothing", content)
+
     def test_package_repository_boundary_requires_explicit_inclusion(self):
         content = ROUTER.read_text()
         self.assertIn("`.engifoundry/packages/` is outside the scope", content)
@@ -89,6 +98,35 @@ class RoutingContractTests(unittest.TestCase):
         content = ROUTER.read_text()
         self.assertIn("`engifoundry-docs`", content)
         self.assertIn("explicitly requests a detailed human-readable document", content)
+
+    def test_router_can_delegate_visual_design_to_optional_engi_design(self):
+        content = ROUTER.read_text()
+        self.assertIn("## External Skill Routes", content)
+        self.assertIn("| External Skill | Match intent | Outcome |", content)
+        self.assertIn("| `engi-design` |", content)
+        self.assertIn("`$engifoundry`", content)
+        self.assertIn("product visual-design request", content)
+        self.assertIn("`$engifoundry 帮我设计一个运营后台`", content)
+        self.assertIn("Accepted project-root `DESIGN.md`", content)
+
+    def test_missing_engi_design_is_a_silent_non_route(self):
+        content = ROUTER.read_text()
+        self.assertIn("Consider only external Skills discoverable", content)
+        self.assertIn("Omit an unavailable route silently", content)
+        self.assertIn("without mentioning the missing Skill", content)
+        self.assertIn("suggesting installation", content)
+        self.assertIn("creating a blocker", content)
+
+    def test_external_routes_are_separate_from_bundle_contracts(self):
+        content = ROUTER.read_text()
+        nodes = content.split("## Node Contracts", 1)[1].split("## State Signals", 1)[0]
+        supporting = content.split("## Supporting Skills", 1)[1].split("## External Skill Routes", 1)[0]
+        external = content.split("## External Skill Routes", 1)[1]
+        self.assertNotIn("engi-design", nodes)
+        self.assertNotIn("engi-design", supporting)
+        self.assertIn("not Nodes or supporting rules in this bundle", external)
+        self.assertIn("Keep external routes outside the Node sequence", external)
+        self.assertGreater(content.index("## External Skill Routes"), content.index("## Supporting Skills"))
 
 
 if __name__ == "__main__":

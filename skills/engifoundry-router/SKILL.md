@@ -61,6 +61,22 @@ When packaged work pauses before completion because user or external input is re
 
 Whenever the Agent applies EngiFoundry to engineering work, including a `direct` classification, it uses test-first development for behavior changes when feasible, debugs from reproduced evidence, reviews durable outputs in fresh context when applicable, and obtains fresh task-appropriate verification before claiming completion. Package records add structure; they do not create these quality requirements.
 
+When locally installed Superpowers discipline Skills are discoverable in the current host's available Skills list, the Agent may apply them as optional discipline enhancers and pass their applicable instructions through to the selected Executor; they strengthen but never replace or relax the four rules, and their absence changes nothing.
+
 ## Supporting Skills
 
 `engifoundry-audit`, `engifoundry-review`, and `engifoundry-docs` are reusable EngiFoundry rules rather than Nodes. Docs applies only when the user explicitly requests a detailed human-readable document from project records. Runtime contracts state when supporting rules apply and how the Agent continues from recorded facts. Agent direct action is a declared non-Node destination and does not create Package records.
+
+## External Skill Routes
+
+External Skills are optional integrations, not Nodes or supporting rules in this bundle.
+
+| External Skill | Match intent | Outcome |
+| --- | --- | --- |
+| `engi-design` | An explicit `$engifoundry` product visual-design request to create, resume, review, revise, extend, or finalize a design; for example, `$engifoundry 帮我设计一个运营后台`. | Accepted project-root `DESIGN.md`, with intermediate state owned by the external contract under `.engifoundry/design/`. |
+
+1. Consider only external Skills discoverable in the current host's available Skills list.
+2. Match explicit user intent, then read and apply only the selected external Skill contract.
+3. Omit an unavailable route silently, without mentioning the missing Skill, suggesting installation, or creating a blocker. Continue selecting from the available EngiFoundry contracts using the remaining request intent and project facts.
+4. Resolve multiple matching external routes from the requested outcome and boundaries; ask only when a material ambiguity remains.
+5. Keep external routes outside the Node sequence, State Signals, supporting-rule membership, and Package records unless the request independently includes packaged engineering work.
