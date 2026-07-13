@@ -80,6 +80,18 @@ class RoutingContractTests(unittest.TestCase):
         self.assertIn("strengthen but never replace or relax the four rules", content)
         self.assertIn("their absence changes nothing", content)
 
+    def test_group_rules_exclude_non_discipline_superpowers_workflows(self):
+        content = ROUTER.read_text()
+        self.assertIn(
+            "Use Superpowers only for discipline-aligned TDD, systematic debugging, review, and verification practices",
+            content,
+        )
+        self.assertIn("every other Superpowers workflow as outside EngiFoundry selection", content)
+        self.assertIn("unless the user explicitly requests it", content)
+        self.assertIn("If the host loads another Superpowers workflow independently", content)
+        self.assertIn("preserve EngiFoundry contracts", content)
+        self.assertIn("leave any conflicting workflow unapplied", content)
+
     def test_package_repository_boundary_requires_explicit_inclusion(self):
         content = ROUTER.read_text()
         self.assertIn("`.engifoundry/packages/` is outside the scope", content)

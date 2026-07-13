@@ -2,7 +2,7 @@
   "name": "engifoundry",
   "pluginName": "engifoundry-bundle",
   "displayName": "EngiFoundry",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "status": "runtime-v3-draft",
   "skillRoot": "skills",
   "entrySkill": "skills/engifoundry",

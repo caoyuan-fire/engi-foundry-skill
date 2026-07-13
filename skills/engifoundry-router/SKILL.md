@@ -63,6 +63,8 @@ Whenever the Agent applies EngiFoundry to engineering work, including a `direct`
 
 When locally installed Superpowers discipline Skills are discoverable in the current host's available Skills list, the Agent may apply them as optional discipline enhancers and pass their applicable instructions through to the selected Executor; they strengthen but never replace or relax the four rules, and their absence changes nothing.
 
+Use Superpowers only for discipline-aligned TDD, systematic debugging, review, and verification practices. Treat every other Superpowers workflow as outside EngiFoundry selection unless the user explicitly requests it. If the host loads another Superpowers workflow independently, preserve EngiFoundry contracts and leave any conflicting workflow unapplied.
+
 ## Supporting Skills
 
 `engifoundry-audit`, `engifoundry-review`, and `engifoundry-docs` are reusable EngiFoundry rules rather than Nodes. Docs applies only when the user explicitly requests a detailed human-readable document from project records. Runtime contracts state when supporting rules apply and how the Agent continues from recorded facts. Agent direct action is a declared non-Node destination and does not create Package records.
