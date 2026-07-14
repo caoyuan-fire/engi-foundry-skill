@@ -71,26 +71,11 @@ class RoutingContractTests(unittest.TestCase):
         for rule in ("test-first", "reproduced evidence", "fresh context", "fresh task-appropriate verification"):
             self.assertIn(rule, content)
 
-    def test_group_rules_allow_optional_superpowers_discipline_enhancement(self):
+    def test_group_rules_do_not_declare_superpowers_integration(self):
         content = ROUTER.read_text()
-        self.assertIn("locally installed Superpowers discipline Skills", content)
-        self.assertIn("discoverable in the current host's available Skills list", content)
-        self.assertIn("optional discipline enhancers", content)
-        self.assertIn("pass their applicable instructions through to the selected Executor", content)
-        self.assertIn("strengthen but never replace or relax the four rules", content)
-        self.assertIn("their absence changes nothing", content)
-
-    def test_group_rules_exclude_non_discipline_superpowers_workflows(self):
-        content = ROUTER.read_text()
-        self.assertIn(
-            "Use Superpowers only for discipline-aligned TDD, systematic debugging, review, and verification practices",
-            content,
-        )
-        self.assertIn("every other Superpowers workflow as outside EngiFoundry selection", content)
-        self.assertIn("unless the user explicitly requests it", content)
-        self.assertIn("If the host loads another Superpowers workflow independently", content)
-        self.assertIn("preserve EngiFoundry contracts", content)
-        self.assertIn("leave any conflicting workflow unapplied", content)
+        self.assertNotIn("Superpowers", content)
+        self.assertNotIn("optional discipline enhancers", content)
+        self.assertNotIn("pass their applicable instructions through", content)
 
     def test_package_repository_boundary_requires_explicit_inclusion(self):
         content = ROUTER.read_text()
