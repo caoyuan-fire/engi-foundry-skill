@@ -41,7 +41,9 @@ On this first question only, add one localized blue/info callout equivalent to: 
 
 For `phase: prefer`, list the returned selected options in the user's input order. State that the chosen Executor moves to the front and the others retain that order. Pass the complete reply unchanged to `prefer`. A single selection skips this phase.
 
-At `status: ready`, run `commit`. Never construct or reorder `executorOrder` yourself. During initialization, then run state `advance`; during later configuration changes, stop after commit.
+At `status: ready`, run `commit`. Never construct or reorder `executorOrder` yourself.
+
+After `commit`, explore the best invocation for each selected CLI Executor yourself from the installed CLI's actual capabilities and feedback. Run a real, bounded, non-interactive task with the candidate invocation; only a successful invocation that returns the expected result is verified. Write the verified template as `usage` in that Executor's `executors.json` entry, using placeholders for the workspace and prompt. Do not persist an untested template or silently fall back after a failed attempt. Scripts are optional helpers and never replace this exploration. During initialization, then run state `advance`; during later configuration changes, stop after updating the Executor config.
 
 Never ask about CLI models during initialization. Model configuration is a hidden modification capability only. When an explicit configuration-change request already identifies the target Executor and desired default or model ID, read the existing Executor config, run the platform `executor-probe` with that exact request, and update only the target entry after a successful probe. Do not show a model menu, enumerate models, or start a numbered question flow. Never trust model self-identification or infer availability from a catalog.
 

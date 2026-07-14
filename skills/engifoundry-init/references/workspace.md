@@ -28,7 +28,7 @@ This file describes the EngiFoundry-owned structure in this project. It is copie
 | `./engifoundry.config.json` | The only project discovery entry. It points to project knowledge and configuration facts. |
 | `.engifoundry/workspace.md` | Project-owned guide to EngiFoundry structure and output locations. |
 | `.engifoundry/initialization.json` | Initialization progress facts maintained through the Init state scripts. |
-| `.engifoundry/executors.json` | Available Executor facts and their configured selection order. |
+| `.engifoundry/executors.json` | Available Executor facts, configured selection order, and preferred invocation templates for CLI executors. |
 | `.engifoundry/workflows.json` | Fixed delivery workflow automation and approval policy. |
 | `.engifoundry/artifacts/plans/` | Durable planning and design outputs. |
 | `.engifoundry/artifacts/records/` | Durable execution and decision records, including human-readable snapshots at actual pause points. |

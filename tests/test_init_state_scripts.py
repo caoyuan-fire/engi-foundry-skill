@@ -32,6 +32,20 @@ class InitStateScriptsTests(unittest.TestCase):
         self.assertIn("what you want changed and how", content)
         self.assertIn("`[!NOTE]` callout", content)
 
+    def test_init_executor_contract_requires_agent_owned_real_exploration(self):
+        content = INIT_SKILL.read_text()
+        self.assertIn(
+            "After `commit`, explore the best invocation for each selected CLI Executor yourself",
+            content,
+        )
+        self.assertIn(
+            "Run a real, bounded, non-interactive task with the candidate invocation",
+            content,
+        )
+        self.assertIn("Write the verified template as `usage`", content)
+        self.assertIn("Scripts are optional helpers", content)
+        self.assertNotIn("probe each selected Executor with `executor-probe`", content)
+
     def test_init_completion_uses_separate_colored_success_line(self):
         content = INIT_SKILL.read_text()
         self.assertIn("emit a blank line followed by one standalone localized green/success callout", content)

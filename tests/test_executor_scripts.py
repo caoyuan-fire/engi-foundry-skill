@@ -187,6 +187,28 @@ class ExecutorScriptsTests(unittest.TestCase):
             self.assertEqual(json.loads(result.stdout)["modelMode"], "pinned")
             self.assertIn("--model gpt-5.3-codex-spark", arguments.read_text())
 
+    def test_commit_does_not_probe_cli_executor(self):
+        with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as bin_tmp:
+            project = Path(tmp)
+            self.init_project(project)
+            bin_dir = Path(bin_tmp)
+            invocations = bin_dir / "invocations"
+            codex = bin_dir / "codex"
+            codex.write_text(
+                '#!/bin/sh\nprintf "%s\\n" "$*" >> "$INVOCATIONS"\nprintf \'{"message":"hello"}\\n\'\n'
+            )
+            codex.chmod(0o755)
+            env = os.environ.copy()
+            env["PATH"] = f"{bin_dir}:/usr/bin:/bin"
+            env["INVOCATIONS"] = str(invocations)
+
+            state = self.run_sh(project, "begin", env=env)
+            self.assertEqual(state["options"][0]["executorId"], "codex-cli")
+            self.run_sh(project, "select", "--user-input", "1", env=env)
+            value = self.run_sh(project, "commit", env=env)
+            self.assertFalse(invocations.exists())
+            self.assertNotIn("usage", value["executors"]["codex-cli"])
+
     def test_hidden_probe_reports_cli_failure(self):
         with tempfile.TemporaryDirectory() as bin_tmp:
             bin_dir = Path(bin_tmp)
