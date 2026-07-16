@@ -24,7 +24,7 @@ class PublicationContractTests(unittest.TestCase):
         for path in paths:
             self.assertTrue((ROOT / path / "SKILL.md").is_file(), path)
         serialized = json.dumps(value)
-        self.assertEqual(value["version"], "0.2.4")
+        self.assertEqual(value["version"], "0.2.5")
         for stale in ("engifoundry-gate", "resolve_module", "check_version", "contract-operating-model"):
             self.assertNotIn(stale, serialized)
 
@@ -35,7 +35,7 @@ class PublicationContractTests(unittest.TestCase):
             self.assertTrue(manifest.is_file(), relative)
             plugin = json.loads(manifest.read_text())
             self.assertEqual(plugin["skills"], "./skills/")
-            self.assertEqual(plugin["version"], "0.2.4")
+            self.assertEqual(plugin["version"], "0.2.5")
 
     def test_readmes_do_not_publish_legacy_runtime(self):
         for relative in ("README.md", "zh/README.md", "examples/README.md"):

@@ -5,7 +5,9 @@ description: Audit new engineering work and orchestrate Phase, PAK, and Job cont
 
 # EngiFoundry Orch
 
-Read `./engifoundry.config.json`, the project-owned workspace guide, Workflow config, and [contracts.md](references/contracts.md) before writing orchestration artifacts.
+`<project-root>` is the root of the target project and contains `engifoundry.config.json`. `<orch-skill-root>` is the directory containing this `SKILL.md`. These are independent locations: never infer the project root from the Skill installation path, and never look for bundled Orch resources under the project root.
+
+Read `<project-root>/engifoundry.config.json`, the project-owned workspace guide and Workflow config, and `<orch-skill-root>/references/contracts.md` before writing orchestration artifacts.
 
 ## Boundary
 
@@ -38,10 +40,12 @@ Write execution input only under the configured package root. Reviewer Agents wr
 
 ## Commands
 
-- macOS/Linux: `sh scripts/orch.sh create-phase|create-package|check [options]`
-- Windows: `powershell -ExecutionPolicy Bypass -File scripts/orch.ps1 -Action create-phase|create-package|check [options]`
+- macOS/Linux: `sh <orch-skill-root>/scripts/orch.sh create-phase|create-package|check --project-root <project-root> [options]`
+- Windows: `powershell -ExecutionPolicy Bypass -File <orch-skill-root>/scripts/orch.ps1 -Action create-phase|create-package|check -ProjectRoot <project-root> [options]`
 
-Use `create-phase` and `create-package` only for allocation and skeleton creation. Fill every semantic field and require `check` before recording `pending-review`. The Agent writes Review evidence, `reviewRef`, and conclusion state directly from the applicable contracts.
+Resolve the bundled script from `<orch-skill-root>/scripts/` and always pass `<project-root>` explicitly, regardless of the current working directory. Prefer `create-phase` and `create-package` for allocation and skeleton creation. Only when the correctly resolved bundled script remains unavailable or non-runnable may the Agent fall back to manual allocation and skeleton creation from the complete reference contract. Failure to find the script under `<project-root>` is not evidence that the bundled script is unavailable.
+
+The helpers handle only allocation and skeleton creation. Fill every semantic field and require `check` before recording `pending-review`; when the helper itself is non-runnable, perform the equivalent contract checks manually. The Agent writes Review evidence, `reviewRef`, and conclusion state directly from the applicable contracts.
 
 ## Continuation
 

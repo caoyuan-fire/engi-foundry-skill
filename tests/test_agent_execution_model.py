@@ -44,6 +44,17 @@ class AgentExecutionModelTests(unittest.TestCase):
             for semantic_action in ("apply-review", "submit-review", "verified-available", "jobs-completed"):
                 self.assertNotIn(semantic_action, content)
 
+    def test_orch_contract_distinguishes_project_and_skill_roots(self):
+        content = (SKILLS / "engifoundry-orch" / "SKILL.md").read_text()
+        self.assertIn("`<project-root>`", content)
+        self.assertIn("`<orch-skill-root>`", content)
+        self.assertIn("<orch-skill-root>/scripts/orch.sh", content)
+        self.assertIn("--project-root <project-root>", content)
+        self.assertIn("<orch-skill-root>/scripts/orch.ps1", content)
+        self.assertIn("-ProjectRoot <project-root>", content)
+        self.assertNotIn("`sh scripts/orch.sh", content)
+        self.assertNotIn("`./engifoundry.config.json`", content)
+
 
 if __name__ == "__main__":
     unittest.main()
