@@ -19,11 +19,13 @@ For first initialization, run scaffold `init`, then start Configurator `status`.
 
 Configurator JSON is the question and state authority. Do not reconstruct, localize, supplement, skip, reorder, or answer its questions.
 
+From the first Configurator invocation until `complete` or `cancelled`, emit no model-authored conversational text. In particular, never expose planning, reasoning, intention, progress, transition, tool, or command narration such as “I should…”, “I will…”, “I’m…”, “正在……”, “接下来……”, or “已完成……”. Run every script action and custom-resolution probe silently. User-visible output is limited to the script-returned fields allowed below; this restriction applies equally to initialization and `--init-modify`.
+
 - At `status: question`, relay `notice` when present, then `question.context`, `question.prompt`, every numbered `question.options`, and every `question.hints` line exactly as returned. Wait for the user's reply.
 - Submit the complete reply unchanged with Configurator `answer`. All questions are single-choice except a returned `kind: free-text` custom-description branch.
-- At `status: invalid`, call `status` and relay the same current question again with a concise localized statement of the returned validation reason. Never infer a corrected value.
-- At `status: agent-action-required`, apply Custom Resolution below and return the result through Configurator `resolve`.
-- At `status: complete`, read the committed Executor, Reviewer, and Workflow files and present a concise localized summary. For first initialization, add a standalone success callout beginning `🎉`, then read Router because `./engifoundry.config.json` now exists. A modification completion simply confirms that the old configuration was replaced.
+- At `status: invalid`, relay only the returned `message`, call `status` silently, and relay the same current question again. Never author an explanation or infer a corrected value.
+- At `status: agent-action-required`, emit nothing, apply Custom Resolution silently, and return the result through Configurator `resolve`.
+- At `status: complete`, relay only `completion.lines` in order and `completion.message` exactly as returned. Then, for first initialization, read Router silently because `./engifoundry.config.json` now exists.
 - At `status: cancelled`, stop. Because every invocation is stateful, an interrupted conversation resumes by calling `status`; do not discard a valid state or overwrite configuration outside the script.
 
 While a Configurator flow is active, its current question owns the conversation. An unrelated reply is submitted unchanged and handled as invalid input. Cancel only for an explicit user cancellation request.

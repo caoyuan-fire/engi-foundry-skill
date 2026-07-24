@@ -56,6 +56,26 @@ json_escape() {
   printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' -e 's/	/\\t/g' -e 's//\\r/g'
 }
 
+invalid_message() {
+  case "$1" in
+    empty-input) zh_message="请输入一个选项编号。"; en_message="Enter one option number." ;;
+    invalid-format) zh_message="请输入有效的数字选项。"; en_message="Enter a valid numeric option." ;;
+    multiple-not-allowed) zh_message="每次只能选择一个选项。"; en_message="Choose only one option at a time." ;;
+    duplicate-option) zh_message="不能重复选择同一个选项。"; en_message="Do not repeat an option." ;;
+    unknown-option) zh_message="该选项不存在，请重新选择。"; en_message="That option is not available. Choose again." ;;
+    empty-custom-description) zh_message="请描述你希望使用的 CLI 或模型。"; en_message="Describe the CLI or model you want to use." ;;
+    invalid-custom-description) zh_message="自定义描述格式无效，请使用普通文本重新描述。"; en_message="The custom description is invalid. Describe it again using plain text." ;;
+    *) zh_message="当前输入无效，请重新回答。"; en_message="The current input is invalid. Answer again." ;;
+  esac
+  if [ "$locale" = zh-CN ] || [ "$locale" = zh ]; then printf '%s' "$zh_message"; else printf '%s' "$en_message"; fi
+}
+
+emit_invalid() {
+  invalid_reason="$1"
+  printf '{"status":"invalid","reason":"%s","message":"%s"}\n' \
+    "$(json_escape "$invalid_reason")" "$(json_escape "$(invalid_message "$invalid_reason")")"
+}
+
 write_value() {
   key="$1"
   value="$2"
@@ -242,11 +262,11 @@ emit_choice() {
   discover_options "$role"
   revision="$(read_value revision)"
   if [ "$locale" = zh-CN ] || [ "$locale" = zh ]; then
-    if [ "$role" = executor ]; then prompt="请选择 Executor："; else prompt="请选择 Reviewer："; fi
-    if [ "$mode" = modify ]; then context="正在重新配置 EngiFoundry；完成全部问题前，当前配置保持生效。"; else context=""; fi
+    if [ "$role" = executor ]; then prompt="请选择参与协作执行的 Agent CLI："; else prompt="请选择参与独立审查的 Agent CLI："; fi
+    if [ "$mode" = modify ]; then context="这是 EngiFoundry 配置修改流程；提交最后一个答案前，当前配置保持生效。"; else context=""; fi
   else
-    if [ "$role" = executor ]; then prompt="Choose the Executor:"; else prompt="Choose the Reviewer:"; fi
-    if [ "$mode" = modify ]; then context="The current configuration remains active until every question is complete."; else context=""; fi
+    if [ "$role" = executor ]; then prompt="Choose the Agent CLI that will collaborate on execution:"; else prompt="Choose the Agent CLI that will perform independent review:"; fi
+    if [ "$mode" = modify ]; then context="This is the EngiFoundry configuration update flow. The current configuration remains active until the final answer is submitted."; else context=""; fi
   fi
   printf '{"schemaVersion":1,"status":"question","mode":"%s","revision":%s,"question":{"id":"%s.choice","kind":"single-choice","prompt":"%s","context":"%s","options":' \
     "$mode" "$revision" "$role" "$(json_escape "$prompt")" "$(json_escape "$context")"
@@ -285,16 +305,16 @@ emit_workflow() {
   if [ "$workflow_phase" = automation ]; then
     question_id="workflow.automation"
     if [ "$locale" = zh-CN ] || [ "$locale" = zh ]; then
-      prompt="请选择自动化模式："; labels='每个 Job 和最终验证均需审批|仅最终验证需审批|全自动'
+      prompt="请选择任务流程的自动化程度："; labels='逐项审批（每个 Job Review 结果及最终 PAK Verify 结果都需要审批）|仅最终审批（自动推进 Job Review，只在 Deliver 前审批最终 PAK Verify 结果，推荐）|全自动（自动推进 Job Review、PAK Verify 和 Deliver）'
     else
-      prompt="Choose the automation mode:"; labels='Approve every Job and final verification|Approve final verification only|Full auto'
+      prompt="Choose how automatically the task workflow should advance:"; labels='Approve each step (approve every Job Review result and the final PAK Verify result)|Final approval only (advance through Job Review automatically and approve the final PAK Verify result before Deliver; recommended)|Full auto (advance through Job Review, PAK Verify, and Deliver automatically)'
     fi
   else
     question_id="workflow.action-preference"
     if [ "$locale" = zh-CN ] || [ "$locale" = zh ]; then
-      prompt="请选择行动偏好："; labels='优先创建 Package|平衡模式|优先直接执行'
+      prompt="请选择你偏好的任务处理方式："; labels='优先创建 Package（除机械、琐碎修改外，所有行动都创建 Package）|平衡模式（多步骤、跨模块、边界不清、委派或有显著风险时创建 Package，推荐）|优先直接执行（明确且可控时直接执行；无法可靠控制范围、风险或交付质量时仍创建 Package）'
     else
-      prompt="Choose the action preference:"; labels='Package first|Balanced|Direct first'
+      prompt="Choose your preferred way to handle tasks:"; labels='Package first (create a Package for every action except mechanical, trivial changes)|Balanced (create a Package for multi-step, cross-module, unclear, delegated, or meaningfully risky work; recommended)|Direct first (act directly on clear, controlled work, but still create a Package when scope, risk, or delivery quality cannot be controlled reliably)'
     fi
   fi
   old_ifs=$IFS; IFS='|'; set -- $labels; IFS=$old_ifs
@@ -315,9 +335,9 @@ emit_notice_choice() {
   discover_options "$role"
   revision="$(read_value revision)"
   if [ "$locale" = zh-CN ] || [ "$locale" = zh ]; then
-    if [ "$role" = executor ]; then prompt="请选择 Executor："; else prompt="请选择 Reviewer："; fi
+    if [ "$role" = executor ]; then prompt="请选择参与协作执行的 Agent CLI："; else prompt="请选择参与独立审查的 Agent CLI："; fi
   else
-    if [ "$role" = executor ]; then prompt="Choose the Executor:"; else prompt="Choose the Reviewer:"; fi
+    if [ "$role" = executor ]; then prompt="Choose the Agent CLI that will collaborate on execution:"; else prompt="Choose the Agent CLI that will perform independent review:"; fi
   fi
   printf '{"schemaVersion":1,"status":"question","mode":"%s","revision":%s,"notice":{"level":"warning","message":"%s"},"question":{"id":"%s.choice","kind":"single-choice","prompt":"%s","context":"","options":' \
     "$mode" "$revision" "$(json_escape "$message")" "$role" "$(json_escape "$prompt")"
@@ -336,7 +356,11 @@ emit_current() {
     reviewer-resolve) emit_agent_action reviewer ;;
     automation) emit_workflow automation ;;
     action-preference) emit_workflow action-preference ;;
-    complete) printf '{"schemaVersion":1,"status":"complete","mode":"%s"}\n' "$mode" ;;
+    complete)
+      printf '{"schemaVersion":1,"status":"complete","mode":"%s","completion":{"lines":["%s","%s","%s","%s"],"message":"%s"}}\n' \
+        "$mode" "$(json_escape "$(read_value completion-line1)")" "$(json_escape "$(read_value completion-line2)")" \
+        "$(json_escape "$(read_value completion-line3)")" "$(json_escape "$(read_value completion-line4)")" \
+        "$(json_escape "$(read_value completion-message)")" ;;
     cancelled) printf '{"schemaVersion":1,"status":"cancelled","mode":"%s"}\n' "$mode" ;;
     *) printf '%s\n' '{"status":"error","reason":"invalid-configurator-state"}'; exit 2 ;;
   esac
@@ -369,7 +393,15 @@ validate_choice() {
   result="$(sh "$verifier" --source "$source_ids" --selection single --user-input "$user_input")"
   result_status=$?
   set -e
-  if [ "$result_status" -ne 0 ]; then printf '%s\n' "$result"; exit "$result_status"; fi
+  if [ "$result_status" -ne 0 ]; then
+    if [ "$result_status" -eq 1 ]; then
+      reason="$(printf '%s' "$result" | sed -n 's/.*"reason":"\([^"]*\)".*/\1/p')"
+      emit_invalid "${reason:-invalid-input}"
+    else
+      printf '%s\n' "$result"
+    fi
+    exit "$result_status"
+  fi
   printf '%s' "$result" | sed -n 's/.*"normalizedInput":"\([0-9]*\)".*/\1/p'
 }
 
@@ -400,7 +432,40 @@ commit_configuration() {
   if [ "$mode" = initialize ]; then mv "$initialization_tmp" "$data_root/initialization.json"; fi
   write_value phase complete
   increment_revision
-  printf '{"schemaVersion":1,"status":"complete","mode":"%s"}\n' "$mode"
+  executor_label="$(read_value executor-label)"; reviewer_label="$(read_value reviewer-label)"
+  if [ "$locale" = zh-CN ] || [ "$locale" = zh ]; then
+    case "$automation_mode" in
+      job-approval) automation_label='逐项审批（每个 Job Review 结果及最终 PAK Verify 结果都需要审批）' ;;
+      package-approval) automation_label='仅最终审批（自动推进 Job Review，只在 Deliver 前审批最终 PAK Verify 结果，推荐）' ;;
+      full-auto) automation_label='全自动（自动推进 Job Review、PAK Verify 和 Deliver）' ;;
+    esac
+    case "$action_preference" in
+      package-first) action_label='优先创建 Package（除机械、琐碎修改外，所有行动都创建 Package）' ;;
+      balanced) action_label='平衡模式（多步骤、跨模块、边界不清、委派或有显著风险时创建 Package，推荐）' ;;
+      direct-first) action_label='优先直接执行（明确且可控时直接执行；无法可靠控制范围、风险或交付质量时仍创建 Package）' ;;
+    esac
+    line1="协作执行 Agent CLI：$executor_label"; line2="独立审查 Agent CLI：$reviewer_label"
+    line3="任务流程自动化程度：$automation_label"; line4="任务处理方式：$action_label"
+    if [ "$mode" = initialize ]; then completion_message='🎉 EngiFoundry 初始化完成。'; else completion_message='EngiFoundry 配置修改完成。'; fi
+  else
+    case "$automation_mode" in
+      job-approval) automation_label='Approve each step (approve every Job Review result and the final PAK Verify result)' ;;
+      package-approval) automation_label='Final approval only (advance through Job Review automatically and approve the final PAK Verify result before Deliver; recommended)' ;;
+      full-auto) automation_label='Full auto (advance through Job Review, PAK Verify, and Deliver automatically)' ;;
+    esac
+    case "$action_preference" in
+      package-first) action_label='Package first (create a Package for every action except mechanical, trivial changes)' ;;
+      balanced) action_label='Balanced (create a Package for multi-step, cross-module, unclear, delegated, or meaningfully risky work; recommended)' ;;
+      direct-first) action_label='Direct first (act directly on clear, controlled work, but still create a Package when scope, risk, or delivery quality cannot be controlled reliably)' ;;
+    esac
+    line1="Execution Agent CLI: $executor_label"; line2="Independent Review Agent CLI: $reviewer_label"
+    line3="Workflow automation: $automation_label"; line4="Task handling: $action_label"
+    if [ "$mode" = initialize ]; then completion_message='🎉 EngiFoundry initialization is complete.'; else completion_message='EngiFoundry configuration update is complete.'; fi
+  fi
+  write_value completion-line1 "$line1"; write_value completion-line2 "$line2"
+  write_value completion-line3 "$line3"; write_value completion-line4 "$line4"
+  write_value completion-message "$completion_message"
+  emit_current
 }
 
 if [ "$action" = status ]; then emit_current; exit 0; fi
@@ -435,9 +500,9 @@ if [ "$action" = answer ]; then
     executor-custom|reviewer-custom)
       role="${phase%%-*}"
       trimmed="$(printf '%s' "$user_input" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-      if [ -z "$trimmed" ]; then printf '%s\n' '{"status":"invalid","reason":"empty-custom-description"}'; exit 1; fi
+      if [ -z "$trimmed" ]; then emit_invalid empty-custom-description; exit 1; fi
       if [ "${#user_input}" -gt 500 ] || printf '%s' "$user_input" | LC_ALL=C grep -q '[[:cntrl:]]'; then
-        printf '%s\n' '{"status":"invalid","reason":"invalid-custom-description"}'; exit 1
+        emit_invalid invalid-custom-description; exit 1
       fi
       write_value "$role-original" "$user_input"
       write_value phase "$role-resolve"
@@ -445,24 +510,30 @@ if [ "$action" = answer ]; then
       emit_current
       ;;
     automation)
-      result="$(sh "$verifier" --source 1,2,3 --selection single --user-input "$user_input")" || { status=$?; printf '%s\n' "$result"; exit "$status"; }
+      set +e
+      result="$(sh "$verifier" --source 1,2,3 --selection single --user-input "$user_input")"; status=$?
+      set -e
+      if [ "$status" -ne 0 ]; then reason="$(printf '%s' "$result" | sed -n 's/.*"reason":"\([^"]*\)".*/\1/p')"; emit_invalid "${reason:-invalid-input}"; exit "$status"; fi
       selected="$(printf '%s' "$result" | sed -n 's/.*"normalizedInput":"\([0-9]*\)".*/\1/p')"
       case "$selected" in 1) value=job-approval ;; 2) value=package-approval ;; 3) value=full-auto ;; esac
       write_value automation-mode "$value"; write_value phase action-preference; increment_revision; emit_current
       ;;
     action-preference)
-      result="$(sh "$verifier" --source 1,2,3 --selection single --user-input "$user_input")" || { status=$?; printf '%s\n' "$result"; exit "$status"; }
+      set +e
+      result="$(sh "$verifier" --source 1,2,3 --selection single --user-input "$user_input")"; status=$?
+      set -e
+      if [ "$status" -ne 0 ]; then reason="$(printf '%s' "$result" | sed -n 's/.*"reason":"\([^"]*\)".*/\1/p')"; emit_invalid "${reason:-invalid-input}"; exit "$status"; fi
       selected="$(printf '%s' "$result" | sed -n 's/.*"normalizedInput":"\([0-9]*\)".*/\1/p')"
       case "$selected" in 1) value=package-first ;; 2) value=balanced ;; 3) value=direct-first ;; esac
       write_value action-preference "$value"; commit_configuration
       ;;
-    *) printf '%s\n' '{"status":"invalid","reason":"answer-not-expected"}'; exit 1 ;;
+    *) emit_invalid answer-not-expected; exit 1 ;;
   esac
   exit 0
 fi
 
 if [ "$action" = resolve ]; then
-  case "$phase" in executor-resolve|reviewer-resolve) role="${phase%%-*}" ;; *) printf '%s\n' '{"status":"invalid","reason":"resolution-not-expected"}'; exit 1 ;; esac
+  case "$phase" in executor-resolve|reviewer-resolve) role="${phase%%-*}" ;; *) emit_invalid resolution-not-expected; exit 1 ;; esac
   case "$resolution_status" in
     unconfirmed)
       write_value phase "$role-choice"
@@ -474,10 +545,10 @@ if [ "$action" = resolve ]; then
       if ! printf '%s' "$executor_id" | grep -Eq '^[A-Za-z0-9._:/+@-]+$' || \
          ! printf '%s' "$resolved_command" | grep -Eq '^[A-Za-z0-9._:/+@-]+$' || \
          [ -z "$resolved_label" ] || [ -z "$resolved_usage" ]; then
-        printf '%s\n' '{"status":"invalid","reason":"invalid-resolution"}'; exit 1
+        emit_invalid invalid-resolution; exit 1
       fi
       if [ -n "$resolved_model" ] && ! printf '%s' "$resolved_model" | grep -Eq '^[A-Za-z0-9._:/+@-]+$'; then
-        printf '%s\n' '{"status":"invalid","reason":"invalid-model-id"}'; exit 1
+        emit_invalid invalid-model-id; exit 1
       fi
       write_value "$role-id" "$executor_id"; write_value "$role-label" "$resolved_label"
       write_value "$role-command" "$resolved_command"; write_value "$role-model" "$resolved_model"
@@ -486,6 +557,6 @@ if [ "$action" = resolve ]; then
       increment_revision
       emit_current
       ;;
-    *) printf '%s\n' '{"status":"invalid","reason":"missing-resolution-status"}'; exit 1 ;;
+    *) emit_invalid missing-resolution-status; exit 1 ;;
   esac
 fi

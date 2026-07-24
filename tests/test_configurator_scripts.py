@@ -21,6 +21,9 @@ class ConfiguratorScriptsTests(unittest.TestCase):
         self.assertIn("Submit the complete reply unchanged", content)
         self.assertIn("resolve-and-probe-cli", content)
         self.assertIn("A modification request always restarts the same complete four-question flow", content)
+        self.assertIn("emit no model-authored conversational text", content)
+        for narration in ("I should…", "I will…", "I’m…", "正在……", "接下来……", "已完成……"):
+            self.assertIn(narration, content)
         for obsolete in ("executor.sh", "executor.ps1", "workflow.sh", "workflow.ps1", "state.sh", "state.ps1"):
             self.assertFalse((SCRIPTS / obsolete).exists())
             self.assertNotIn(obsolete, content)
@@ -78,6 +81,7 @@ class ConfiguratorScriptsTests(unittest.TestCase):
             state = self.run_configure(project, env=env)
             self.assertEqual(state["question"]["id"], "executor.choice")
             self.assertEqual(state["question"]["kind"], "single-choice")
+            self.assertEqual(state["question"]["prompt"], "请选择参与协作执行的 Agent CLI：")
             self.assertEqual(
                 [option["label"] for option in state["question"]["options"]],
                 ["Codex", "Kimi", "Cursor", "自定义"],
@@ -88,6 +92,7 @@ class ConfiguratorScriptsTests(unittest.TestCase):
                 project, "answer", "--user-input", "1,2", env=env, expected=1
             )
             self.assertEqual(invalid["reason"], "multiple-not-allowed")
+            self.assertEqual(invalid["message"], "每次只能选择一个选项。")
             self.assertEqual(self.run_configure(project, env=env)["question"]["id"], "executor.choice")
 
             state = self.run_configure(project, "answer", "--user-input", "4", env=env)
@@ -131,11 +136,26 @@ class ConfiguratorScriptsTests(unittest.TestCase):
                 project, "answer", "--user-input", str(inherited["displayNumber"]), env=env
             )
             self.assertEqual(state["question"]["id"], "workflow.automation")
+            automation_labels = [option["label"] for option in state["question"]["options"]]
+            self.assertTrue(all("（" in label and "）" in label for label in automation_labels))
+            self.assertIn("Job Review", automation_labels[0])
+            self.assertIn("推荐", automation_labels[1])
+            self.assertIn("Deliver", automation_labels[2])
             state = self.run_configure(project, "answer", "--user-input", "2", env=env)
             self.assertEqual(state["question"]["id"], "workflow.action-preference")
+            action_labels = [option["label"] for option in state["question"]["options"]]
+            self.assertTrue(all("（" in label and "）" in label for label in action_labels))
+            self.assertIn("机械、琐碎修改", action_labels[0])
+            self.assertIn("跨模块", action_labels[1])
+            self.assertIn("交付质量", action_labels[2])
             state = self.run_configure(project, "answer", "--user-input", "2", env=env)
             self.assertEqual(state["status"], "complete")
             self.assertEqual(state["mode"], "initialize")
+            self.assertEqual(state["completion"]["message"], "🎉 EngiFoundry 初始化完成。")
+            self.assertEqual(len(state["completion"]["lines"]), 4)
+            self.assertIn("协作执行 Agent CLI", state["completion"]["lines"][0])
+            resumed = self.run_configure(project, env=env)
+            self.assertEqual(resumed["completion"], state["completion"])
 
             value = json.loads((project / ".engifoundry" / "executors.json").read_text())
             self.assertEqual(value["executor"]["model"], "gpt-5.3-codex-spark")
@@ -197,6 +217,7 @@ class ConfiguratorScriptsTests(unittest.TestCase):
             state = self.run_configure(project, "answer", "--user-input", "1", env=env)
             self.assertEqual(state["status"], "complete")
             self.assertEqual(state["mode"], "modify")
+            self.assertEqual(state["completion"]["message"], "EngiFoundry 配置修改完成。")
             value = json.loads((project / ".engifoundry" / "executors.json").read_text())
             self.assertEqual(value["executor"]["executorId"], "kimi-cli")
             self.assertEqual((project / ".engifoundry" / "initialization.json").read_text(), initialization_before)
@@ -213,6 +234,7 @@ class ConfiguratorScriptsTests(unittest.TestCase):
                 project, "answer", "--user-input", "   ", env=env, expected=1
             )
             self.assertEqual(invalid["reason"], "empty-custom-description")
+            self.assertEqual(invalid["message"], "请描述你希望使用的 CLI 或模型。")
 
     def test_hidden_probe_still_supports_pinned_models(self):
         with tempfile.TemporaryDirectory() as bin_tmp:

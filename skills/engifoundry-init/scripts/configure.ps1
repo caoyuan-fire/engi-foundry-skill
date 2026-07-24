@@ -28,6 +28,37 @@ function Emit-Json {
   exit $Code
 }
 
+function Get-InvalidMessage {
+  param([string]$Reason)
+  $zh = switch ($Reason) {
+    "empty-input" { "请输入一个选项编号。" }
+    "invalid-format" { "请输入有效的数字选项。" }
+    "multiple-not-allowed" { "每次只能选择一个选项。" }
+    "duplicate-option" { "不能重复选择同一个选项。" }
+    "unknown-option" { "该选项不存在，请重新选择。" }
+    "empty-custom-description" { "请描述你希望使用的 CLI 或模型。" }
+    "invalid-custom-description" { "自定义描述格式无效，请使用普通文本重新描述。" }
+    default { "当前输入无效，请重新回答。" }
+  }
+  $en = switch ($Reason) {
+    "empty-input" { "Enter one option number." }
+    "invalid-format" { "Enter a valid numeric option." }
+    "multiple-not-allowed" { "Choose only one option at a time." }
+    "duplicate-option" { "Do not repeat an option." }
+    "unknown-option" { "That option is not available. Choose again." }
+    "empty-custom-description" { "Describe the CLI or model you want to use." }
+    "invalid-custom-description" { "The custom description is invalid. Describe it again using plain text." }
+    default { "The current input is invalid. Answer again." }
+  }
+  if ($Locale -like "zh*") { return $zh }
+  return $en
+}
+
+function Emit-Invalid {
+  param([string]$Reason)
+  Emit-Json ([ordered]@{ status = "invalid"; reason = $Reason; message = Get-InvalidMessage $Reason }) 1
+}
+
 if (-not (Test-Path -LiteralPath $ProjectRoot -PathType Container)) {
   Emit-Json ([ordered]@{ status = "error"; reason = "invalid-project-root" }) 2
 }
@@ -103,7 +134,7 @@ if ($InitModify) {
   $State = New-State "modify"
 }
 elseif (Test-Path -LiteralPath $StateFile -PathType Leaf) {
-  $State = ConvertTo-OrderedMap (Get-Content -LiteralPath $StateFile -Raw | ConvertFrom-Json)
+  $State = ConvertTo-OrderedMap (Get-Content -LiteralPath $StateFile -Raw -Encoding UTF8 | ConvertFrom-Json)
 }
 else {
   $State = New-State "initialize"
@@ -190,13 +221,13 @@ function Emit-Choice {
   param([string]$Role, [string]$Warning = "")
   $options = Get-Options $Role
   $prompt = if ($Locale -like "zh*") {
-    if ($Role -eq "executor") { "请选择 Executor：" } else { "请选择 Reviewer：" }
+    if ($Role -eq "executor") { "请选择参与协作执行的 Agent CLI：" } else { "请选择参与独立审查的 Agent CLI：" }
   } else {
-    if ($Role -eq "executor") { "Choose the Executor:" } else { "Choose the Reviewer:" }
+    if ($Role -eq "executor") { "Choose the Agent CLI that will collaborate on execution:" } else { "Choose the Agent CLI that will perform independent review:" }
   }
   $context = if ($State.mode -eq "modify") {
-    if ($Locale -like "zh*") { "正在重新配置 EngiFoundry；完成全部问题前，当前配置保持生效。" }
-    else { "The current configuration remains active until every question is complete." }
+    if ($Locale -like "zh*") { "这是 EngiFoundry 配置修改流程；提交最后一个答案前，当前配置保持生效。" }
+    else { "This is the EngiFoundry configuration update flow. The current configuration remains active until the final answer is submitted." }
   } else { "" }
   $value = [ordered]@{
     schemaVersion = 1; status = "question"; mode = $State.mode; revision = $State.revision
@@ -236,12 +267,12 @@ function Emit-Workflow {
   param([string]$Phase)
   if ($Phase -eq "automation") {
     $id = "workflow.automation"
-    $prompt = if ($Locale -like "zh*") { "请选择自动化模式：" } else { "Choose the automation mode:" }
-    $labels = if ($Locale -like "zh*") { @("每个 Job 和最终验证均需审批", "仅最终验证需审批", "全自动") } else { @("Approve every Job and final verification", "Approve final verification only", "Full auto") }
+    $prompt = if ($Locale -like "zh*") { "请选择任务流程的自动化程度：" } else { "Choose how automatically the task workflow should advance:" }
+    $labels = if ($Locale -like "zh*") { @("逐项审批（每个 Job Review 结果及最终 PAK Verify 结果都需要审批）", "仅最终审批（自动推进 Job Review，只在 Deliver 前审批最终 PAK Verify 结果，推荐）", "全自动（自动推进 Job Review、PAK Verify 和 Deliver）") } else { @("Approve each step (approve every Job Review result and the final PAK Verify result)", "Final approval only (advance through Job Review automatically and approve the final PAK Verify result before Deliver; recommended)", "Full auto (advance through Job Review, PAK Verify, and Deliver automatically)") }
   } else {
     $id = "workflow.action-preference"
-    $prompt = if ($Locale -like "zh*") { "请选择行动偏好：" } else { "Choose the action preference:" }
-    $labels = if ($Locale -like "zh*") { @("优先创建 Package", "平衡模式", "优先直接执行") } else { @("Package first", "Balanced", "Direct first") }
+    $prompt = if ($Locale -like "zh*") { "请选择你偏好的任务处理方式：" } else { "Choose your preferred way to handle tasks:" }
+    $labels = if ($Locale -like "zh*") { @("优先创建 Package（除机械、琐碎修改外，所有行动都创建 Package）", "平衡模式（多步骤、跨模块、边界不清、委派或有显著风险时创建 Package，推荐）", "优先直接执行（明确且可控时直接执行；无法可靠控制范围、风险或交付质量时仍创建 Package）") } else { @("Package first (create a Package for every action except mechanical, trivial changes)", "Balanced (create a Package for multi-step, cross-module, unclear, delegated, or meaningfully risky work; recommended)", "Direct first (act directly on clear, controlled work, but still create a Package when scope, risk, or delivery quality cannot be controlled reliably)") }
   }
   $options = for ($index = 0; $index -lt 3; $index++) {
     [ordered]@{ id = "$($index + 1)"; displayNumber = $index + 1; label = $labels[$index]; behavior = "select-value" }
@@ -262,7 +293,7 @@ function Emit-Current {
     "reviewer-resolve" { Emit-AgentAction "reviewer" }
     "automation" { Emit-Workflow "automation" }
     "action-preference" { Emit-Workflow "action-preference" }
-    "complete" { Emit-Json ([ordered]@{ schemaVersion = 1; status = "complete"; mode = $State.mode }) }
+    "complete" { Emit-Json ([ordered]@{ schemaVersion = 1; status = "complete"; mode = $State.mode; completion = $State.completion }) }
     "cancelled" { Emit-Json ([ordered]@{ schemaVersion = 1; status = "cancelled"; mode = $State.mode }) }
     default { Emit-Json ([ordered]@{ status = "error"; reason = "invalid-configurator-state" }) 2 }
   }
@@ -273,7 +304,15 @@ function Read-SingleChoice {
   $source = (1..$Count) -join ","
   $powerShell = (Get-Process -Id $PID).Path
   $result = & $powerShell -NoProfile -ExecutionPolicy Bypass -File $Verifier -Source $source -Selection single -UserInput $UserInput
-  if ($LASTEXITCODE -ne 0) { Write-Output $result; exit $LASTEXITCODE }
+  $verificationCode = $LASTEXITCODE
+  if ($verificationCode -ne 0) {
+    if ($verificationCode -eq 1) {
+      $invalid = $result | ConvertFrom-Json
+      Emit-Invalid $invalid.reason
+    }
+    Write-Output $result
+    exit $verificationCode
+  }
   return [int](($result | ConvertFrom-Json).normalizedInput)
 }
 
@@ -312,7 +351,47 @@ function Commit-Configuration {
     [IO.File]::WriteAllText((Join-Path $DataRoot "initialization.json"), (($initialization | ConvertTo-Json -Depth 10) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
   }
   $State.phase = "complete"; $State.revision++; Save-State $State
-  Emit-Json ([ordered]@{ schemaVersion = 1; status = "complete"; mode = $State.mode })
+  if ($Locale -like "zh*") {
+    $automationLabel = switch ($State.automationMode) {
+      "job-approval" { "逐项审批（每个 Job Review 结果及最终 PAK Verify 结果都需要审批）" }
+      "package-approval" { "仅最终审批（自动推进 Job Review，只在 Deliver 前审批最终 PAK Verify 结果，推荐）" }
+      "full-auto" { "全自动（自动推进 Job Review、PAK Verify 和 Deliver）" }
+    }
+    $actionLabel = switch ($State.actionPreference) {
+      "package-first" { "优先创建 Package（除机械、琐碎修改外，所有行动都创建 Package）" }
+      "balanced" { "平衡模式（多步骤、跨模块、边界不清、委派或有显著风险时创建 Package，推荐）" }
+      "direct-first" { "优先直接执行（明确且可控时直接执行；无法可靠控制范围、风险或交付质量时仍创建 Package）" }
+    }
+    $lines = @(
+      "协作执行 Agent CLI：$($State.executor.label)",
+      "独立审查 Agent CLI：$($State.reviewer.label)",
+      "任务流程自动化程度：$automationLabel",
+      "任务处理方式：$actionLabel"
+    )
+    $message = if ($State.mode -eq "initialize") { "🎉 EngiFoundry 初始化完成。" } else { "EngiFoundry 配置修改完成。" }
+  }
+  else {
+    $automationLabel = switch ($State.automationMode) {
+      "job-approval" { "Approve each step (approve every Job Review result and the final PAK Verify result)" }
+      "package-approval" { "Final approval only (advance through Job Review automatically and approve the final PAK Verify result before Deliver; recommended)" }
+      "full-auto" { "Full auto (advance through Job Review, PAK Verify, and Deliver automatically)" }
+    }
+    $actionLabel = switch ($State.actionPreference) {
+      "package-first" { "Package first (create a Package for every action except mechanical, trivial changes)" }
+      "balanced" { "Balanced (create a Package for multi-step, cross-module, unclear, delegated, or meaningfully risky work; recommended)" }
+      "direct-first" { "Direct first (act directly on clear, controlled work, but still create a Package when scope, risk, or delivery quality cannot be controlled reliably)" }
+    }
+    $lines = @(
+      "Execution Agent CLI: $($State.executor.label)",
+      "Independent Review Agent CLI: $($State.reviewer.label)",
+      "Workflow automation: $automationLabel",
+      "Task handling: $actionLabel"
+    )
+    $message = if ($State.mode -eq "initialize") { "🎉 EngiFoundry initialization is complete." } else { "EngiFoundry configuration update is complete." }
+  }
+  $State["completion"] = [ordered]@{ lines = $lines; message = $message }
+  Save-State $State
+  Emit-Current
 }
 
 if ($Action -eq "status") { Emit-Current }
@@ -340,8 +419,8 @@ if ($Action -eq "answer") {
       $State.revision++; Save-State $State; Emit-Current
     }
     { $_ -in @("executor-custom", "reviewer-custom") } {
-      if ([string]::IsNullOrWhiteSpace($UserInput)) { Emit-Json ([ordered]@{ status = "invalid"; reason = "empty-custom-description" }) 1 }
-      if ($UserInput.Length -gt 500 -or $UserInput -match "[\x00-\x1F\x7F]") { Emit-Json ([ordered]@{ status = "invalid"; reason = "invalid-custom-description" }) 1 }
+      if ([string]::IsNullOrWhiteSpace($UserInput)) { Emit-Invalid "empty-custom-description" }
+      if ($UserInput.Length -gt 500 -or $UserInput -match "[\x00-\x1F\x7F]") { Emit-Invalid "invalid-custom-description" }
       $role = ($State.phase -split "-")[0]
       $State.customDescription = $UserInput; $State.phase = "$role-resolve"; $State.revision++
       Save-State $State; Emit-Current
@@ -356,13 +435,13 @@ if ($Action -eq "answer") {
       $State.actionPreference = @("package-first", "balanced", "direct-first")[$selected - 1]
       Commit-Configuration
     }
-    default { Emit-Json ([ordered]@{ status = "invalid"; reason = "answer-not-expected" }) 1 }
+    default { Emit-Invalid "answer-not-expected" }
   }
 }
 
 if ($Action -eq "resolve") {
   if ($State.phase -notin @("executor-resolve", "reviewer-resolve")) {
-    Emit-Json ([ordered]@{ status = "invalid"; reason = "resolution-not-expected" }) 1
+    Emit-Invalid "resolution-not-expected"
   }
   $role = ($State.phase -split "-")[0]
   if ($ResolutionStatus -eq "unconfirmed") {
@@ -370,11 +449,11 @@ if ($Action -eq "resolve") {
     $warning = if ($Locale -like "zh*") { "刚刚输入的自定义 CLI 或模型无法确认可用，请重新选择。" } else { "The custom CLI or model could not be confirmed as available. Choose again." }
     Emit-Choice $role $warning
   }
-  if ($ResolutionStatus -ne "confirmed") { Emit-Json ([ordered]@{ status = "invalid"; reason = "missing-resolution-status" }) 1 }
+  if ($ResolutionStatus -ne "confirmed") { Emit-Invalid "missing-resolution-status" }
   if ($ExecutorId -notmatch '^[A-Za-z0-9._:/+@-]+$' -or $Command -notmatch '^[A-Za-z0-9._:/+@-]+$' -or [string]::IsNullOrWhiteSpace($Label) -or [string]::IsNullOrWhiteSpace($Usage)) {
-    Emit-Json ([ordered]@{ status = "invalid"; reason = "invalid-resolution" }) 1
+    Emit-Invalid "invalid-resolution"
   }
-  if ($Model -and $Model -notmatch '^[A-Za-z0-9._:/+@-]+$') { Emit-Json ([ordered]@{ status = "invalid"; reason = "invalid-model-id" }) 1 }
+  if ($Model -and $Model -notmatch '^[A-Za-z0-9._:/+@-]+$') { Emit-Invalid "invalid-model-id" }
   $State[$role] = [ordered]@{
     executorId = $ExecutorId; kind = "cli"; label = $Label; command = $Command
     modelMode = $(if ($Model) { "pinned" } else { "cli-default" }); model = $Model
