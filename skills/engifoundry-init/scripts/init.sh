@@ -50,6 +50,7 @@ root_config="$project_root/engifoundry.config.json"
 data_root="$project_root/.engifoundry"
 gitignore="$project_root/.gitignore"
 gitignore_rule=".engifoundry/packages/"
+cache_gitignore_rule=".engifoundry/cache/"
 
 check_scaffold() {
   check_root="$1"
@@ -58,6 +59,8 @@ check_scaffold() {
 
   for directory in \
     "$check_data" \
+    "$check_data/cache" \
+    "$check_data/contracts" \
     "$check_data/artifacts/plans" \
     "$check_data/artifacts/records" \
     "$check_data/artifacts/reviews" \
@@ -76,6 +79,7 @@ check_scaffold() {
     "$check_data/workspace.md" \
     "$check_data/initialization.json" \
     "$check_data/executors.json" \
+    "$check_data/contracts/executors.schema.json" \
     "$check_data/workflows.json"
   do
     if [ ! -s "$file" ]; then
@@ -87,6 +91,10 @@ check_scaffold() {
   check_gitignore="$check_root/.gitignore"
   if [ ! -f "$check_gitignore" ] || ! grep -Fqx "$gitignore_rule" "$check_gitignore"; then
     echo "missing .gitignore rule: $gitignore_rule" >&2
+    errors=1
+  fi
+  if [ ! -f "$check_gitignore" ] || ! grep -Fqx "$cache_gitignore_rule" "$check_gitignore"; then
+    echo "missing .gitignore rule: $cache_gitignore_rule" >&2
     errors=1
   fi
 
@@ -120,6 +128,7 @@ for template in \
   "$template_root/engifoundry.config.json" \
   "$template_root/initialization.json" \
   "$template_root/executors.json" \
+  "$template_root/executors.schema.json" \
   "$template_root/workflows.json"
 do
   if [ ! -s "$template" ]; then
@@ -157,6 +166,8 @@ trap cleanup EXIT HUP INT TERM
 
 staging_data="$staging/.engifoundry"
 mkdir -p \
+  "$staging_data/cache" \
+  "$staging_data/contracts" \
   "$staging_data/artifacts/plans" \
   "$staging_data/artifacts/records" \
   "$staging_data/artifacts/reviews" \
@@ -167,9 +178,10 @@ mkdir -p \
 cp "$workspace_template" "$staging_data/workspace.md"
 cp "$template_root/initialization.json" "$staging_data/initialization.json"
 cp "$template_root/executors.json" "$staging_data/executors.json"
+cp "$template_root/executors.schema.json" "$staging_data/contracts/executors.schema.json"
 cp "$template_root/workflows.json" "$staging_data/workflows.json"
 cp "$template_root/engifoundry.config.json" "$staging/engifoundry.config.json"
-printf '%s\n' "$gitignore_rule" > "$staging/.gitignore"
+printf '%s\n%s\n' "$gitignore_rule" "$cache_gitignore_rule" > "$staging/.gitignore"
 
 if ! check_scaffold "$staging"; then
   echo "status: failed"
@@ -179,15 +191,17 @@ fi
 mv "$staging_data" "$data_root"
 installed_data=1
 
-if [ ! -f "$gitignore" ] || ! grep -Fqx "$gitignore_rule" "$gitignore"; then
+if [ ! -f "$gitignore" ] || ! grep -Fqx "$gitignore_rule" "$gitignore" || ! grep -Fqx "$cache_gitignore_rule" "$gitignore"; then
   if [ -e "$gitignore" ]; then
     gitignore_existed=1
     cp "$gitignore" "$staging/gitignore.backup"
   fi
-  if [ -s "$gitignore" ]; then
-    printf '\n%s\n' "$gitignore_rule" >> "$gitignore"
-  else
-    printf '%s\n' "$gitignore_rule" > "$gitignore"
+  if ! grep -Fqx "$gitignore_rule" "$gitignore" 2>/dev/null; then
+    if [ -s "$gitignore" ]; then printf '\n' >> "$gitignore"; fi
+    printf '%s\n' "$gitignore_rule" >> "$gitignore"
+  fi
+  if ! grep -Fqx "$cache_gitignore_rule" "$gitignore" 2>/dev/null; then
+    printf '%s\n' "$cache_gitignore_rule" >> "$gitignore"
   fi
   gitignore_changed=1
 fi

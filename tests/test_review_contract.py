@@ -10,24 +10,24 @@ CONTRACT = ROOT / "skills" / "engifoundry-review" / "references" / "contracts.md
 class ReviewContractTests(unittest.TestCase):
     def test_review_requires_clean_context(self):
         content = SKILL.read_text()
-        self.assertIn("establishes a fresh context", content)
-        self.assertIn("must not have performed the reviewed work", content)
-        self.assertIn("same model is acceptable", content)
-        self.assertIn("independent of `executorOrder`", content)
+        self.assertIn("genuinely fresh context", content)
+        self.assertIn("did not perform the reviewed work", content)
+        self.assertIn("same model as the producer is acceptable", content)
 
-    def test_reviewer_selection_is_capability_driven(self):
+    def test_reviewer_selection_uses_complete_project_config(self):
         content = SKILL.read_text()
         self.assertIn("## Reviewer Selection", content)
+        self.assertIn("complete project-owned Executor configuration", content)
+        self.assertIn("complete schema referenced by its `schemaRef`", content)
+        self.assertIn("Use the configured `reviewer`", content)
         self.assertIn("inspect the complete primary subject and evidence", content)
-        self.assertIn("Prefer a host-native isolated subagent", content)
-        self.assertIn("prefer a mechanism independent from the producer", content)
-        self.assertIn("then the lower-overhead candidate", content)
+        self.assertIn("never replace it with a host-native subagent", content)
 
     def test_reviewer_fallback_does_not_enable_conclusion_shopping(self):
         content = SKILL.read_text()
-        self.assertIn("Fallback is valid only for objective unavailability", content)
+        self.assertIn("Objective unavailability before a conclusion", content)
         self.assertIn("`pass` and `rework-required` are conclusions", content)
-        self.assertIn("never repeat Review with another candidate to seek a preferred result", content)
+        self.assertIn("never repeat Review to seek a preferred result", content)
         self.assertIn("A new Review requires a changed subject", content)
 
     def test_review_is_rules_without_program_interface(self):

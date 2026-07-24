@@ -28,9 +28,9 @@ Other JSON files are historical content unless project facts prove they are cont
 
 ## Re-init Decision
 
-Use full Init interaction when Executor or Workflow preferences cannot be mapped confidently, legacy roots or hierarchy are inconsistent, a partial current scaffold conflicts with the legacy layout, or required configuration facts are missing. Do not ask the user to choose merely because migration exists; decide from inspected facts.
+Use full Init interaction when Executor, Reviewer, or Workflow preferences cannot be mapped confidently, legacy roots or hierarchy are inconsistent, a partial current scaffold conflicts with the legacy layout, or required configuration facts are missing. Schema-version-1 `executorOrder` contains no configured Reviewer and therefore requires the complete current four-question flow; do not invent a Reviewer or treat a former fallback entry as one. Do not ask the user to choose merely because migration exists; decide from inspected facts.
 
-When preferences are recoverable without guessing, rebuild `executors.json` and `workflows.json` from those facts and validate them. Advance initialization through the normal state script. Never mark initialization complete from an assumption.
+When every current preference is recoverable without guessing, rebuild `executors.json` and `workflows.json` from those facts and validate them against the current templates and referenced Executor schema. Never mark initialization complete from an assumption.
 
 Full re-init changes only how current preferences are established. It does not permit loss or rewriting of legacy outputs.
 

@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engifoundry.local/contracts/executors.schema.json",
+  "title": "EngiFoundry Executor and Reviewer Configuration",
+  "description": "Explains every Executor, Reviewer, and Gate field. Agents must read this complete contract together with executors.json before arranging execution or Review.",
+  "type": "object",
+  "required": ["schemaVersion", "schemaRef", "configured", "executor", "reviewer", "gate"],
+  "properties": {
+    "schemaVersion": {
+      "const": 2,
+      "description": "Version of the project-owned Executor and Reviewer configuration."
+    },
+    "schemaRef": {
+      "type": "string",
+      "description": "Project-relative path to this complete field contract."
+    },
+    "configured": {
+      "type": "boolean",
+      "description": "True only after the complete four-question configuration flow commits successfully."
+    },
+    "executor": {
+      "$ref": "#/$defs/cliSelection",
+      "description": "The single configured implementation Executor. There is no automatic Executor order or silent fallback list."
+    },
+    "reviewer": {
+      "$ref": "#/$defs/cliSelection",
+      "description": "The configured Reviewer mechanism. It is still eligible only when it starts in a genuinely fresh context, can inspect the complete subject and evidence, and did not produce the reviewed work."
+    },
+    "gate": {
+      "type": "object",
+      "description": "Mandatory execution gates. Every declared Gate is binding policy, not advice. An Agent must evaluate and obey every Gate before proceeding.",
+      "required": ["executorUnavailable"],
+      "properties": {
+        "executorUnavailable": {
+          "type": "object",
+          "description": "Facts that govern objective Executor unavailability. A missing command, failed authentication, unavailable pinned model, or inability to start the verified invocation activates this Gate. A completed invocation with failing tests or incorrect output is an execution failure, not unavailability.",
+          "required": ["action", "fallbackTarget", "decisionScope"],
+          "properties": {
+            "action": {
+              "const": "ask-user",
+              "description": "Stop the task and ask the user before any fallback. Never silently switch Executor."
+            },
+            "fallbackTarget": {
+              "const": "current-session",
+              "description": "The existing controlling Agent session may take over only after user approval."
+            },
+            "decisionScope": {
+              "const": "task",
+              "description": "Approval applies only to the current task and does not rewrite project configuration."
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "cliSelection": {
+      "type": ["object", "null"],
+      "required": ["executorId", "kind", "label", "command", "modelMode", "usage"],
+      "properties": {
+        "executorId": {
+          "type": "string",
+          "description": "Canonical stable identifier resolved for the CLI selection."
+        },
+        "kind": {
+          "const": "cli",
+          "description": "The configured selection is invoked through a CLI."
+        },
+        "label": {
+          "type": "string",
+          "description": "Canonical human-readable name confirmed during configuration."
+        },
+        "command": {
+          "type": "string",
+          "description": "Verified executable name. User free text is never executed directly."
+        },
+        "modelMode": {
+          "enum": ["cli-default", "pinned"],
+          "description": "Whether the CLI chooses its default model or receives an explicitly verified canonical model ID."
+        },
+        "model": {
+          "type": "string",
+          "description": "Canonical verified model ID. Required when modelMode is pinned."
+        },
+        "originalDescription": {
+          "type": "string",
+          "description": "Unchanged user description retained for a successfully resolved custom selection and displayed as a later Reviewer option when applicable."
+        },
+        "usage": {
+          "type": "string",
+          "description": "Verified non-interactive invocation template with a {prompt} placeholder and, when the CLI supports an explicit working-directory argument, a {workspace} placeholder. Invocation otherwise starts with the project root as its process working directory."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "modelMode": { "const": "pinned" } },
+            "required": ["modelMode"]
+          },
+          "then": { "required": ["model"] }
+        },
+        {
+          "if": {
+            "properties": { "modelMode": { "const": "cli-default" } },
+            "required": ["modelMode"]
+          },
+          "then": { "not": { "required": ["model"] } }
+        }
+      ],
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

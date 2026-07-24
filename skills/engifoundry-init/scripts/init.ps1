@@ -26,6 +26,7 @@ $RootConfig = Join-Path $ProjectRoot "engifoundry.config.json"
 $DataRoot = Join-Path $ProjectRoot ".engifoundry"
 $GitIgnore = Join-Path $ProjectRoot ".gitignore"
 $GitIgnoreRule = ".engifoundry/packages/"
+$CacheGitIgnoreRule = ".engifoundry/cache/"
 
 function Test-Scaffold {
   param([string]$Root)
@@ -34,6 +35,8 @@ function Test-Scaffold {
   $errors = @()
   $directories = @(
     $data,
+    (Join-Path $data "cache"),
+    (Join-Path $data "contracts"),
     (Join-Path $data "artifacts/plans"),
     (Join-Path $data "artifacts/records"),
     (Join-Path $data "artifacts/reviews"),
@@ -46,6 +49,7 @@ function Test-Scaffold {
     (Join-Path $data "workspace.md"),
     (Join-Path $data "initialization.json"),
     (Join-Path $data "executors.json"),
+    (Join-Path $data "contracts/executors.schema.json"),
     (Join-Path $data "workflows.json")
   )
 
@@ -66,6 +70,9 @@ function Test-Scaffold {
   $gitignore = Join-Path $Root ".gitignore"
   if (-not (Test-Path -LiteralPath $gitignore -PathType Leaf) -or -not ((Get-Content -LiteralPath $gitignore) -contains $GitIgnoreRule)) {
     $errors += "missing .gitignore rule: $GitIgnoreRule"
+  }
+  if (-not (Test-Path -LiteralPath $gitignore -PathType Leaf) -or -not ((Get-Content -LiteralPath $gitignore) -contains $CacheGitIgnoreRule)) {
+    $errors += "missing .gitignore rule: $CacheGitIgnoreRule"
   }
   return $errors
 }
@@ -93,6 +100,7 @@ $templates = @(
   (Join-Path $TemplateRoot "engifoundry.config.json"),
   (Join-Path $TemplateRoot "initialization.json"),
   (Join-Path $TemplateRoot "executors.json"),
+  (Join-Path $TemplateRoot "executors.schema.json"),
   (Join-Path $TemplateRoot "workflows.json")
 )
 foreach ($template in $templates) {
@@ -115,6 +123,8 @@ try {
   $StagingData = Join-Path $Staging ".engifoundry"
   @(
     "artifacts/plans",
+    "cache",
+    "contracts",
     "artifacts/records",
     "artifacts/reviews",
     "artifacts/verification",
@@ -127,9 +137,10 @@ try {
   Copy-Item -LiteralPath $WorkspaceTemplate -Destination (Join-Path $StagingData "workspace.md")
   Copy-Item -LiteralPath (Join-Path $TemplateRoot "initialization.json") -Destination (Join-Path $StagingData "initialization.json")
   Copy-Item -LiteralPath (Join-Path $TemplateRoot "executors.json") -Destination (Join-Path $StagingData "executors.json")
+  Copy-Item -LiteralPath (Join-Path $TemplateRoot "executors.schema.json") -Destination (Join-Path $StagingData "contracts/executors.schema.json")
   Copy-Item -LiteralPath (Join-Path $TemplateRoot "workflows.json") -Destination (Join-Path $StagingData "workflows.json")
   Copy-Item -LiteralPath (Join-Path $TemplateRoot "engifoundry.config.json") -Destination (Join-Path $Staging "engifoundry.config.json")
-  [IO.File]::WriteAllText((Join-Path $Staging ".gitignore"), "$GitIgnoreRule$([Environment]::NewLine)", [Text.UTF8Encoding]::new($false))
+  [IO.File]::WriteAllText((Join-Path $Staging ".gitignore"), "$GitIgnoreRule$([Environment]::NewLine)$CacheGitIgnoreRule$([Environment]::NewLine)", [Text.UTF8Encoding]::new($false))
 
   $errors = @(Test-Scaffold -Root $Staging)
   if ($errors.Count -gt 0) {
@@ -141,7 +152,7 @@ try {
   Move-Item -LiteralPath $StagingData -Destination $DataRoot
   $InstalledData = $true
 
-  if (-not (Test-Path -LiteralPath $GitIgnore -PathType Leaf) -or -not ((Get-Content -LiteralPath $GitIgnore) -contains $GitIgnoreRule)) {
+  if (-not (Test-Path -LiteralPath $GitIgnore -PathType Leaf) -or -not ((Get-Content -LiteralPath $GitIgnore) -contains $GitIgnoreRule) -or -not ((Get-Content -LiteralPath $GitIgnore) -contains $CacheGitIgnoreRule)) {
     if (Test-Path -LiteralPath $GitIgnore) {
       $GitIgnoreExisted = $true
       Copy-Item -LiteralPath $GitIgnore -Destination (Join-Path $Staging "gitignore.backup")
@@ -151,7 +162,13 @@ try {
       $content = ""
     }
     $separator = if ($content.Length -eq 0 -or $content.EndsWith("`n") -or $content.EndsWith("`r")) { "" } else { [Environment]::NewLine }
-    [IO.File]::AppendAllText($GitIgnore, "$separator$GitIgnoreRule$([Environment]::NewLine)", [Text.UTF8Encoding]::new($false))
+    if (-not ($content -split "`r?`n" -contains $GitIgnoreRule)) {
+      [IO.File]::AppendAllText($GitIgnore, "$separator$GitIgnoreRule$([Environment]::NewLine)", [Text.UTF8Encoding]::new($false))
+      $separator = ""
+    }
+    if (-not ($content -split "`r?`n" -contains $CacheGitIgnoreRule)) {
+      [IO.File]::AppendAllText($GitIgnore, "$separator$CacheGitIgnoreRule$([Environment]::NewLine)", [Text.UTF8Encoding]::new($false))
+    }
     $GitIgnoreChanged = $true
   }
 

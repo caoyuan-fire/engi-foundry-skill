@@ -34,6 +34,7 @@ class InitScriptsTests(unittest.TestCase):
             "engifoundry.config.json",
             "initialization.json",
             "executors.json",
+            "executors.schema.json",
             "workflows.json",
         ]:
             json.loads((TEMPLATES / name).read_text())
@@ -51,6 +52,7 @@ class InitScriptsTests(unittest.TestCase):
                 {"engifoundry.config.json", ".engifoundry"},
             )
             self.assertIn(".engifoundry/packages/", (project / ".gitignore").read_text().splitlines())
+            self.assertIn(".engifoundry/cache/", (project / ".gitignore").read_text().splitlines())
             self.assertEqual(
                 (project / "engifoundry.config.json").read_text(),
                 (TEMPLATES / "engifoundry.config.json").read_text(),
@@ -67,6 +69,11 @@ class InitScriptsTests(unittest.TestCase):
             self.assertFalse((project / ".engifoundry" / "verification.json").exists())
             self.assertFalse((project / ".engifoundry" / "risk.json").exists())
             self.assertTrue((project / ".engifoundry" / "artifacts" / "verification").is_dir())
+            self.assertTrue((project / ".engifoundry" / "cache").is_dir())
+            self.assertEqual(
+                (project / ".engifoundry" / "contracts" / "executors.schema.json").read_text(),
+                (TEMPLATES / "executors.schema.json").read_text(),
+            )
             initialization = json.loads((project / ".engifoundry" / "initialization.json").read_text())
             self.assertEqual(initialization["status"], "in_progress")
             self.assertEqual(initialization["currentStep"], "executor")
@@ -85,6 +92,7 @@ class InitScriptsTests(unittest.TestCase):
             lines = gitignore.read_text().splitlines()
             self.assertEqual(lines[0], "node_modules/")
             self.assertEqual(lines.count(".engifoundry/packages/"), 1)
+            self.assertEqual(lines.count(".engifoundry/cache/"), 1)
 
     def test_workspace_requires_explicit_package_repository_inclusion(self):
         content = WORKSPACE_TEMPLATE.read_text()

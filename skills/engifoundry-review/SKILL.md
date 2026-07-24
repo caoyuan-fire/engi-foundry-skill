@@ -7,11 +7,11 @@ description: Review EngiFoundry planning, Job work, code, documents, research, o
 
 ## Reviewer Selection
 
-Reviewer selection is capability-driven and independent of `executorOrder`. The Agent arranging Review establishes a fresh context through an exposed host subagent, new-session, or CLI capability. A candidate is eligible only when it can inspect the complete primary subject and evidence, perform every required check with verified available tools, and start without receiving implementation discussion or an intended conclusion. It must not have performed the reviewed work.
+Read the complete project-owned Executor configuration and the complete schema referenced by its `schemaRef`. Use the configured `reviewer`; never replace it with a host-native subagent or another available CLI merely because that mechanism has lower overhead.
 
-Prefer a host-native isolated subagent when it is sufficient. Otherwise choose a verified new-session or CLI mechanism. Among equally capable candidates, prefer a mechanism independent from the producer, then the lower-overhead candidate. The same model is acceptable when the context is genuinely fresh.
+The Agent arranging Review must invoke that Reviewer in a genuinely fresh context through its verified CLI usage. It is eligible only when it can inspect the complete primary subject and evidence, perform every required check with verified available tools, start without implementation discussion or an intended conclusion, and did not perform the reviewed work. The same model as the producer is acceptable when context is genuinely fresh.
 
-Fallback is valid only for objective unavailability before a valid conclusion exists. `pass` and `rework-required` are conclusions, not selection failures; never repeat Review with another candidate to seek a preferred result. A new Review requires a changed subject, an invalid prior attempt, or an explicit multiple-Review requirement.
+Objective unavailability before a conclusion makes Review unavailable; record the factual blocker and do not silently substitute another Reviewer. `pass` and `rework-required` are conclusions, not selection failures; never repeat Review to seek a preferred result. A new Review requires a changed subject, an invalid prior attempt, or an explicit multiple-Review requirement.
 
 When no eligible fresh-context mechanism is actually available after inspecting host capabilities, Review is unavailable. Record that objective fact in the subject state; do not fabricate a Review attempt or reuse the producing context.
 

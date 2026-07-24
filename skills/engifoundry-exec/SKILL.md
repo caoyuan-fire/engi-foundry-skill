@@ -1,11 +1,11 @@
 ---
 name: engifoundry-exec
-description: Execute ready EngiFoundry Jobs in dependency order, apply configured Executor fallback, enforce engineering discipline, and record concise results. Use for implementation or rework of an existing ready PAK.
+description: Execute ready EngiFoundry Jobs in dependency order, obey the configured Executor and its mandatory availability Gate, enforce engineering discipline, and record concise results. Use for implementation or rework of an existing ready PAK.
 ---
 
 # EngiFoundry Exec
 
-Read `./engifoundry.config.json`, the project-owned workspace guide, Executor and Workflow configs, and [contracts.md](references/contracts.md). Then read the Phase, PAK, and Job contracts before acting.
+Read `./engifoundry.config.json`, the project-owned workspace guide, the complete Executor and Workflow config files, and [contracts.md](references/contracts.md). Follow the Executor config's `schemaRef` and read that complete schema before selecting or invoking an Executor. Do not extract only `executor`, `command`, or `usage`; the surrounding fields and every declared Gate remain binding. Then read the Phase, PAK, and Job contracts before acting.
 
 ## Boundary
 
@@ -13,9 +13,9 @@ Execute only a PAK with `planning.status: ready`. Treat its JSON as authoritativ
 
 Run eligible Jobs in dependency order. A Job is eligible only when every dependency is complete. Obey its type, allowed areas, forbidden areas, and stop conditions.
 
-Select Executors strictly by `executorOrder`. Use the first usable entry; fall back in order only after a factual unavailability or failed attempt. Do not invent, reorder, or silently skip configured entries. `primary-control-only` work stays in the current control session.
+Use only the single configured `executor`. It is usable only when its configured command and pinned model, if any, are available and the Agent can start its verified invocation. Run bounded work from the project root, provide the Job contract paths and required concise handback, and inspect actual process state before deciding availability. A running or quiet process is not unavailable; inspect available liveness facts before making that conclusion. Do not persist prompts, raw streams, or transient process state.
 
-An Executor is usable only when the Agent knows a verified invocation for its configured host mechanism or command. Run bounded work from the project root, provide the Job contract paths and required concise handback, and inspect actual process state before fallback. A running or quiet process is not a failed attempt; probe available liveness facts before declaring failure. Do not persist prompts, raw streams, or transient process state.
+Evaluate `gate.executorUnavailable` before any fallback. A missing command, failed authentication, unavailable pinned model, or inability to start the verified invocation is objective unavailability. Stop the task and ask whether the current controlling session may take over. Proceed only after explicit approval; that approval applies to the current task and never rewrites project configuration. Do not silently substitute another CLI, model, or Agent. A started invocation that returns incorrect output, failing tests, or another work result is an execution failure and follows normal debugging or rework rules, not this Gate.
 
 ## Discipline
 

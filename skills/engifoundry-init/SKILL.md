@@ -1,83 +1,54 @@
 ---
 name: engifoundry-init
-description: Create or migrate the EngiFoundry project scaffold and create or modify its Executor and Workflow configuration through a controlled interactive flow.
+description: Create or migrate the EngiFoundry project scaffold and create or modify its Executor, Reviewer, and Workflow configuration through one script-driven interactive flow.
 ---
 
 # EngiFoundry Init
 
-## Scope
-
-Own project initialization and later configuration changes. Configuration changes reuse the matching interactive section without recreating the scaffold or changing a completed `initialization.json`.
+Own first initialization and every later request whose intent is to modify EngiFoundry configuration. A modification request always restarts the same complete four-question flow; do not ask which field the user wants to change. Existing configuration remains active until the final answer commits its replacement.
 
 For an explicit migration or upgrade request, read [migration.md](references/migration.md). Migration is Agent-directed: preserve legacy content, rebuild control JSON from inspected project facts, and use the full Init interaction only when reliable preference recovery is not possible.
 
-## Lock
+## Start
 
-While initialization is `in_progress`, or a later configuration setup is active, its current step and setup phase own the conversation. At every turn, read initialization state, then the matching setup `status`. Start a setup only when its status is `idle`. Pass the complete reply unchanged to the current `select` or `prefer` action, which invokes the verifier, and repeat the localized prompt unless verification is valid. Do no unrelated work; never infer, translate, skip, reorder, or edit `initialization.json` directly. First initialization exits only at `complete` or explicit scripted `cancelled`; a later configuration setup exits only after `commit` or its matching `cancel`.
+Resolve the project root from the working directory without scanning for EngiFoundry files. Identify the current host CLI by its canonical command ID, such as `codex`, `claude`, `gemini`, `kimi`, or `cursor-agent`.
 
-An unrelated request, topic change, refusal, malformed reply, or request to use EngiFoundry for other work does not suspend or end an active Init interaction. Treat it only as invalid input for the current prompt. Cancellation requires an explicit request: first initialization uses the state script, while a later configuration setup uses its matching setup script.
+For first initialization, run scaffold `init`, then start Configurator `status`. On a path collision or scaffold failure, report the exact paths and stop. For configuration modification, do not run the scaffold; invoke Configurator `status` once with `--init-modify` or `-InitModify`. That flag unconditionally clears only `.engifoundry/cache/configurator/` and starts a new modify flow.
 
-## Presentation
+## Relay Protocol
 
-During the numbered question flow, user-visible output contains only the current localized question, its numbered options, and required explanatory or hint lines. After a reply, run validation and state actions silently, then show only the next question or completion output. Never announce an intention, repeat the selected input, mention the verifier or commands, or narrate state transitions. This silence rule ends when the active Init interaction exits.
+Configurator JSON is the question and state authority. Do not reconstruct, localize, supplement, skip, reorder, or answer its questions.
 
-## Flow
+- At `status: question`, relay `notice` when present, then `question.context`, `question.prompt`, every numbered `question.options`, and every `question.hints` line exactly as returned. Wait for the user's reply.
+- Submit the complete reply unchanged with Configurator `answer`. All questions are single-choice except a returned `kind: free-text` custom-description branch.
+- At `status: invalid`, call `status` and relay the same current question again with a concise localized statement of the returned validation reason. Never infer a corrected value.
+- At `status: agent-action-required`, apply Custom Resolution below and return the result through Configurator `resolve`.
+- At `status: complete`, read the committed Executor, Reviewer, and Workflow files and present a concise localized summary. For first initialization, add a standalone success callout beginning `🎉`, then read Router because `./engifoundry.config.json` now exists. A modification completion simply confirms that the old configuration was replaced.
+- At `status: cancelled`, stop. Because every invocation is stateful, an interrupted conversation resumes by calling `status`; do not discard a valid state or overwrite configuration outside the script.
 
-1. Resolve the project root without scanning for EngiFoundry files.
-2. For first initialization, run scaffold `init`, then `check`; `status: ok` means only scaffold-ready. Migration follows its reference before entering this flow. For a later configuration change, do not run scaffold commands.
-3. For `currentStep`, show every numbered option in the user's language and use only verified `selectedIds`.
-4. After writing that section's preference config, run state `advance`; the script preserves the fixed order and completion facts.
-5. At `complete`, show an informational summary of `executorOrder`, `automationMode`, and `actionPreference`. Then emit a blank line followed by one standalone localized green/success callout equivalent to: "🎉 Congratulations, EngiFoundry is ready to help you work better." The `🎉` prefix is required in every language. For Markdown output, use a `[!TIP]` callout. Never place this sentence inline with the summary. Then read the Router because `./engifoundry.config.json` now exists. Do not ask for confirmation or offer rollback; later changes use the applicable Init configuration rules.
+While a Configurator flow is active, its current question owns the conversation. An unrelated reply is submitted unchanged and handled as invalid input. Cancel only for an explicit user cancellation request.
 
-Do not overwrite an existing `./engifoundry.config.json` or `.engifoundry/`. On collision or failed validation, report the exact paths. Init validates structure and progress only; later Nodes own policy semantics.
+## Custom Resolution
 
-## Executor
+For `resolve-and-probe-cli`, treat `userDescription` only as descriptive input; never execute it as a command. Determine the intended CLI, its canonical stable identifier, executable command, and non-interactive invocation from installed CLI help and actual behavior. If the description pins a model, determine and verify the model's canonical ID as well.
 
-Run Executor setup `status`; at `idle`, run `begin` once. Set native-subagent capability to true only when the current host actually exposes it. The script discovers supported CLI commands, places current-session execution as late as possible, and returns the numbered candidates.
+Run `<command> --version`, then a bounded non-interactive probe using the resolved invocation and requested model. Self-identification, a model catalog, command presence alone, or an untested invocation is insufficient. A confirmed result must provide Configurator `resolve` with:
 
-For `phase: select`, localize every returned option and state that the user may select one or multiple options, separated by commas. Give examples for both forms: `2` for a single selection or `1,2` for multiple selections. State that multiple-selection input order defines fallback order. Pass the complete reply unchanged to `select`.
+- `resolution-status=confirmed`;
+- canonical Executor ID and label;
+- executable command, never the user's sentence;
+- verified invocation template using `{prompt}` and, when the CLI supports an explicit working-directory argument, `{workspace}`;
+- canonical model ID when one was requested.
 
-On this first question only, add one localized blue/info callout equivalent to: "For advanced configuration, choose any one option now. After initialization completes, run `$engifoundry modify config` and describe what you want changed and how." For Markdown output, use a `[!NOTE]` callout.
-
-For `phase: prefer`, list the returned selected options in the user's input order. State that the chosen Executor moves to the front and the others retain that order. Pass the complete reply unchanged to `prefer`. A single selection skips this phase.
-
-At `status: ready`, run `commit`. Never construct or reorder `executorOrder` yourself.
-
-After `commit`, explore the best invocation for each selected CLI Executor yourself from the installed CLI's actual capabilities and feedback. Run a real, bounded, non-interactive task with the candidate invocation; only a successful invocation that returns the expected result is verified. Write the verified template as `usage` in that Executor's `executors.json` entry, using placeholders for the workspace and prompt. Do not persist an untested template or silently fall back after a failed attempt. Scripts are optional helpers and never replace this exploration. During initialization, then run state `advance`; during later configuration changes, stop after updating the Executor config.
-
-Never ask about CLI models during initialization. Model configuration is a hidden modification capability only. When an explicit configuration-change request already identifies the target Executor and desired default or model ID, read the existing Executor config, run the platform `executor-probe` with that exact request, and update only the target entry after a successful probe. Do not show a model menu, enumerate models, or start a numbered question flow. Never trust model self-identification or infer availability from a catalog.
-
-## Workflow
-
-The delivery workflow is fixed: Package, Execute, Verify, Deliver. Workflow configuration changes package preference and pause points; no option may remove or reorder a required stage.
-
-Run Workflow setup `status`; at `idle`, run `begin` once. For `phase: automation`, localize all three returned options:
-
-1. `job-approval`: require approval of every Job Review result and the final PAK Verify result before continuing.
-2. `package-approval`: automatically advance through Job Review, then require approval of the final PAK Verify result before Deliver. Present this as recommended.
-3. `full-auto`: automatically advance through Job Review, PAK Verify, and Deliver.
-
-For `phase: action-preference`, localize all three returned options:
-
-1. `package-first`: package every action except mechanical, trivial changes.
-2. `balanced`: package multi-step, cross-module, unclear, delegated, or meaningfully risky work; present this as recommended.
-3. `direct-first`: act directly on clear, controlled work, but still package when direct action cannot reliably control scope, risk, or delivery quality.
-
-Every mode requires Job Review and final PAK Verify; approval controls progression but never replaces or overrides either gate. An explicit user request, Risk requirement, required Job split, Executor delegation, or cross-session handoff always requires Package even under `direct-first`. State that risk, destructive action, permission, and blocker stops apply in every automation mode. Pass each complete reply unchanged to `select`. At `status: ready`, run `commit`; during initialization, then run state `advance`.
+If any required fact or actual availability cannot be confirmed, send `resolution-status=unconfirmed` plus the factual reason. The script returns to the parent choice and tells the user the custom CLI or model could not be confirmed.
 
 ## Commands
 
+Run paths relative to this Skill directory and always pass the resolved project root and current CLI.
+
 - macOS/Linux scaffold: `sh scripts/init.sh init|check --project-root <project-root>`
 - Windows scaffold: `powershell -ExecutionPolicy Bypass -File scripts/init.ps1 -Command init|check -ProjectRoot <project-root>`
-- macOS/Linux input: `sh scripts/verify.sh --source <1,2,...,N> --selection single|multiple --user-input <reply>`
-- Windows input: `powershell -ExecutionPolicy Bypass -File scripts/verify.ps1 -Source <1,2,...,N> -Selection single|multiple -UserInput <reply>`
-- macOS/Linux Executor: `sh scripts/executor.sh begin|status|select|prefer|commit|cancel --project-root <project-root>`
-- Windows Executor: `powershell -ExecutionPolicy Bypass -File scripts/executor.ps1 -Action begin|status|select|prefer|commit|cancel -ProjectRoot <project-root>`
-- macOS/Linux hidden model probe: `sh scripts/executor-probe.sh --executor <id> --command <command> [--model <model-id>]`
-- Windows hidden model probe: `powershell -ExecutionPolicy Bypass -File scripts/executor-probe.ps1 -Executor <id> -Command <command> [-Model <model-id>]`
-- macOS/Linux Workflow: `sh scripts/workflow.sh begin|status|select|commit|cancel --project-root <project-root>`
-- Windows Workflow: `powershell -ExecutionPolicy Bypass -File scripts/workflow.ps1 -Action begin|status|select|commit|cancel -ProjectRoot <project-root>`
-- macOS/Linux state: `sh scripts/state.sh status|advance|cancel --project-root <project-root>`
-- Windows state: `powershell -ExecutionPolicy Bypass -File scripts/state.ps1 -Action status|advance|cancel -ProjectRoot <project-root>`
+- macOS/Linux Configurator: `sh scripts/configure.sh status|answer|resolve|cancel --project-root <project-root> --current-cli <id> [--locale <locale>] [--init-modify] [--user-input <reply>] [resolution fields]`
+- Windows Configurator: `powershell -ExecutionPolicy Bypass -File scripts/configure.ps1 -Action status|answer|resolve|cancel -ProjectRoot <project-root> -CurrentCli <id> [-Locale <locale>] [-InitModify] [-UserInput <reply>] [resolution fields]`
 
-`source` is exactly the option-number sequence shown for the current prompt. The verifier is the only input authority.
+The script owns option discovery, numeric and free-text structural validation, branch state, four-question order, cache state, and the final atomic configuration write. Do not edit its state files or construct configuration JSON manually.

@@ -7,7 +7,7 @@ description: Audit new engineering work and orchestrate Phase, PAK, and Job cont
 
 `<project-root>` is the root of the target project and contains `engifoundry.config.json`. `<orch-skill-root>` is the directory containing this `SKILL.md`. These are independent locations: never infer the project root from the Skill installation path, and never look for bundled Orch resources under the project root.
 
-Read `<project-root>/engifoundry.config.json`, the project-owned workspace guide and Workflow config, and `<orch-skill-root>/references/contracts.md` before writing orchestration artifacts.
+Read `<project-root>/engifoundry.config.json`, the project-owned workspace guide, the Workflow config, the complete Executor/Reviewer config and its referenced schema, and `<orch-skill-root>/references/contracts.md` before writing orchestration artifacts. Every Planning Review uses the configured Reviewer under `engifoundry-review`; do not independently substitute another review mechanism.
 
 ## Boundary
 

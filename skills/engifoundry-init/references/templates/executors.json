@@ -1,6 +1,14 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
+  "schemaRef": ".engifoundry/contracts/executors.schema.json",
   "configured": false,
-  "executorOrder": [],
-  "executors": {}
+  "executor": null,
+  "reviewer": null,
+  "gate": {
+    "executorUnavailable": {
+      "action": "ask-user",
+      "fallbackTarget": "current-session",
+      "decisionScope": "task"
+    }
+  }
 }

@@ -61,7 +61,17 @@ class ExecContractTests(unittest.TestCase):
         content = SKILL.read_text()
         self.assertIn("verified invocation", content)
         self.assertIn("Run bounded work from the project root", content)
-        self.assertIn("quiet process is not a failed attempt", content)
+        self.assertIn("running or quiet process is not unavailable", content)
+
+    def test_exec_reads_complete_executor_contract_and_obeys_gate(self):
+        content = SKILL.read_text()
+        self.assertIn("complete Executor and Workflow config files", content)
+        self.assertIn("read that complete schema", content)
+        self.assertIn("Do not extract only `executor`", content)
+        self.assertIn("Use only the single configured `executor`", content)
+        self.assertIn("Evaluate `gate.executorUnavailable`", content)
+        self.assertIn("ask whether the current controlling session may take over", content)
+        self.assertIn("execution failure", content)
 
 
 if __name__ == "__main__":
